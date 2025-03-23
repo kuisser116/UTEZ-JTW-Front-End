@@ -1,0 +1,88 @@
+body {
+    background-color: #F4F2EE;
+    margin: 0;
+    font-family: 'Geomanist', sans-serif;
+}
+
+
+
+.search{
+    position: absolute;
+    width: 100%;
+    top: 12%;
+}
+
+.searchInput{
+    padding: 15px;
+    background-color: #25252500;
+    border-radius: 25px;
+    border-style: solid;
+    border-width: 3px;
+    border-color: #252525;
+    width: 20%;
+    margin-left: 16%;
+    font-size: 2vh;
+    color: #252525;
+    align-content: center;
+}
+
+.selection{
+    position: absolute;
+    width: 100%;
+    color: #252525;
+    top: 0%;
+    left: 40%;
+}
+
+.tittle{
+    position: absolute;
+    margin-left: 5%;
+    font-size: 5vh;
+    margin-bottom: 0;
+    margin-top: 0;
+    top: 10%;
+
+}
+
+#dropdown{
+    background-color: #25252500;
+    padding: 10px ;
+    color: #252525;
+    border-radius: 25px;
+    width: 15%;
+    font-size: 2vh;
+    height: 5vh;
+    border-width: 3px;
+    border-color: #252525;
+    border-style: solid;
+}
+
+.eventsGrid{
+    position: absolute;
+    width: 90%;
+    height: 75%;
+    top: 20%;
+    display: grid;
+    overflow-y: auto;
+    left: 5%;
+    right: 5%;
+    grid-template-columns: repeat(4, 1fr);
+
+}
+
+.eventCard{
+    width: 90%;
+    height: 90%;
+    border-color: #252525;
+    border-style: solid;
+    border-radius: 20px;
+}
+
+.eventInfo{
+    color: #ffffff;
+    padding: 40px;
+    justify-content: center;
+    margin-top: 50%;
+    
+}
+

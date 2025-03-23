@@ -1,0 +1,296 @@
+body {
+    background-color: #ffffff;
+    margin: 0;
+    font-family: 'Geomanist', sans-serif;
+}
+
+
+.top-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    z-index: 2;
+}
+
+.nav{
+    padding: 20px;
+}
+
+.perfil{
+    position: absolute;
+    background-color: #252525;
+    width:15vh;
+    height: 5vh;
+    right: 20px;
+    border-radius: 20px;
+}
+
+.today{
+    position: absolute;
+    color: #252525;
+    font-size: 2.4vh;
+    margin: 0;
+    margin-top: 5px;
+    left: 5%;
+}
+
+/*Contenido*/
+
+.EventImg{
+    position: fixed;
+    width: 100%;
+    top: 9%;
+    z-index: 1;
+}
+
+.img{
+    width: 100%;
+    position:fixed;
+}
+
+.gradient{
+    z-index: 2;
+    position: fixed;
+    width: 50%;
+    height: 100%;
+}
+
+.eventPart{
+    position: absolute;
+    z-index: 3;
+    color: #252525;
+    left: 5%;
+    width: 30%;
+}
+
+h2{
+    font-size: 6vh;
+    margin-top: 15vh;
+}
+
+button{
+    width: 50%;
+    font-size: 3vh;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 3vh;
+}
+
+p{
+    font-size: 2.4vh;
+    margin-bottom: 3vh;
+}
+
+h3{
+    font-size: 4vh;
+    margin-bottom: 3vh;
+}
+
+.table{
+    background-color: #ffffff;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 100%;
+    z-index: 1;
+}
+
+.tableContent{
+    position: absolute;
+    color: #252525;
+    width: 100%;
+}
+
+.tableTittle{
+    position: absolute;
+    margin-top: 10vh;
+    left: 5%;
+}
+
+
+/*Tabla*/
+
+.tabla-container {
+    position: absolute;
+    margin-top: 10%;
+    left: 5%;
+    right: 5%;
+
+  }
+
+.tabla-talleres {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .encabezado {
+    background-color: #f2f2f2;
+    height: 50px;
+  }
+  
+  .tabla-talleres th {
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .tabla-talleres tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+    height: 54px;
+  }
+  
+  .tabla-talleres td {
+    padding: 8px 16px;
+    color: #333;
+  }
+  
+  .tabla-talleres .acciones {
+    width: 40px;
+    text-align: center;
+  }
+  
+  .menu-puntos {
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #666;
+    padding: 5px;
+  }
+  
+  .fecha-hora {
+    display: block;
+  }
+  
+  .hora {
+    color: #666;
+    font-size: 0.9em;
+  }
+
+  .addTaller{
+    position: absolute;
+    top: 13%;
+    width: 15%;
+    border-radius: 30px;
+    background-color: #25252500;
+    border-color: #252525;
+    color: #252525;
+    right: 10%;
+    font-size: 2vh;
+    height: 5vh;
+
+  }
+
+  .plusadd{
+    position: absolute;
+    width: 35px;
+    padding-left: 10px;
+    top: 4px;
+  }
+
+  .configView{
+    position: absolute;
+    width: 40px;
+    top: 13%;
+    right: 7%;
+  }
+
+  .tittleDashboard{
+    position: absolute;
+    color: #252525;
+    left: 9%;
+    margin-top: 5%;
+  }
+
+  .arrowLeft{
+    position: absolute;
+    margin-top: 5.8%;
+    width: 6vh;
+    left: 5%;
+  }
+
+  /*Dashboard Items*/
+
+  h3{
+    margin: 0;
+    padding: 0;
+  }
+
+  .dashboard{
+    position: absolute;
+    width: 100%;
+    height: 70%;
+    top: 25%;
+  }
+
+  .dashboardItem{
+    position: absolute;
+    left: 5%;
+    right: 5%;
+    bottom: 5%;
+    height: 100%;
+  }
+
+  .dashboardModule{
+    position: absolute;
+    background-color: #e0e0e0;
+    border-style: solid;
+    border-color: #252525;
+    border-width: 1px;
+    border-radius: 25px;
+    padding: 20px;
+    width: 20%;
+  }
+
+  .dashboardModuleChecador{
+    margin-left: 0%;
+    height: 45%;
+    background-color:#25252500;
+
+  }
+
+  .dashboardModuleAsistentes{
+    margin-left: 25%;
+    height: 45%;
+    background-color:#25252500;
+
+
+  }
+
+  .dashboardModuleTalleres{
+    margin-left: 50%;
+    height: 45%;
+    background-color:#25252500;
+
+
+  }
+
+  .dashboardModuleList{
+    margin-left: 75%;
+    height: 100%;
+    background-color:#25252500;
+
+  }
+
+  .dashboardModuleEstado{
+    margin-left: 0%;
+    margin-top: 21.3%;
+    height: 45%;
+
+  }
+
+  .dashboardModuleActividad{
+    margin-left: 25%;
+    margin-top: 21.3%;
+    width: 45%;
+    height: 45%;
+    background-color:#25252500;
+
+
+  }
+

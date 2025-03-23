@@ -1,0 +1,63 @@
+body {
+    background-color: #ffffff;
+    margin: 0;
+    font-family: 'Geomanist', sans-serif;
+}
+
+
+
+/*Contenido*/
+
+.EventImg{
+    position: absolute;
+    width: 100%;
+    top: 9%;
+}
+
+.img{
+    width: 100%;
+    position:fixed;
+}
+
+.gradient{
+    z-index: 2;
+    position: fixed;
+    width: 50%;
+    height: 100%;
+}
+
+.eventPart{
+    position: absolute;
+    z-index: 3;
+    color: #252525;
+    left: 5%;
+    width: 30%;
+}
+
+h2{
+    font-size: 6vh;
+    margin-top: 15vh;
+}
+
+button{
+    width: 50%;
+    font-size: 3vh;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 3vh;
+}
+
+p{
+    font-size: 2.4vh;
+    margin-bottom: 3vh;
+}
+
+h3{
+    font-size: 4vh;
+    margin-bottom: 3vh;
+}
+
+
+
+
+

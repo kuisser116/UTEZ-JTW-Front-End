@@ -1,16 +1,18 @@
 import 'react';
-import '../assets/styles/stylesLogin/login.css'
-import conferenceImage from '../assets/img/conference-3-100.svg'
-import forms from '../assets/img/formasLogin.svg'
+import styles from '../../assets/styles/stylesLogin/login.module.css'
+import conferenceImage from '../../assets/img/conference-3-100.svg'
+import forms from '../../assets/img/formasLogin.svg'
 
 
 function LoginComponent() {
+
+
+    
     return (
         <body>
-            <img className='formas' src={forms} alt="" />
-                    {/* Sección del formulario */}
-                    <div className='Login'>
-                        <h2 className='title1'>Iniciar sesión</h2>
+            <img className={styles.formas} src={forms} alt="" />
+                    <div className={styles.Login}>
+                        <h2 className={styles.title1}>Iniciar sesión</h2>
                         <div>
                             <div>
                                 <input
@@ -31,10 +33,9 @@ function LoginComponent() {
                         </div>
                     </div>
                     
-                    {/* Sección de bienvenida */}
-                    <div className='bienvenida'>
-                        <h2 className='title2'>¡Bienvenido!</h2>
-                        <img className='img'
+                    <div className={styles.bienvenida}>
+                        <h2 className={styles.title2}>¡Bienvenido!</h2>
+                        <img className={styles.img}
                             src={conferenceImage}
                         />
                     </div>
