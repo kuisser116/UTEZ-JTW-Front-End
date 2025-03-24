@@ -6,7 +6,7 @@ body {
 
 .topNav {
     position: absolute;
-    top: 0;
+    top: 2%;
     left: 0;
     width: 100%;
     display: flex;
@@ -35,14 +35,16 @@ body {
 
 .logoututton {
     position: absolute;
-    right: 20px; 
-    background-color: #333;
+    right: 2%; 
+    background-color: #252525;
     color: white;
-    border: none;
+    border: solid;
     border-radius: 15px;
-    padding: 10px 20px;
-    font-size: 16px;
+    font-size: 2vh;
     cursor: pointer;
+    width: 10%;
+    height: 90%;
+    top: 0%;
 }
 
 .nav{
