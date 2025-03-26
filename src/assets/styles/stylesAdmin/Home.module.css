@@ -20,7 +20,7 @@ body {
     border-width: 3px;
     border-color: #252525;
     width: 20%;
-    margin-left: 16%;
+    margin-left: 20%;
     font-size: 2vh;
     color: #252525;
     align-content: center;
@@ -61,8 +61,8 @@ body {
 .eventsGrid{
     position: absolute;
     width: 90%;
-    height: 75%;
-    top: 20%;
+    height: 70%;
+    top: 30%;
     display: grid;
     overflow-y: auto;
     left: 5%;
@@ -88,7 +88,7 @@ body {
     color: #ffffff;
     padding: 40px;
     justify-content: center;
-    margin-top: 50%;
+    margin-top: 45%;
     border-radius: 0px 0px 15px 15px;
     
 }

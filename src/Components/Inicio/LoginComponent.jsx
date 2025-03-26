@@ -3,7 +3,7 @@ import styles from '../../assets/styles/stylesLogin/login.module.css';
 import conferenceImage from '../../assets/img/conference-3-100.svg';
 import forms from '../../assets/img/formasLogin.svg';
 import Header from '../Components/Header';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 
@@ -25,7 +25,8 @@ function LoginComponent() {
 
             if (user) {
                 console.log('Login Exitoso');
-                navigate('/EventWorkshop');
+                navigate('/HomeAdmin',{state:'/login'});
+
             } else {
                 console.log('Error de Login');
             }

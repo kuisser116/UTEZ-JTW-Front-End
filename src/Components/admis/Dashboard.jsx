@@ -1,5 +1,5 @@
 import 'react';
-import Header from '../Components/Header';
+import Header from '../Components/HeaderAdmin';
 import EventImg from '../../assets/img/assets_participante/wallpaperflare.com_wallpaper.jpg';
 import styles from '../../assets/styles/stylesAdmin/Dashboard.module.css';
 import plus from '../../assets/img/Assets_admin/plus-regular-240.png';

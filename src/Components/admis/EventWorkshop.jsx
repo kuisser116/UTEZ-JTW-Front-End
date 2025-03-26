@@ -1,5 +1,5 @@
 import 'react';
-import Header from '../Components/Header'
+import Header from '../Components/HeaderAdmin'
 import TableTalleres from '../Components/TableTalleres';
 import EventImg from '../../assets/img/assets_participante/wallpaperflare.com_wallpaper.jpg'
 import styles from '../../assets/styles/stylesAdmin/WorkshopList.module.css'

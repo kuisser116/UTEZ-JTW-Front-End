@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from '../../assets/styles/stylesLogin/eventos.module.css';
+import styles from '../../assets/styles/stylesAdmin/Home.module.css';
 import { Link, useLocation } from 'react-router-dom';
-import Header from '../Components/Header';
+import Header from '../Components/HeaderAdminHC';
+import NavBar from '../Components/NavBar'; 
 
 function Events() {
     const [events, setEvents] = useState([]);
@@ -25,6 +26,7 @@ function Events() {
     return (
         <div>
             <Header />
+            <NavBar /> 
             <h2 className={styles.tittle}>Eventos</h2>
             <div className={styles.search}>
                 <input className={styles.searchInput} type="text" placeholder="Buscar eventos" />
@@ -38,8 +40,8 @@ function Events() {
                             backgroundImage: `url(http://localhost:3000/api/event/image?filename=${event.mainImg})`,
                         }}
                         key={event._id} 
-                        to={'/Event'} 
-                        state={'/Events'}
+                        to={'/EventWorkshop'} 
+                        state={'/HomeAdmin' }  // Aquí puedes pasar información al siguiente componente
                     >
                         <div className={styles.eventInfo}>
                             <div className="event-name">{event.name}</div>

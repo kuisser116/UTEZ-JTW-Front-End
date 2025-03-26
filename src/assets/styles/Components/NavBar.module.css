@@ -1,0 +1,28 @@
+/* navbar.module.css */
+.navbar {
+    position: absolute;
+    top: 20%;
+    left: 5%;
+    background-color: #33333300;
+}
+
+.navList {
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+}
+
+.navItem {
+    margin: 0 8vh;
+}
+
+.navLink {
+    color: #252525;
+    text-decoration: none;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.navLink:hover {
+    text-decoration: underline;
+}

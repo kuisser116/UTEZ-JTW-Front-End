@@ -6,6 +6,8 @@ import EventWorkshop from "./Components/admis/EventWorkshop";
 import JWT from './Components/Inicio/JTW';
 import Event from './Components/participante/event';
 import ListEvent from './Components/participante/ListEvent';
+import HomeAdmin from './Components/admis/Home';
+import ChecadoresAdmin from './Components/admis/Checadores';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Event" element={<Event />} />
         <Route path="/ListEvent" element={<ListEvent />} />
+        <Route path="/HomeAdmin" element={<HomeAdmin />} />
+        <Route path="/Checadores" element={<ChecadoresAdmin />} />
       </Routes>
     </Router>
   );

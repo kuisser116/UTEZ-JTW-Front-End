@@ -8,13 +8,13 @@ function Header() {
     const today = new Date().toLocaleDateString();
     const location = useLocation();
 
-    const backLink = location.pathname === '/Events' ? '/' : location.state || '/';
+    const backLink = location.pathname === '/EventWorkshop' ? '/HomeAdmin' : location.state || '/HomeAdmin';
 
     return (
         <div>
             <nav className={styles.topNav}>
                 <div className={styles.nav}>
-                    <Link to={backLink} state={'/Events'}>
+                    <Link to={backLink} state={'/HomeAdmin'}>
                         <img className={styles.arrow} src={Arrow} alt="Back" />
                     </Link>
                     <p className={styles.today}>{today}</p>
