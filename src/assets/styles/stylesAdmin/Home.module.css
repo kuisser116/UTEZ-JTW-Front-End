@@ -73,23 +73,228 @@ body {
 
 .eventCard{
     width: 90%;
-    height: 90%;
-    border-color: #252525;
-    border-style: solid;
-    border-radius: 20px;
+    border-radius: 10px;
     background-Size: cover;
     background-Repeat: no-repeat;
     background-Position: center;
-    height: 44%;
+    min-height: 350px; /* Define un tamaño mínimo para evitar que se encojan */
+    height: 50%; 
+    margin-bottom: 45px;
 }
 
-.eventInfo{
-    background-color: #00000079;
+.eventInfo {
     color: #ffffff;
-    padding: 40px;
     justify-content: center;
-    margin-top: 45%;
     border-radius: 0px 0px 15px 15px;
+    font-size: 2vh;
+    height: 100%;
+    opacity: 0;  /* Inicia invisible */
+    transition: opacity 0.2s ease-in-out;  /* Fade-in de 2 segundos */
+}
+
+.eventCard:hover .eventInfo {
+    background: linear-gradient(to top, #25252580 10%, rgba(0, 0, 0, 0) 50%);
+    opacity: 1;  /* Se hace visible */
+}
+
+
+
+.eventCard:hover .p {
+    color: #ffffff;
+}
+
+.eventCard:hover .pt {
+    color: #ffffff;
+    font-size: 2vh;
+}
+
+.info{
+    color: white;
+    padding: 30px;
+    padding-top: 27vh;
+}
+
+.p{
+    color: rgba(255, 255, 255, 0);
+    margin: 0;
+    font-size: 2vh;
+}
+
+.pt{
+    color: rgba(219, 181, 55, 0);
+    margin: 0;
+    font-size: 2vh;
+}
+
+.addEvent{
+    position: absolute;
+    color: #252525;
+    border-color: #252525;
+    border-width: 3px;
+    border-radius: 40px;
+    background-color: #25252500;
+    width: 13%;
+    font-size: 2vh;
+    right: 5%;
+    top: 20%;
+    margin: 0;
+    display: flex;
+    padding: 0;
+    padding-left: 20px;
+    align-items: center;
+    height: 5%;
+}
+
+.plusadd{
+    width: 4vh;
+    padding-left: 40px;    
+}
+
+/*Modal*/
+
+/* Fondo difuminado cuando el modal está abierto */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+}
+
+/* Contenedor del modal */
+.modalContent {
+    background: white;
+    padding: 20px;
+    border-radius: 25px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 80%;
+}
+
+.modalContent2 {
+    background: white;
+    padding: 20px;
+    border-radius: 25px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 10%;
+}
+
+/* Estilo de los inputs y botones */
+.modalContent input {
+    width: 100%;
+    padding: 8px;
+    margin: 5px ;
+    border-radius: 10px;
+    font-size: 20px;
+    height: 45px;
+    margin-bottom: 10px;
+    border-width: 2px;
+    text-align: center;
+}
+
+.modalContent button {
+    margin: 20px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.Mbtn{
+    width: 25%;
+    font-size: 2vh;
+    border-color: #252525;
+    background-color: #25252500;
+    color: #252525;
+    border-style: solid;
+    border-width: 3px;
+    margin-top: 0;
     
+}
+
+.formT{
+    color: #252525;
+    font-size: 4vh;
+    margin: auto;
+    padding-bottom: 20px;
+    text-align: center;
+}
+
+.fileImg{
+    position: absolute;
+    width: 15%;
+    height: 60%;
+    background-color: #25252577;
+    left: 15%;
+    top: 20%;
+    border-radius: 20px 0px 0 20px;
+}
+
+.formDataMain{
+    position: absolute;
+    left: 35%;
+    top: 20%;
+    height: 30%;
+    width: 30%;
+    gap: 0px;
+    
+}
+
+
+
+.btns{
+    position: absolute;
+    top: 80%;
+    width: 80%;
+}
+
+.btns button{
+    height: 50px;
+    border-radius: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
+    border-color: #2525258d;
+}
+
+.formDataMain label{
+    text-align: center;
+}
+
+.btnA{
+    background-color: #25252500;
+    width: 10px;
+    height: 45px;
+    font-size: 20px;
+    color:#252525;
+    border-color: #252525;
+    margin: 0;
+}
+
+.alertaImg{
+    margin: 10px;
+}
+
+.arrowM{
+    position: absolute;
+    width: 4vh;
+    left: 11%;
+    top: 11%;
+    cursor: pointer;
+}
+
+.advice{
+    color: #252525;
+    position: absolute;
+    left: 15%;
+    top: 80%;
+    font-size: 15px;
 }
 

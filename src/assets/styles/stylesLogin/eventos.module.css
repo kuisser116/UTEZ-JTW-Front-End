@@ -57,11 +57,10 @@ body {
     border-color: #252525;
     border-style: solid;
 }
-
 .eventsGrid{
     position: absolute;
     width: 90%;
-    height: 75%;
+    height: 70%;
     top: 20%;
     display: grid;
     overflow-y: auto;
@@ -73,23 +72,53 @@ body {
 
 .eventCard{
     width: 90%;
-    height: 90%;
-    border-color: #252525;
-    border-style: solid;
-    border-radius: 20px;
+    border-radius: 10px;
     background-Size: cover;
     background-Repeat: no-repeat;
     background-Position: center;
-    height: 44%;
+    min-height: 350px; /* Define un tamaño mínimo para evitar que se encojan */
+    height: 50%; 
+    margin-bottom: 45px;
 }
 
-.eventInfo{
-    background-color: #00000079;
+
+.eventInfo {
     color: #ffffff;
-    padding: 40px;
     justify-content: center;
-    margin-top: 50%;
     border-radius: 0px 0px 15px 15px;
-    
+    font-size: 2vh;
+    height: 100%;
+    opacity: 0;  /* Inicia invisible */
+    transition: opacity 0.2s ease-in-out;  /* Fade-in de 2 segundos */
 }
+
+.eventCard:hover .eventInfo {
+    background: linear-gradient(to top, #25252580 10%, rgba(0, 0, 0, 0) 50%);
+    opacity: 1;  /* Se hace visible */
+}
+
+.eventCard:hover .p {
+    color: #ffffff;
+}
+
+
+
+
+.info{
+    color: white;
+    padding: 30px;
+    padding-top: 27vh;
+}
+
+.p{
+    color: rgba(255, 255, 255, 0);
+    margin: 0;
+    font-size: 2vh;
+}
+
+
+
+
+
+
 

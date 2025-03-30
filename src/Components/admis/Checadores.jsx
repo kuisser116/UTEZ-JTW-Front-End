@@ -15,7 +15,7 @@ function Events() {
             <NavBar /> 
             <h2 className={styles.tittle}>Checadores</h2>
             <div className={styles.search}>
-                <input className={styles.searchInput} type="text" placeholder="Buscar eventos" />
+                <input className={styles.searchInput} type="text" placeholder="Buscar checador" />
             </div>
             
             <div className={styles.eventsGrid}>

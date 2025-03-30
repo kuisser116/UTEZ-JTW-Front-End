@@ -16,18 +16,18 @@ body {
 
 .img{
     width: 100%;
-    position:fixed;
+    position:absolute;
 }
 
 .gradient{
-    z-index: 2;
+    z-index: 3;
     position: fixed;
     width: 50%;
     height: 100%;
 }
 
 .eventPart{
-    position: absolute;
+    position: fixed;
     z-index: 3;
     color: #252525;
     left: 5%;
@@ -115,6 +115,32 @@ h3{
     margin: auto;
     padding-bottom: 20px;
 }
+
+
+.carousel{
+    background-color: #ffffff;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 100%;
+    z-index: 2;
+  }
+
+  .swiperContainer {
+    width: 100%;
+    height: 100%; /* Ajusta la altura según lo necesites */
+}
+
+.bannerImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    
+}
+
+  
+  
+
 
 
 

@@ -8,6 +8,7 @@ import Event from './Components/participante/event';
 import ListEvent from './Components/participante/ListEvent';
 import HomeAdmin from './Components/admis/Home';
 import ChecadoresAdmin from './Components/admis/Checadores';
+import RecoverPassword from './Components/Inicio/PasswordRecover';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/ListEvent" element={<ListEvent />} />
         <Route path="/HomeAdmin" element={<HomeAdmin />} />
         <Route path="/Checadores" element={<ChecadoresAdmin />} />
+        <Route path="/RecoverPassword" element={<RecoverPassword />} />
       </Routes>
     </Router>
   );

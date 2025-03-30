@@ -3,7 +3,7 @@ import styles from '../../assets/styles/stylesLogin/login.module.css';
 import conferenceImage from '../../assets/img/conference-3-100.svg';
 import forms from '../../assets/img/formasLogin.svg';
 import Header from '../Components/Header';
-import { useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 
@@ -25,6 +25,7 @@ function LoginComponent() {
 
             if (user) {
                 console.log('Login Exitoso');
+                localStorage.setItem('adminId', user._id);
                 navigate('/HomeAdmin',{state:'/login'});
 
             } else {
@@ -59,10 +60,9 @@ function LoginComponent() {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
-                    <p>¿Olvidaste tu contraseña?</p>
+                    <Link to={'/RecoverPassword'} state={'/login'}><p>¿Olvidaste tu contraseña?</p></Link>
                     <hr />
                     <button onClick={Validacion}>Iniciar sesión</button>
-                    <p>¿No tienes una cuenta? <span>Regístrate</span></p>
                 </div>
             </div>
             <div className={styles.bienvenida}>

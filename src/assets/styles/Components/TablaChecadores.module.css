@@ -47,7 +47,7 @@ body {
 }
 
 .tabla-talleres th {
-  text-align: left;
+  text-align: center;
   padding: 12px 16px;
   font-weight: 500;
   color: #333;
@@ -56,6 +56,7 @@ body {
 .tabla-talleres tbody tr {
   border-bottom: 1px solid #e0e0e0;
   height: 54px;
+  text-align: center;
 }
 
 .tabla-talleres td {
@@ -85,4 +86,77 @@ body {
   color: #666;
   font-size: 0.9em;
 }
+
+.img{
+  width: 40px;
+}
+
+.edit{
+  text-align: center;
+}
+
+
+
+
+
+
+/* 🎨 Estilos del modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalContent {
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+  width: 40%;
+  text-align: center;
+  box-shadow: 0px 4px 10px rgba(164, 26, 26, 0.3);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.modalContent h2 {
+  margin-bottom: 10px;
+  color: #252525;
+  margin-top: 0;
+}
+
+.modalContent input, .modalContent select {
+  width: 90%;
+  padding: 8px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.modalContent button {
+  width: 20%;
+  margin: 5px;
+  cursor: pointer;
+  font-size: 20px;
+  border-radius: 10px;
+  border-color: #252525;
+  border-width: 3px;
+}
+
+.modalContent button:first-of-type {
+  background: #004bad00;
+  color: #252525;
+
+}
+
+.modalContent button:last-of-type {
+  background: #d9544f00;
+  color: #252525;
+}
+
+
 

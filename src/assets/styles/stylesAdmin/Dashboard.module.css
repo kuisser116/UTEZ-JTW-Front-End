@@ -216,9 +216,10 @@ h3{
 
   /*Dashboard Items*/
 
-  h3{
+  .h3{
     margin: 0;
     padding: 0;
+    font-size: 3vh;
   }
 
   .dashboard{
@@ -294,4 +295,11 @@ h3{
 
 
   }
+
+  .datos{
+    font-size: 4vh;
+    margin-top: 10px;
+    padding-left: 30px;
+  }
+
 

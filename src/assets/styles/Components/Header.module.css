@@ -7,7 +7,9 @@
     display: flex;
     justify-content: center; 
     align-items: center;
-    z-index: 2;
+    z-index: 3;
+    background-color: white;
+    height: 9%;
 }
 
 .nav{
@@ -28,8 +30,8 @@
     color: #252525;
     font-size: 2.4vh;
     margin: 0;
-    margin-top: 5px;
     left: 8%;
+    top: 23px;
 }
 
 .logo{
@@ -44,4 +46,5 @@
     left: 5%;
     width: 2%;
     margin-top: 3px;
+    top: 20px;
 }

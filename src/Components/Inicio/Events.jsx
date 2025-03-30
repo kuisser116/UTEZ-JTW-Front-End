@@ -7,6 +7,7 @@ import Header from '../Components/Header';
 function Events() {
     const [events, setEvents] = useState([]);
     const location = useLocation();
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -22,31 +23,41 @@ function Events() {
         fetchEvents();
     }, []);
 
+    const filteredEvents = events.filter(event =>
+        event.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+
     return (
         <div>
-            <Header />
+            <Header/>
             <h2 className={styles.tittle}>Eventos</h2>
             <div className={styles.search}>
-                <input className={styles.searchInput} type="text" placeholder="Buscar eventos" />
+                <input className={styles.searchInput} type="text" placeholder="Buscar eventos" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
             </div>
             
             <div className={styles.eventsGrid}>
-                {events.map(event => (
+                {filteredEvents.length > 0 ? (
+                filteredEvents.map(event => (
                     <Link 
                         className={styles.eventCard} 
                         style={{ 
                             backgroundImage: `url(http://localhost:3000/api/event/image?filename=${event.mainImg})`,
                         }}
                         key={event._id} 
-                        to={'/Event'} 
+                        to={`/Event`} 
                         state={'/Events'}
+                        onClick={() => localStorage.setItem('idEvent', event._id)}
                     >
                         <div className={styles.eventInfo}>
-                            <div className="event-name">{event.name}</div>
-                            <div className="event-description">{event.description}</div>
+                            <div className={styles.info}>
+                                <p className={styles.p}>{event.name}</p>
+                            </div>
                         </div>
                     </Link>
-                ))}
+                ))
+            ) : (
+                <p className={styles.noEvents}>No hay eventos disponibles</p>
+            )}
             </div>
         </div>
     );

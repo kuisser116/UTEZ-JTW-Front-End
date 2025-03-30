@@ -7,6 +7,8 @@ import config from '../../assets/img/Assets_admin/cog-solid-240.png';
 import arrowLeft from '../../assets/img/assets_participante/left-arrow-solid-240.png'
 import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 
 function Dashboard() {
@@ -14,16 +16,39 @@ function Dashboard() {
     const location = useLocation();
     console.log(location);
 
+
+    const [event, setEvent] = useState(null);
+    const eventId = localStorage.getItem('idEvent');
+    console.log(eventId)
+
+    useEffect(() => {
+ 
+        const fetchEventDetails = async () => {
+            try {
+                const response = await axios.get(`http://localhost:3000/api/event/${eventId}`);
+                setEvent(response.data.data);
+                console.log(response.data.data)
+            } catch (error) {
+                console.error('Error al obtener los detalles del evento:', error);
+            }
+        };
+        fetchEventDetails();
+    },[eventId]);
+
+    if (!event) return <p>Cargando evento...</p>;
+
+
+
     return (
         <div>
             <Header />
             <div className={styles.EventImg}>
                 <div className={styles.gradient} style={{background: 'linear-gradient(to right,#F4F2EE,rgba(254, 180, 123, 0))'}}></div>
-                <img className={styles.img} src={EventImg} alt="" />
+                <img className={styles.img} src={`http://localhost:3000/api/event/image?filename=${event.mainImg}`} alt="" />
                 <div className={styles.eventPart}>
-                    <h2>Titulo de evento</h2>
-                    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iusto, laudantium consequatur est placeat inventore et sunt deleniti accusamus qui voluptatem, eaque vel saepe voluptate sapiente aliquid atque eveniet illum beatae!</p>
-                    <p>{today} </p>
+                    <h2>{event.name} </h2>
+                    <p>{event.description} </p>
+                    <p>{event.startDate} </p>
                     <h3>Activo</h3>
                 </div>
             </div>
@@ -36,22 +61,26 @@ function Dashboard() {
                 <div className={styles.dashboard}>
                     <div className={styles.dashboardItem}>
                         <div className={classNames(styles.dashboardModule, styles.dashboardModuleChecador)}>
-                            <h3>Checadores</h3>
+                            <h3 className={styles.h3}>Checadores</h3>
+                            <h4 className={styles.datos}>0</h4>
                         </div>
                         <div className={classNames(styles.dashboardModule, styles.dashboardModuleAsistentes)}>
-                            <h3>Asistentes</h3>
+                            <h3 className={styles.h3}>Asistentes</h3>
+                            <h4 className={styles.datos}>0</h4>
                         </div>
                         <div className={classNames(styles.dashboardModule, styles.dashboardModuleTalleres)}>
-                            <h3>Talleres</h3>
+                            <h3 className={styles.h3}>Talleres</h3>
+                            <h4 className={styles.datos}>2</h4>
                         </div>
                         <div className={classNames(styles.dashboardModule, styles.dashboardModuleList)}>
-                            <h3>Lista</h3>
+                            <h3 className={styles.h3}>Lista</h3>
                         </div>
                         <div className={classNames(styles.dashboardModule, styles.dashboardModuleEstado)}>
-                            <h3>Estado</h3>
+                            <h3 className={styles.h3}>Estado</h3>
+                            <h4 className={styles.datos}>Activo</h4>
                         </div>
                         <div className={classNames(styles.dashboardModule, styles.dashboardModuleActividad)}>
-                            <h3>Actividad</h3>
+                            <h3 className={styles.h3}>Actividad</h3>
                         </div>
                     </div>
                 

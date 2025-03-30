@@ -17,7 +17,6 @@ function Header() {
                         <button className={styles.arrow}>Cerrar Sesion</button>
                     </Link>
                     <p className={styles.today}>{today}</p>
-                    <img src={logo} alt="Logo" className={styles.logo} />
                 </div>
             </nav>
         </div>
