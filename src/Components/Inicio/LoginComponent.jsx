@@ -11,26 +11,46 @@ function LoginComponent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+ 
 
     const Validacion = async () => {
 
+    
+
         try {
-            const response = await axios.get('http://localhost:3000/api/administrator/');
+            const response = await axios.post('http://localhost:3000/api/auth/login', {
+                email,
+                password
+            });
+            console.log('Datos obtenidos:', response.data);
+
+            const token = response.data.token;
+            console.log(token);
+
+            const response2 = await axios.get('http://localhost:3000/api/administrator/');
             console.log('Datos obtenidos:', response.data); 
 
-            const user = response.data.data.find(user => 
+            const user = response2.data.data.find(user => 
                 user.email.toLowerCase() === email.toLowerCase() && 
                 user.password === password
             );
 
-            if (user) {
-                console.log('Login Exitoso');
-                localStorage.setItem('adminId', user._id);
-                navigate('/HomeAdmin',{state:'/login'});
+            console.log(user.role);
 
-            } else {
-                console.log('Error de Login');
+            if(token != '' && user){
+                localStorage.setItem('token', token);
+                localStorage.setItem('adminId', user._id);
+                if(user.role === 'SuperAdmin'){
+                    navigate('/HomeSA');
+                }else if(user.role === 'EventAdmin'){
+                    navigate('/HomeAdmin');
+                }
+            }else{
+                console.log('NO SE PUDO')
             }
+
+
+
 
         } catch (error) {
             console.log('Error al hacer la petición:', error);

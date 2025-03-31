@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import styles from '../../assets/styles/stylesAdmin/Home.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../Components/HeaderAdminHC';
 import NavBar from '../Components/NavBar'; 
 import plus from '../../assets/img/Assets_admin/plus-regular-240.png';
@@ -17,8 +17,18 @@ function Events() {
     const fileInputRef = useRef(null);
     const mainImgRef = useRef(null); // Ref para la imagen principal
     const bannerImgsRef = useRef(null); // Ref para las imágenes del banner
+    const navigate = useNavigate();
+
 
     const id = localStorage.getItem('adminId');
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            console.log('No puedes entrar')
+            navigate("/login"); // Redirige al login si no hay token
+        }
+    }, []); 
 
     useEffect(() => {
         const fetchEvents = async () => {

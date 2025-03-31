@@ -31,7 +31,7 @@ function RecuperarContrasena() {
     try {
       // Enviar la solicitud POST con JSON en el cuerpo
       const response = await axios.post(
-        'http://localhost:3000/api/user/change-pass-mail',
+        'http://localhost:3000/api/user/change-pass',
         emailData,
         {
           headers: {
@@ -48,16 +48,15 @@ function RecuperarContrasena() {
 
   return (
     <div className={styles.body}>
-      <Header />
       <div className={styles.recover}>
-        <h2 className={styles.tittle}>Recuperar contraseña</h2>
+        <h2 className={styles.tittle}>Actualizar contraseña</h2>
         <div>
           <input
             ref={emailRef} // Asignar la referencia al input
             className={styles.box}
             name="email"
             type="email"
-            placeholder="Correo"
+            placeholder="Nueva contraseña"
           />
         </div>
         <div>
@@ -76,7 +75,7 @@ function RecuperarContrasena() {
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
-            <h2 className={styles.formT}>Correo enviado</h2>
+            <h2 className={styles.formT}>Contraseña actualizada</h2>
             <p className={styles.p}>Serás redirigido al login en 2 segundos...</p>
           </div>
         </div>

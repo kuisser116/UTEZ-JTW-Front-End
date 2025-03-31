@@ -1,0 +1,151 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import styles from '../../assets/styles/stylesSA/Home.module.css';
+import { Link, useNavigate } from 'react-router-dom';
+import Header from '../Components/HeaderAdminHC';
+import NavBar from '../Components/SNavBar'; 
+import TableAdmin from '../Components/TableAdmin';
+import plus from '../../assets/img/Assets_admin/plus-regular-240.png';
+import arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png';
+
+function Events() {
+    const [openModal, setOpenModal] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        lastname: '',
+        email: '',
+        password: '',  // Inicialmente vacío
+        role: 'SuperAdmin', // Valor predeterminado
+        cellphoneNumber: '',
+        company: ''
+    });
+
+    const navigate = useNavigate();
+
+    
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            console.log('No puedes entrar')
+            navigate("/login"); // Redirige al login si no hay token
+        }
+    }, []); 
+
+    // Este useEffect actualizará la contraseña con el correo cuando el email cambie
+    useEffect(() => {
+        if (formData.email) {
+            setFormData((prevData) => ({
+                ...prevData,
+                password: formData.email // Asigna el correo como contraseña por defecto
+            }));
+        }
+    }, [formData.email]); // Solo se ejecuta cuando el email cambia
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const enviarUsuario = async (event) => {
+        event.preventDefault();
+        try {
+            const responseUser = await axios.post('http://localhost:3000/api/auth/register', formData);
+            const response = await axios.post('http://localhost:3000/api/administrator/', formData);
+            console.log(response.data);
+            console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa',responseUser.data);
+            alert('Usuario agregado correctamente');
+            setOpenModal(false);
+        } catch (error) {
+            console.error('Error al agregar usuario', error);
+            alert('Hubo un error al agregar el usuario');
+        }
+    };
+
+    return (
+        <div>
+            <Header />
+            <NavBar /> 
+            <h2 className={styles.tittle}>Administradores</h2>
+            <div className={styles.search}>
+                <input className={styles.searchInput} type="text" placeholder="Buscar administrador" />
+            </div>
+            
+            <button onClick={() => setOpenModal(true)} className={styles.addEvent}>
+                Agregar usuario <img className={styles.plusadd} src={plus} alt="" />
+            </button>
+            
+            {openModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <img onClick={() => setOpenModal(false)} className={styles.arrowM} src={arrow} alt="" />
+                        <h2 className={styles.formT}>Agregar usuario</h2>
+                        <form onSubmit={enviarUsuario}>
+                            <input
+                                className={styles.input}
+                                name="name"
+                                type="text"
+                                placeholder="Nombre"
+                                value={formData.name}
+                                onChange={handleChange}
+                                required
+                            />
+                            <input
+                                className={styles.input}
+                                name="lastname"
+                                type="text"
+                                placeholder="Apellido"
+                                value={formData.lastname}
+                                onChange={handleChange}
+                                required
+                            />
+                            <input
+                                className={styles.input}
+                                name="email"
+                                type="email"
+                                placeholder="Correo"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                            />
+                            <select
+                                className={styles.inputS}
+                                name="role"
+                                value={formData.role}
+                                onChange={handleChange}
+                                required
+                            >
+                                <option value="SuperAdmin">SuperAdmin</option>
+                                <option value="EventAdmin">EventAdmin</option>
+                            </select>
+                            <input
+                                className={styles.input}
+                                name="cellphoneNumber"
+                                type="tel"
+                                placeholder="Número de celular"
+                                value={formData.cellphoneNumber}
+                                onChange={handleChange}
+                                required
+                            />
+                            <input
+                                className={styles.input}
+                                name="company"
+                                type="text"
+                                placeholder="Compañía"
+                                value={formData.company}
+                                onChange={handleChange}
+                                required
+                            />
+                           
+                            <button type="submit" className={styles.btn}>Guardar</button>
+                        </form>
+                    </div>
+                </div>
+            )}
+            
+            <div className={styles.eventsGrid}>
+                <TableAdmin />
+            </div>
+        </div>
+    );
+}
+
+export default Events;

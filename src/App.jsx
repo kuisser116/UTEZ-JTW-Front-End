@@ -9,6 +9,10 @@ import ListEvent from './Components/participante/ListEvent';
 import HomeAdmin from './Components/admis/Home';
 import ChecadoresAdmin from './Components/admis/Checadores';
 import RecoverPassword from './Components/Inicio/PasswordRecover';
+import Password from './Components/Inicio/2Password';
+import HomeSA from './Components/S_admins/Home';
+import Admins from './Components/S_admins/Checadores';
+import EventSA from './Components/S_admins/Events';
 
 function App() {
   return (
@@ -24,6 +28,10 @@ function App() {
         <Route path="/HomeAdmin" element={<HomeAdmin />} />
         <Route path="/Checadores" element={<ChecadoresAdmin />} />
         <Route path="/RecoverPassword" element={<RecoverPassword />} />
+        <Route path="/Password" element={<Password />} />
+        <Route path="/HomeSA" element={<HomeSA />} />
+        <Route path="/Admins" element={<Admins />} />
+        <Route path="/EventSA" element={<EventSA />} />
       </Routes>
     </Router>
   );
