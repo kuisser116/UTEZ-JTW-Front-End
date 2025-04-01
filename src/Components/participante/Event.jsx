@@ -96,7 +96,11 @@ function Eventpage() {
                     
                     {/* Botón para abrir el modal */}
                     <button onClick={() => setIsModalOpen(true)}>Registrarse</button>
-                    
+
+                    <Link to={'/List'} state={'/Event'}>
+                    <p style={{cursor: 'pointer', textDecoration: 'underline'}}>Ver talleres</p>
+                    </Link>
+
                     <p>{event.description}</p>
                     <p>{event.startDate}</p>
                 </div>

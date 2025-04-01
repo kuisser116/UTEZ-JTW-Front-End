@@ -3,7 +3,7 @@ import EventImg from '../../assets/img/assets_participante/wallpaperflare.com_wa
 import styles from '../../assets/styles/stylesUser/listEvent.module.css'
 import Header from '../Components/Header'
 import TableTalleres from '../Components/TableTalleres';
-import {Link, useNavigate} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
@@ -14,17 +14,6 @@ function ListEvent() {
     const [event, setEvent] = useState(null);
     const eventId = localStorage.getItem('idEvent');
     console.log(eventId)
-
-    const navigate = useNavigate();
-
-    
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            console.log('No puedes entrar')
-            navigate("/login"); // Redirige al login si no hay token
-        }
-    }, []);
 
     useEffect(() => {
  
@@ -53,7 +42,6 @@ function ListEvent() {
                 <img className={styles.img} src={`http://localhost:3000/api/event/image?filename=${event.mainImg}`} alt="" />
                 <div className={styles.eventPart}>
                     <h2>{event.name} </h2>
-                    <button className={styles.btnRdo}>Registrado</button>
                     <p>{event.description} </p>
                     <p className=''>{event.startDate} </p>
                 </div>

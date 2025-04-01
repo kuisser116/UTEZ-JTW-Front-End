@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from '../../assets/styles/stylesSA/eventos.module.css';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Header from '../Components/HeaderAdminHC';
 import NavBar from '../Components/SNavBar';
 
@@ -9,6 +9,17 @@ function Events() {
     const [events, setEvents] = useState([]);
     const location = useLocation();
     const [searchTerm, setSearchTerm] = useState("");
+
+    const navigate = useNavigate();
+
+    
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            console.log('No puedes entrar')
+            navigate("/login"); // Redirige al login si no hay token
+        }
+    }, []);
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -46,7 +57,7 @@ function Events() {
                             backgroundImage: `url(http://localhost:3000/api/event/image?filename=${event.mainImg})`,
                         }}
                         key={event._id} 
-                        to={`/ListEvent`} 
+                        to={`/List`} 
                         state={'/EventSA'}
                         onClick={() => localStorage.setItem('idEvent', event._id)}
                     >

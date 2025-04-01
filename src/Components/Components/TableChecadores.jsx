@@ -1,45 +1,59 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../../assets/styles/Components/TablaChecadores.module.css';
 import pen from '../../assets/img/Assets_admin/pencil-solid-240.png';
-import trash from '../../assets/img/Assets_admin/trash-regular-240.png';
+import axios from 'axios';
 
 function TableChecadores() {
-    // 📋 Estado de los checadores
-    const [checadores, setChecadores] = useState([
-        { id: 1, nombre: "Juan Pérez", correo: "juan@example.com", evento: "Conferencia Tech", estatus: "Activo" },
-        { id: 2, nombre: "María López", correo: "maria@example.com", evento: "Hackathon 2024", estatus: "Inactivo" },
-        { id: 3, nombre: "Carlos Ruiz", correo: "carlos@example.com", evento: "Taller de IA", estatus: "Activo" },
-        { id: 4, nombre: "Ana Torres", correo: "ana@example.com", evento: "Congreso de Software", estatus: "Pendiente" },
-        { id: 5, nombre: "Luis Gómez", correo: "luis@example.com", evento: "Expo Innovación", estatus: "Activo" }
-    ]);
+    const [supervisores, setSupervisores] = useState([]);
+    const [events, setEvents] = useState([]);
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const [selectedSupervisor, setSelectedSupervisor] = useState(null);
+    const [adminEvents, setAdminEvents] = useState([]);
 
-    // 📝 Estados para los modales
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [currentChecador, setCurrentChecador] = useState(null);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/supervisor/');
+                setSupervisores(response.data.data);
 
-    // 🖊 Abrir modal de edición con datos del checador seleccionado
-    const openEditModal = (checador) => {
-        setCurrentChecador(checador);
-        setIsEditModalOpen(true);
+                const responseEventos = await axios.get('http://localhost:3000/api/event/all-events');
+                const eventosMap = responseEventos.data.data.reduce((acc, evento) => {
+                    acc[evento._id] = evento.name;
+                    return acc;
+                }, {});
+                setEvents(eventosMap);
+
+                const adminId = localStorage.getItem('adminId');
+                if (adminId) {
+                    const responseAdminEvents = await axios.get(`http://localhost:3000/api/event/admin/${adminId}`);
+                    setAdminEvents(responseAdminEvents.data.data);
+                }
+            } catch (error) {
+                console.error('Error al obtener los datos:', error);
+            }
+        };
+        fetchData();
+    }, []);
+
+    const handleEditClick = (supervisor) => {
+        setSelectedSupervisor(supervisor);
+        setOpenEditModal(true);
     };
 
-    // 🗑 Abrir modal de eliminación
-    const openDeleteModal = (checador) => {
-        setCurrentChecador(checador);
-        setIsDeleteModalOpen(true);
-    };
-
-    // ✅ Guardar cambios en el checador editado
-    const handleEditSave = () => {
-        setChecadores(checadores.map(ch => ch.id === currentChecador.id ? currentChecador : ch));
-        setIsEditModalOpen(false);
-    };
-
-    // 🚮 Eliminar checador
-    const handleDelete = () => {
-        setChecadores(checadores.filter(ch => ch.id !== currentChecador.id));
-        setIsDeleteModalOpen(false);
+    const handleEditSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            await axios.put(`http://localhost:3000/api/supervisor/${selectedSupervisor._id}`, {
+                events: selectedSupervisor.events, // Asegúrate de actualizar los eventos correctamente
+                status: selectedSupervisor.status
+            });
+            setOpenEditModal(false);
+            console.log(selectedSupervisor.email)
+            location.reload();
+        } catch (error) {
+            console.error('Error al actualizar el supervisor:', error);
+            alert('Error al actualizar el supervisor');
+        }
     };
 
     return (
@@ -48,34 +62,30 @@ function TableChecadores() {
                 <div className={styles.tablaContainer}>
                     <table className={styles.tablaTalleres}>
                         <thead>
-                            <tr className={styles.encabezado}> 
+                            <tr className={styles.encabezado}>
                                 <th>Nombre del Checador</th>
                                 <th>Correo</th>
                                 <th>Evento Asignado</th>
-                                <th>Estatus</th>
+                                <th>Status</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {checadores.map(checador => (
-                                <tr key={checador.id}>
-                                    <td>{checador.nombre}</td>
-                                    <td>{checador.correo}</td>
-                                    <td>{checador.evento}</td>
-                                    <td>{checador.estatus}</td>
+                            {supervisores.map(supervisor => (
+                                <tr key={supervisor._id}>
+                                    <td>{supervisor.name}</td>
+                                    <td>{supervisor.email}</td>
+                                    <td>
+                                        {supervisor.events.map(eventoId => (
+                                            <span key={eventoId}>
+                                                {events[eventoId] || "Evento no encontrado"}
+                                                <br />
+                                            </span>
+                                        ))}
+                                    </td>
+                                    <td>{supervisor.status ? 'Activo' : 'Inactivo'}</td>
                                     <td className={styles.edit}>
-                                        <img 
-                                            className={styles.img} 
-                                            src={pen} 
-                                            alt="Editar" 
-                                            onClick={() => openEditModal(checador)} 
-                                        />
-                                        <img 
-                                            className={styles.img} 
-                                            src={trash} 
-                                            alt="Eliminar" 
-                                            onClick={() => openDeleteModal(checador)} 
-                                        />
+                                        <img className={styles.img} src={pen} alt="Editar" onClick={() => handleEditClick(supervisor)} />
                                     </td>
                                 </tr>
                             ))}
@@ -84,48 +94,34 @@ function TableChecadores() {
                 </div>
             </div>
 
-            {/* 📌 Modal de edición */}
-            {isEditModalOpen && currentChecador && (
+            {openEditModal && selectedSupervisor && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
-                        <h2>Editar Checador</h2>
-                        <input 
-                            type="text" 
-                            value={currentChecador.nombre} 
-                            onChange={(e) => setCurrentChecador({...currentChecador, nombre: e.target.value})} 
-                        />
-                        <input 
-                            type="email" 
-                            value={currentChecador.correo} 
-                            onChange={(e) => setCurrentChecador({...currentChecador, correo: e.target.value})} 
-                        />
-                        <input 
-                            type="text" 
-                            value={currentChecador.evento} 
-                            onChange={(e) => setCurrentChecador({...currentChecador, evento: e.target.value})} 
-                        />
-                        <select 
-                            value={currentChecador.estatus} 
-                            onChange={(e) => setCurrentChecador({...currentChecador, estatus: e.target.value})}
-                        >
-                            <option value="Activo">Activo</option>
-                            <option value="Inactivo">Inactivo</option>
-                            <option value="Pendiente">Pendiente</option>
-                        </select>
-                        <button onClick={handleEditSave}>Guardar</button>
-                        <button onClick={() => setIsEditModalOpen(false)}>Cerrar</button>
-                    </div>
-                </div>
-            )}
+                        <h2>Editar Supervisor</h2>
+                        <form onSubmit={handleEditSubmit}>
+                            <select 
+                                className={styles.inputS} 
+                                value={selectedSupervisor.events[0] || ''} 
+                                onChange={(e) => setSelectedSupervisor({ ...selectedSupervisor, events: [e.target.value] })} 
+                            >
+                                <option value="">Seleccionar evento</option>
+                                {adminEvents.map(event => (
+                                    <option key={event._id} value={event._id}>{event._id}</option>
+                                ))}
+                            </select>
 
-            {/* 📌 Modal de confirmación de eliminación */}
-            {isDeleteModalOpen && currentChecador && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent}>
-                        <h2>¿Eliminar Checador?</h2>
-                        <p>¿Estás seguro de que deseas eliminar a {currentChecador.nombre}?</p>
-                        <button onClick={handleDelete}>Sí, eliminar</button>
-                        <button onClick={() => setIsDeleteModalOpen(false)}>Cancelar</button>
+                            <select 
+                                className={styles.inputS} 
+                                value={selectedSupervisor.status} 
+                                onChange={(e) => setSelectedSupervisor({ ...selectedSupervisor, status: e.target.value === 'true' })}
+                            >
+                                <option value="true">Activo</option>
+                                <option value="false">Inactivo</option>
+                            </select>
+
+                            <button type="submit" className={styles.btn}>Guardar</button>
+                        </form>
+                        <button onClick={() => setOpenEditModal(false)}>Cerrar</button>
                     </div>
                 </div>
             )}

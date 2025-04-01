@@ -158,5 +158,17 @@ body {
   color: #252525;
 }
 
+.inputS{
+  width: 90%;
+  height: 5vh;
+  background-color: #25252500;
+  border-color: #252525;
+  border-width: 3px;
+  border-radius: 10px;
+  margin-bottom: 21px;
+  color: #252525;
+}
+
+
 
 

@@ -18,6 +18,8 @@ function Events() {
     const mainImgRef = useRef(null); // Ref para la imagen principal
     const bannerImgsRef = useRef(null); // Ref para las imágenes del banner
     const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState("");
+
 
 
     const id = localStorage.getItem('adminId');
@@ -69,53 +71,46 @@ function Events() {
 
     const enviarEvento = async (event) => {
         event.preventDefault();
-
-        // Convertir las fechas al formato requerido
+    
         const startDate = formatDate(event.target.startDate.value);
         const endDate = formatDate(event.target.endDate.value);
-
+    
         const formData = new FormData();
         formData.append('name', event.target.name.value);
         formData.append('description', event.target.description.value);
-        formData.append('startDate', startDate); // Usar fecha convertida
-        formData.append('endDate', endDate); // Usar fecha convertida
-
-        // Obtener la imagen principal (mainImg)
+        formData.append('startDate', startDate);
+        formData.append('endDate', endDate);
+    
         const mainImgFile = mainImgRef.current.files[0];
         if (mainImgFile) {
-            formData.append('mainImg', mainImgFile);
-            console.log("mainImg:", mainImgFile.name); // Verifica el nombre de la imagen principal
+            const renamedFile = new File(
+                [mainImgFile],
+                mainImgFile.name.replace(/\s+/g, "_"), // Reemplaza espacios por guiones bajos
+                { type: mainImgFile.type }
+            );
+            formData.append('mainImg', renamedFile);
+            console.log("mainImg renombrado:", renamedFile.name);
         }
-
-        // Obtener las imágenes del banner (bannerImgs)
+    
         const bannerImgsFiles = bannerImgsRef.current.files;
         for (let i = 0; i < bannerImgsFiles.length; i++) {
             formData.append('bannerImgs', bannerImgsFiles[i]);
-            console.log("bannerImgs añadido:", bannerImgsFiles[i].name); // Verifica los archivos de imágenes del banner
+            console.log("bannerImgs añadido:", bannerImgsFiles[i].name);
         }
-
-        // Verificar los datos antes de enviarlos
-        console.log("startDate:", startDate);
-        console.log("endDate:", endDate);
-        console.log("name:", event.target.name.value);
-        console.log("description:", event.target.description.value);
-        console.log(id);
-
+    
         try {
             const response = await axios.post(`http://localhost:3000/api/event/create/${id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+                headers: { 'Content-Type': 'multipart/form-data' },
             });
-
-            console.log("Respuesta del servidor:", response.data); // Verifica la respuesta del servidor
+    
+            console.log("Respuesta del servidor:", response.data);
             setOpenModal(false);
-            console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
             window.location.reload();
         } catch (error) {
             console.error('Error al enviar los datos:', error);
         }
     };
+    
 
     //Terminar descripcion con mas de 50 palabras
     const truncateText = (text, maxLength) => {
@@ -127,36 +122,50 @@ function Events() {
         e.target.showPicker();
     };
 
+        const filteredEvents = events.filter(event =>
+        event.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+
     return (
         <div>
             <Header />
             <NavBar />
             <h2 className={styles.tittle}>Eventos</h2>
             <div className={styles.search}>
-                <input className={styles.searchInput} type="text" placeholder="Buscar evento" />
+            <input 
+                className={styles.searchInput} 
+                type="text" 
+                placeholder="Buscar evento" 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)} 
+            />
             </div>            
             <button onClick={() => setOpenModal(true)} className={styles.addEvent}>
                 Agregar evento <img className={styles.plusadd} src={plus} alt="" />
             </button>
             <div className={styles.eventsGrid}>
-                {events.map(event => (
-                    <Link
-                        className={styles.eventCard}
-                        style={{
+                {filteredEvents.length > 0 ? (
+                filteredEvents.map(event => (
+                    <Link 
+                        className={styles.eventCard} 
+                        style={{ 
                             backgroundImage: `url(http://localhost:3000/api/event/image?filename=${event.mainImg})`,
                         }}
-                        key={event._id}
-                        to={'/EventWorkshop'}
+                        key={event._id} 
+                        to={`/EventWorkshop`} 
                         state={'/HomeAdmin'}
                         onClick={() => localStorage.setItem('idEvent', event._id)}
                     >
                         <div className={styles.eventInfo}>
                             <div className={styles.info}>
-                                <p className={styles.pt}>{event.name}</p>
+                                <p className={styles.p}>{event.name}</p>
                             </div>
                         </div>
                     </Link>
-                ))}
+                ))
+            ) : (
+                <p className={styles.noEvents}>No hay eventos disponibles</p>
+            )}
             </div>
 
             {openModal && (
@@ -185,7 +194,6 @@ function Events() {
                                 <p style={{color: 'white'}}>Imagen principal <br /> del evento</p>
                             </div>
 
-                            <p className={styles.advice}>El nombre del archivo no debe contener espacios</p>
 
                             {/* Input file oculto para la imagen principal */}
                             <input 

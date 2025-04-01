@@ -233,3 +233,151 @@ h3{
 
 
 
+/* Fondo difuminado cuando el modal está abierto */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+}
+
+/* Contenedor del modal */
+.modalContent {
+  background: white;
+  padding: 20px;
+  border-radius: 25px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  height: 80%;
+}
+
+.modalContent2 {
+  background: white;
+  padding: 20px;
+  border-radius: 25px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  height: 10%;
+}
+
+/* Estilo de los inputs y botones */
+.modalContent input {
+  width: 100%;
+  padding: 8px;
+  margin: 5px ;
+  border-radius: 10px;
+  font-size: 20px;
+  height: 45px;
+  margin-bottom: 10px;
+  border-width: 2px;
+  text-align: center;
+}
+
+.modalContent button {
+  margin: 20px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.Mbtn{
+  width: 25%;
+  font-size: 2vh;
+  border-color: #252525;
+  background-color: #25252500;
+  color: #252525;
+  border-style: solid;
+  border-width: 3px;
+  margin-top: 0;
+  
+}
+
+.formT{
+  color: #252525;
+  font-size: 4vh;
+  margin: auto;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+.fileImg{
+  position: absolute;
+  width: 30%;
+  height: 16%;
+  background-color: #25252577;
+  left: 35%;
+  top: 63%;
+  border-radius: 20px ;
+}
+
+.formDataMain{
+  position: absolute;
+  left: 35%;
+  top: 20%;
+  height: 30%;
+  width: 30%;
+  gap: 0px;
+  
+}
+
+
+
+.btns{
+  position: absolute;
+  top: 80%;
+  width: 40%;
+}
+
+.btns button{
+  height: 50px;
+  border-radius: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+  border-color: #2525258d;
+}
+
+.formDataMain label{
+  text-align: center;
+}
+
+.btnA{
+  background-color: #25252500;
+  width: 10px;
+  height: 45px;
+  font-size: 20px;
+  color:#252525;
+  border-color: #252525;
+  margin: 0;
+}
+
+.alertaImg{
+  margin: 10px;
+}
+
+.arrowM{
+  position: absolute;
+  width: 4vh;
+  left: 35%;
+  top: 11%;
+  cursor: pointer;
+}
+
+.advice{
+  color: #252525;
+  position: absolute;
+  left: 15%;
+  top: 80%;
+  font-size: 15px;
+}
+
+
+

@@ -17,7 +17,9 @@ function Events() {
             console.log('No puedes entrar')
             navigate("/login"); // Redirige al login si no hay token
         }
-    }, []); 
+    }, []);
+
+    console.log(localStorage.getItem('adminId'))
 
     return (
         <div>

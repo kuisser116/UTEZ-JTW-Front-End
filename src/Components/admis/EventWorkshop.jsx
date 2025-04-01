@@ -6,8 +6,9 @@ import styles from '../../assets/styles/stylesAdmin/WorkshopList.module.css'
 import plus from '../../assets/img/Assets_admin/plus-regular-240.png'
 import grafic from '../../assets/img/Assets_admin/grafico-de-barras.png'
 import config from '../../assets/img/Assets_admin/cog-solid-240.png'
-import { Link, useLocation} from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png'
+import { Link, useLocation, useNavigate} from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -22,7 +23,26 @@ function EventWorkshop() {
     console.log(location);
     const [event, setEvent] = useState(null);
     const eventId = localStorage.getItem('idEvent');
+    const adminId = localStorage.getItem('adminId');
     console.log(eventId)
+
+    const navigate = useNavigate();
+
+    const [openModal, setOpenModal] = useState(false);
+    const [previewImage, setPreviewImage] = useState(null);
+    const imgRef = useRef(null);
+
+    const verCalendario = (e) => {
+        e.target.showPicker();
+    };
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            console.log('No puedes entrar')
+            navigate("/login"); // Redirige al login si no hay token
+        }
+    }, []);
 
     useEffect(() => {
  
@@ -40,9 +60,79 @@ function EventWorkshop() {
 
     if (!event) return <p>Cargando evento...</p>;
 
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setPreviewImage(imageUrl);
+        }
+    };
 
+    function formatDate(dateString) {
+        if (!dateString) return null;
+        const [datePart, timePart] = dateString.split("T");
+        const [year, month, day] = datePart.split("-");
+        const [hours, minutes] = timePart.split(":");
+        
+        return `${day}/${month}/${year} ${hours}:${minutes}:00`;
+    }
+    
 
-
+    const crearTaller = async (e) => {
+        e.preventDefault();
+        const eventId = localStorage.getItem('idEvent');
+    
+        const formData = new FormData();
+        formData.append('name', e.target.name.value);
+        formData.append('description', e.target.description.value);
+        
+        if (!e.target.startDate.value || !e.target.endDate.value) {
+            console.error('Las fechas son requeridas');
+            return;
+        }
+    
+        const startDate = formatDate(e.target.startDate.value);
+        const endDate = formatDate(e.target.endDate.value);
+    
+        formData.append('startDate', startDate);
+        console.log(startDate)
+        formData.append('endDate', endDate);
+        console.log(endDate)
+        formData.append('limitQuota', e.target.limitQuota.value);
+        formData.append('instructor', e.target.instructor.value);
+        formData.append('event', eventId);
+    
+        const imgFile = imgRef.current.files[0];
+        if (imgFile) {
+            formData.append('img', imgFile);
+        }
+    
+        try {
+            const response = await axios.post(
+                `http://localhost:3000/api/workshop/create/${adminId}`, 
+                {
+                    name: e.target.name.value,
+                    description: e.target.description.value,
+                    startDate: startDate,
+                    endDate: endDate,
+                    limitQuota: e.target.limitQuota.value,
+                    instructor: e.target.instructor.value,
+                    event: eventId,
+                    img: imgFile
+                },
+                {
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            );
+            
+            console.log('Taller creado:', response.data);
+            setOpenModal(false);
+            window.location.reload();
+        } catch (error) {
+            console.error('Error al crear el taller:', error);
+        }
+    };
+    
 
     return (
         <div>
@@ -93,12 +183,109 @@ function EventWorkshop() {
 
 
             <div className={styles.table}>
-                <button className={styles.addTaller}>Agregar taller <img className={styles.plusadd} src={plus} alt="" /></button>
-                <Link to='/Dashboard' state={'/EventWorkshop'}><img className={styles.graficView} src={grafic} alt="" /></Link>
+                <button 
+                    className={styles.addTaller} 
+                    onClick={() => setOpenModal(true)}
+                >
+                    Agregar taller <img className={styles.plusadd} src={plus} alt="" />
+                </button>
+                <Link to='/Dashboard' state={'/EventWorkshop'}>
+                    <img className={styles.graficView} src={grafic} alt="" />
+                </Link>
                 <img className={styles.configView} src={config} alt="" />
                 <TableTalleres/>
             </div>
-            
+
+            {openModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <img 
+                            onClick={() => setOpenModal(false)} 
+                            className={styles.arrowM} 
+                            src={arrow} 
+                            alt="" 
+                        />
+                        <h2 className={styles.formT}>Agregar Taller</h2>
+                        <form onSubmit={crearTaller}>
+                            <div 
+                                className={styles.fileImg} 
+                                onClick={() => imgRef.current.click()}
+                                style={{
+                                    backgroundImage: previewImage ? `url(${previewImage})` : 'none',
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                    textAlign: 'center'
+                                }}
+                            >
+                                <p style={{color: 'white'}}>
+                                    {previewImage ? 'Imagen del taller' : 'Imagen del taller'}
+                                </p>
+                            </div>
+
+                            <input 
+                                type="file" 
+                                name="img" 
+                                ref={imgRef}
+                                onChange={handleFileChange} 
+                                style={{ display: 'none' }} 
+                            />
+                            
+                            <div className={styles.formDataMain}>
+                                <label style={{color: 'black'}} htmlFor="startDate">Fecha de inicio</label> <br />
+                                <input 
+                                    type="datetime-local" 
+                                    name="startDate" 
+                                    placeholder='Fecha de inicio' 
+                                    required
+                                    onFocus={verCalendario}
+                                /> <br />
+                                <label style={{color: 'black'}} htmlFor="endDate">Fecha de fin</label> <br />
+                                <input 
+                                    type="datetime-local" 
+                                    name="endDate" 
+                                    placeholder='Fecha de fin'
+                                    required
+                                    onFocus={verCalendario}
+                                />
+                                <input 
+                                    type="text" 
+                                    name='name' 
+                                    placeholder='Nombre del taller' 
+                                    required
+                                />
+                                <input 
+                                    type="text" 
+                                    name='description' 
+                                    placeholder='Descripción del taller' 
+                                    required
+                                />
+                                <input 
+                                    type="number" 
+                                    name='limitQuota' 
+                                    placeholder='Cupo límite' 
+                                    required
+                                />
+                                <input 
+                                    type="text" 
+                                    name='instructor' 
+                                    placeholder='Nombre del instructor' 
+                                    required
+                                />
+                            </div>
+
+                            <div className={styles.btns}>
+                                <button type="submit" className={styles.Mbtn}>Confirmar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

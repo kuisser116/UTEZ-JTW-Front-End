@@ -5,7 +5,7 @@ import { useState } from 'react';
 function NavBar() {
     const location = useLocation(); 
     const [isMenuOpen, setIsModalOpen] = useState(false);
-
+    
     return (
         <nav className={styles.navbar}>
             <ul className={styles.navList}>
@@ -26,7 +26,6 @@ function NavBar() {
                     </Link>
                 </li>
             </ul>
-
         </nav>
     );
 }
