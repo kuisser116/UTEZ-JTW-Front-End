@@ -23,9 +23,10 @@ function Events() {
 
 
     const id = localStorage.getItem('adminId');
+    const token = localStorage.getItem("token");
+
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
         if (!token) {
             console.log('No puedes entrar')
             navigate("/login"); // Redirige al login si no hay token
@@ -35,7 +36,11 @@ function Events() {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/event/admin/${id}`);
+                const response = await axios.get(`http://localhost:3000/api/event/admin/${id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 setEvents(response.data.data);
                 console.log(response.data.data)
             } catch (error) {
@@ -100,9 +105,11 @@ function Events() {
     
         try {
             const response = await axios.post(`http://localhost:3000/api/event/create/${id}`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
             });
-    
             console.log("Respuesta del servidor:", response.data);
             setOpenModal(false);
             window.location.reload();

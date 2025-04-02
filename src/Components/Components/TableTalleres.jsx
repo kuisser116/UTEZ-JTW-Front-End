@@ -21,6 +21,7 @@ function TableTalleres() {
                 const talleresDelEvento = response.data.data.filter(
                     taller => taller.event === eventId
                 );
+                
                 setTalleres(talleresDelEvento);
             } catch (error) {
                 console.error('Error fetching workshops:', error);

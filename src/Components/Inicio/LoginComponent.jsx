@@ -28,12 +28,14 @@ function LoginComponent() {
             console.log(token);
 
             const response2 = await axios.get('http://localhost:3000/api/administrator/');
-            console.log('Datos obtenidos:', response.data); 
 
-            const user = response2.data.data.find(user => 
-                user.email.toLowerCase() === email.toLowerCase() && 
-                user.password === password
-            );
+
+            console.log('Datos obtenidos:', response2.data.data); 
+
+        // Buscar usuario solo por email, ya no comparar contraseñas
+        const user = response2.data.data.find(user => 
+            user.email.toLowerCase() === email.toLowerCase()
+        );
 
             console.log(user.role);
 

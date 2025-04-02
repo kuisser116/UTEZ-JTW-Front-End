@@ -15,6 +15,7 @@ function TableAdministradores() {
         role: 'EventAdmin', // Valor por defecto
         cellphoneNumber: ''
     });
+    const token = localStorage.getItem("token");
 
     useEffect(() => {
         const fetchAdministradores = async () => {
@@ -60,13 +61,18 @@ function TableAdministradores() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:3000/api/administrator/${selectedAdmin._id}`, formData);
+            await axios.put(`http://localhost:3000/api/administrator/${selectedAdmin._id}`, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
             setAdministradores((prevState) =>
                 prevState.map((admin) =>
                     admin._id === selectedAdmin._id ? { ...admin, ...formData } : admin
                 )
             );
             handleCloseModal();
+            window.location.reload();
         } catch (error) {
             console.error('Error al actualizar el administrador:', error);
         }

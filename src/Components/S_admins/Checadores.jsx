@@ -21,10 +21,11 @@ function Events() {
     });
 
     const navigate = useNavigate();
+    const token = localStorage.getItem("token");
+
 
     
     useEffect(() => {
-        const token = localStorage.getItem("token");
         if (!token) {
             console.log('No puedes entrar')
             navigate("/login"); // Redirige al login si no hay token
@@ -49,8 +50,8 @@ function Events() {
         event.preventDefault();
         try {
             const responseUser = await axios.post('http://localhost:3000/api/auth/register', formData);
-            const response = await axios.post('http://localhost:3000/api/administrator/', formData);
-            console.log(response.data);
+
+            console.log(responseUser.data);
             console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa',responseUser.data);
             alert('Usuario agregado correctamente');
             setOpenModal(false);

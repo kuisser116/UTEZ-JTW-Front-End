@@ -53,11 +53,19 @@ function Dashboard() {
         const fetchData = async () => {
             try {
                 // Fetch event details
-                const eventResponse = await axios.get(`http://localhost:3000/api/event/${eventId}`);
+                const eventResponse = await axios.get(`http://localhost:3000/api/event/${eventId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 setEvent(eventResponse.data.data);
 
                 // Fetch supervisors (checadores)
-                const supervisorsResponse = await axios.get('http://localhost:3000/api/supervisor/');
+                const supervisorsResponse = await axios.get('http://localhost:3000/api/supervisor/', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 const eventSupervisors = supervisorsResponse.data.data.filter(
                     supervisor => supervisor.events.includes(eventId)
                 );

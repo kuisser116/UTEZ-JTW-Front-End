@@ -16,10 +16,9 @@ function ListEvent() {
     console.log(eventId)
 
     const navigate = useNavigate();
-
+    const token = localStorage.getItem("token");
     
     useEffect(() => {
-        const token = localStorage.getItem("token");
         if (!token) {
             console.log('No puedes entrar')
             navigate("/login"); // Redirige al login si no hay token
@@ -30,7 +29,11 @@ function ListEvent() {
  
         const fetchEventDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/event/${eventId}`);
+                const response = await axios.get(`http://localhost:3000/api/event/${eventId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 setEvent(response.data.data);
                 console.log(response.data.data)
             } catch (error) {

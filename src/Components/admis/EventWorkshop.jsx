@@ -36,8 +36,10 @@ function EventWorkshop() {
         e.target.showPicker();
     };
 
+    const token = localStorage.getItem("token");
+
+
     useEffect(() => {
-        const token = localStorage.getItem("token");
         if (!token) {
             console.log('No puedes entrar')
             navigate("/login"); // Redirige al login si no hay token
@@ -119,11 +121,11 @@ function EventWorkshop() {
                     instructor: e.target.instructor.value,
                     event: eventId,
                     img: imgFile
-                },
-                {
-                    headers: { 'Content-Type': 'application/json' }
-                }
-            );
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
             
             console.log('Taller creado:', response.data);
             setOpenModal(false);

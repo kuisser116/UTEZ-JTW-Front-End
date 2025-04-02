@@ -9,11 +9,17 @@ function TableChecadores() {
     const [openEditModal, setOpenEditModal] = useState(false);
     const [selectedSupervisor, setSelectedSupervisor] = useState(null);
     const [adminEvents, setAdminEvents] = useState([]);
+    const token = localStorage.getItem("token");
 
+    console.log(token)
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/supervisor/');
+                const response = await axios.get('http://localhost:3000/api/supervisor/', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 setSupervisores(response.data.data);
 
                 const responseEventos = await axios.get('http://localhost:3000/api/event/all-events');
@@ -46,6 +52,10 @@ function TableChecadores() {
             await axios.put(`http://localhost:3000/api/supervisor/${selectedSupervisor._id}`, {
                 events: selectedSupervisor.events, // Asegúrate de actualizar los eventos correctamente
                 status: selectedSupervisor.status
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
             setOpenEditModal(false);
             console.log(selectedSupervisor.email)
@@ -97,7 +107,7 @@ function TableChecadores() {
             {openEditModal && selectedSupervisor && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
-                        <h2>Editar Supervisor</h2>
+                        <h2>Editar Checador</h2>
                         <form onSubmit={handleEditSubmit}>
                             <select 
                                 className={styles.inputS} 
