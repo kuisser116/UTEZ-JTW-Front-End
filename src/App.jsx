@@ -13,7 +13,8 @@ import Password from './Components/Inicio/2Password';
 import HomeSA from './Components/S_admins/Home';
 import Admins from './Components/S_admins/Checadores';
 import EventSA from './Components/S_admins/Events';
-import List from './Components/participante/List'
+import List from './Components/participante/List';
+import Recover from './Components/Inicio/Recover';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="/Admins" element={<Admins />} />
         <Route path="/EventSA" element={<EventSA />} />
         <Route path="/List" element={<List />} />
+        <Route path="/Recover" element={<Recover />} />
       </Routes>
     </Router>
   );

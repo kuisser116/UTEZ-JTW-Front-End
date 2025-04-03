@@ -51,15 +51,9 @@ function Events() {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            const response = await axios.post('http://localhost:3000/api/administrator/', formData, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            console.log(response.data);
             console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa',responseUser.data);
-            alert('Usuario agregado correctamente');
             setOpenModal(false);
+            window.location.reload();
         } catch (error) {
             console.error('Error al agregar usuario', error);
             alert('Hubo un error al agregar el usuario');

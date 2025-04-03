@@ -8,14 +8,12 @@ function RecuperarContrasena() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const emailRef = useRef(null); // Crear la referencia para el input de correo
   const navigate = useNavigate();
-  const token = localStorage.getItem('token')
-  console.log(token)
 
   // ⏳ Cuando el modal se abre, espera 2 segundos y redirige al login
   useEffect(() => {
     if (isModalOpen) {
       const timer = setTimeout(() => {
-        navigate('/Recover'); // Redirige al login
+        navigate('/login'); // Redirige al login
       }, 2000);
 
       return () => clearTimeout(timer); // Limpia el timeout si el componente se desmonta
@@ -33,13 +31,14 @@ function RecuperarContrasena() {
     try {
       // Enviar la solicitud POST con JSON en el cuerpo
       const response = await axios.post(
-        'http://localhost:3000/api/user/validate-code',
+        'http://localhost:3000/api/user/change-pass',
         emailData, {
           headers: {
               'Authorization': `Bearer ${token}`
           }
       });
 
+      navigate('/recover')
 
       console.log(response.data);
     } catch (error) {
@@ -50,14 +49,14 @@ function RecuperarContrasena() {
   return (
     <div className={styles.body}>
       <div className={styles.recover}>
-        <h2 className={styles.tittle} style={{fontSize: '50px'}}>Ingresa el codigo de verificacion</h2>
+        <h2 className={styles.tittle} style={{fontSize: '50px'}}>Ingresa la nueva contraseña</h2>
         <div>
           <input
             ref={emailRef} // Asignar la referencia al input
             className={styles.box}
             name="email"
             type="email"
-            placeholder="Codigo de verificacion"
+            placeholder="Nueva contraseña"
           />
         </div>
         <div>
@@ -76,8 +75,8 @@ function RecuperarContrasena() {
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
-            <h2 className={styles.formT}>Validando codigo</h2>
-            <p className={styles.p}>Serás redirigido en 2 segundos...</p>
+            <h2 className={styles.formT}>Contraseña actualizada</h2>
+            <p className={styles.p}>Serás redirigido al login en 2 segundos...</p>
           </div>
         </div>
       )}

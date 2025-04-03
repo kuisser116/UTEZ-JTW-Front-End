@@ -25,12 +25,17 @@ function EventWorkshop() {
     const eventId = localStorage.getItem('idEvent');
     const adminId = localStorage.getItem('adminId');
     console.log(eventId)
-
+    console.log(adminId)
     const navigate = useNavigate();
 
     const [openModal, setOpenModal] = useState(false);
     const [previewImage, setPreviewImage] = useState(null);
     const imgRef = useRef(null);
+
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const [previewEditImage, setPreviewEditImage] = useState(null);
+    const editMainImgRef = useRef(null);
+    const editBannerImgsRef = useRef(null);
 
     const verCalendario = (e) => {
         e.target.showPicker();
@@ -67,6 +72,14 @@ function EventWorkshop() {
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setPreviewImage(imageUrl);
+        }
+    };
+
+    const handleEditFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setPreviewEditImage(imageUrl);
         }
     };
 
@@ -111,7 +124,7 @@ function EventWorkshop() {
     
         try {
             const response = await axios.post(
-                `http://localhost:3000/api/workshop/create/${adminId}`, 
+                `http://localhost:3000/api/workshop/create`, 
                 {
                     name: e.target.name.value,
                     description: e.target.description.value,
@@ -123,7 +136,8 @@ function EventWorkshop() {
                     img: imgFile
                 }, {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
                     }
                 });
             
@@ -135,6 +149,61 @@ function EventWorkshop() {
         }
     };
     
+    const actualizarEvento = async (e) => {
+        e.preventDefault();
+        const eventId = localStorage.getItem('idEvent');
+    
+        const formData = new FormData();
+        
+        if (e.target.name.value) formData.append('name', e.target.name.value);
+        if (e.target.description.value) formData.append('description', e.target.description.value);
+        
+        if (e.target.startDate.value) {
+            const startDate = formatDate(e.target.startDate.value);
+            formData.append('startDate', startDate);
+        }
+        
+        if (e.target.endDate.value) {
+            const endDate = formatDate(e.target.endDate.value);
+            formData.append('endDate', endDate);
+        }
+    
+        const mainImgFile = editMainImgRef.current.files[0];
+        if (mainImgFile) {
+            // Create a new file with the modified name (spaces replaced with underscores)
+            const modifiedFile = new File(
+                [mainImgFile],
+                mainImgFile.name.replace(/\s+/g, "_"),
+                { type: mainImgFile.type }
+            );
+            formData.append('mainImg', modifiedFile);
+        }
+    
+        const bannerImgsFiles = editBannerImgsRef.current.files;
+        if (bannerImgsFiles.length > 0) {
+            for (let i = 0; i < bannerImgsFiles.length; i++) {
+                formData.append('bannerImgs', bannerImgsFiles[i]);
+            }
+        }
+    
+        try {
+            const response = await axios.put(
+                `http://localhost:3000/api/event/update/${eventId}`,
+                formData,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            );
+            console.log('Evento actualizado:', response.data);
+            setOpenEditModal(false);
+            window.location.reload();
+        } catch (error) {
+            console.error('Error al actualizar el evento:', error);
+        }
+    };
 
     return (
         <div>
@@ -194,7 +263,12 @@ function EventWorkshop() {
                 <Link to='/Dashboard' state={'/EventWorkshop'}>
                     <img className={styles.graficView} src={grafic} alt="" />
                 </Link>
-                <img className={styles.configView} src={config} alt="" />
+                <img 
+                    className={styles.configView} 
+                    src={config} 
+                    alt="" 
+                    onClick={() => setOpenEditModal(true)}
+                />
                 <TableTalleres/>
             </div>
 
@@ -283,6 +357,89 @@ function EventWorkshop() {
 
                             <div className={styles.btns}>
                                 <button type="submit" className={styles.Mbtn}>Confirmar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {openEditModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContent}>
+                        <img 
+                            onClick={() => setOpenEditModal(false)} 
+                            className={styles.arrowM} 
+                            src={arrow} 
+                            alt="" 
+                        />
+                        <h2 className={styles.formT}>Editar evento</h2>
+                        <form onSubmit={actualizarEvento}>
+                            <div 
+                                className={styles.fileImg} 
+                                onClick={() => editMainImgRef.current.click()}
+                                style={{
+                                    backgroundImage: previewEditImage ? 
+                                        `url(${previewEditImage})` : 
+                                        `url(http://localhost:3000/api/event/image?filename=${event.mainImg})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    color: 'white',
+                                    fontWeight: 'bold',
+                                    textAlign: 'center'
+                                }}
+                            >
+                                <p style={{color: 'white'}}>Imagen principal del evento</p>
+                            </div>
+
+                            <input 
+                                type="file" 
+                                name="mainImg" 
+                                ref={editMainImgRef}
+                                onChange={handleEditFileChange}
+                                style={{ display: 'none' }} 
+                            />
+                            
+                            <div className={styles.formDataMain}>
+                                <input 
+                                    type="datetime-local" 
+                                    name="startDate" 
+                                    placeholder='Fecha de inicio'
+                                    onFocus={verCalendario}
+                                />
+                                <input 
+                                    type="datetime-local" 
+                                    name="endDate" 
+                                    onFocus={verCalendario}
+                                />
+                                <input 
+                                    type="text" 
+                                    name='name' 
+                                    placeholder='Nombre del evento'
+                                    defaultValue={event.name}
+                                />
+                                <input 
+                                    type="text" 
+                                    name='description' 
+                                    placeholder='Descripción del evento'
+                                    defaultValue={event.description}
+                                />
+                                
+                                <input 
+                                    type="file" 
+                                    name="bannerImgs" 
+                                    multiple 
+                                    ref={editBannerImgsRef}
+                                />
+                                <br />
+                                <small style={{color: '#252525'}}>Agrega al menos 3 imágenes</small>
+                            </div>
+
+                            <div className={styles.btns}>
+                                <button type="submit" className={styles.Mbtn}>Actualizar</button>
                             </div>
                         </form>
                     </div>

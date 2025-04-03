@@ -3,8 +3,9 @@
     position: absolute;
     top: 20%;
     left: 5%;
-    width: 95%;
-    background-color: #27272700;
+    width: 90%;
+    background-color: #f4f2ee;
+    border-radius: 10px;
 }
 
 .navList {

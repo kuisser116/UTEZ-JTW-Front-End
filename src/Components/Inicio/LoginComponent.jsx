@@ -14,50 +14,40 @@ function LoginComponent() {
  
 
     const Validacion = async () => {
-
-    
-
         try {
             const response = await axios.post('http://localhost:3000/api/auth/login', {
                 email,
                 password
             });
+    
             console.log('Datos obtenidos:', response.data);
-
+    
             const token = response.data.token;
-            console.log(token);
-
-            const response2 = await axios.get('http://localhost:3000/api/administrator/');
-
-
-            console.log('Datos obtenidos:', response2.data.data); 
-
-        // Buscar usuario solo por email, ya no comparar contraseñas
-        const user = response2.data.data.find(user => 
-            user.email.toLowerCase() === email.toLowerCase()
-        );
-
-            console.log(user.role);
-
-            if(token != '' && user){
-                localStorage.setItem('token', token);
-                localStorage.setItem('adminId', user._id);
-                if(user.role === 'SuperAdmin'){
-                    navigate('/HomeSA');
-                }else if(user.role === 'EventAdmin'){
-                    navigate('/HomeAdmin');
-                }
-            }else{
-                console.log('NO SE PUDO')
+            const user = response.data.user;
+    
+            if (!token || !user) {
+                console.log('Error: Usuario o token no válidos');
+                return;
             }
-
-
-
-
+    
+            // Guardar en localStorage
+            localStorage.setItem('token', token);
+            localStorage.setItem('adminId', user._id);
+    
+            // Redireccionar según el rol
+            if (user.role === 'SuperAdmin') {
+                navigate('/HomeSA');
+            } else if (user.role === 'EventAdmin') {
+                navigate('/HomeAdmin');
+            } else {
+                console.log('Rol no reconocido');
+            }
+    
         } catch (error) {
             console.log('Error al hacer la petición:', error);
         }
     };
+    
 
     return (
         <div className={styles.body}>

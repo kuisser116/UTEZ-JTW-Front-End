@@ -13,7 +13,7 @@ function RecuperarContrasena() {
   useEffect(() => {
     if (isModalOpen) {
       const timer = setTimeout(() => {
-        navigate('/login'); // Redirige al login
+        navigate('/Password'); // Redirige al login
       }, 2000);
 
       return () => clearTimeout(timer); // Limpia el timeout si el componente se desmonta
@@ -77,7 +77,7 @@ function RecuperarContrasena() {
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
             <h2 className={styles.formT}>Correo enviado</h2>
-            <p className={styles.p}>Serás redirigido al login en 2 segundos...</p>
+            <p className={styles.p}>Serás redirigido en 2 segundos...</p>
           </div>
         </div>
       )}

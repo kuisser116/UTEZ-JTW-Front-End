@@ -17,10 +17,11 @@ function Dashboard() {
     console.log(location);
 
     const navigate = useNavigate();
+    const token = localStorage.getItem("token");
+
 
     
     useEffect(() => {
-        const token = localStorage.getItem("token");
         if (!token) {
             console.log('No puedes entrar')
             navigate("/login"); // Redirige al login si no hay token
@@ -73,7 +74,11 @@ function Dashboard() {
                 console.log('Checadores',eventSupervisors.length);
 
                 // Fetch participants
-                const participantsResponse = await axios.get(`http://localhost:3000/api/event/participants/${eventId}`);
+                const participantsResponse = await axios.get(`http://localhost:3000/api/event/participants/${eventId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
 
                 // Fetch workshops
                 const workshopsResponse = await axios.get('http://localhost:3000/api/workshop/all-workshops');

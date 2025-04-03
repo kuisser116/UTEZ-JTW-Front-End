@@ -17,7 +17,6 @@ function JumpToWorkPage() {
             <div className={styles.nav}>
             <ul className={styles.navLinks}>
             <Link to={'/Events'} state={'/'}><li><a href="#eventos">Eventos</a></li> </Link>
-            <Link> </Link><li><a href="#soporte">Soporte</a></li>
             <Link to={'/login'} state={'/'}><button  className={styles.logoututton}>Iniciar Sesion</button></Link>
 
             </ul>

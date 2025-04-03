@@ -5,23 +5,25 @@ import axios from 'axios';
 
 function TableChecadores() {
     const [supervisores, setSupervisores] = useState([]);
-    const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState({});
     const [openEditModal, setOpenEditModal] = useState(false);
     const [selectedSupervisor, setSelectedSupervisor] = useState(null);
     const [adminEvents, setAdminEvents] = useState([]);
+    
     const token = localStorage.getItem("token");
+    const adminId = localStorage.getItem("adminId");
 
-    console.log(token)
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/supervisor/', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
+                // Obtener todos los supervisores
+                const responseSupervisores = await axios.get('http://localhost:3000/api/supervisor/', {
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
-                setSupervisores(response.data.data);
 
+                console.log(responseSupervisores.data)
+
+                // Obtener eventos de la base de datos
                 const responseEventos = await axios.get('http://localhost:3000/api/event/all-events');
                 const eventosMap = responseEventos.data.data.reduce((acc, evento) => {
                     acc[evento._id] = evento.name;
@@ -29,15 +31,27 @@ function TableChecadores() {
                 }, {});
                 setEvents(eventosMap);
 
-                const adminId = localStorage.getItem('adminId');
+                // Obtener eventos asignados al administrador actual
                 if (adminId) {
-                    const responseAdminEvents = await axios.get(`http://localhost:3000/api/event/admin/${adminId}`);
-                    setAdminEvents(responseAdminEvents.data.data);
+                    const responseAdminEvents = await axios.get(`http://localhost:3000/api/event/admin`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    const eventosDelAdmin = responseAdminEvents.data.data.map(evento => evento._id);
+                    setAdminEvents(eventosDelAdmin);
+
+                    // Filtrar supervisores que están asignados a los eventos del admin
+                    const supervisoresFiltrados = responseSupervisores.data.data.filter(supervisor =>
+                        supervisor.events.some(eventoId => eventosDelAdmin.includes(eventoId))
+                    );
+
+                    setSupervisores(supervisoresFiltrados);
                 }
             } catch (error) {
                 console.error('Error al obtener los datos:', error);
             }
         };
+
         fetchData();
     }, []);
 
@@ -50,15 +64,12 @@ function TableChecadores() {
         event.preventDefault();
         try {
             await axios.put(`http://localhost:3000/api/supervisor/${selectedSupervisor._id}`, {
-                events: selectedSupervisor.events, // Asegúrate de actualizar los eventos correctamente
+                events: selectedSupervisor.events, 
                 status: selectedSupervisor.status
             }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                headers: { 'Authorization': `Bearer ${token}` }
             });
             setOpenEditModal(false);
-            console.log(selectedSupervisor.email)
             location.reload();
         } catch (error) {
             console.error('Error al actualizar el supervisor:', error);
@@ -81,24 +92,30 @@ function TableChecadores() {
                             </tr>
                         </thead>
                         <tbody>
-                            {supervisores.map(supervisor => (
-                                <tr key={supervisor._id}>
-                                    <td>{supervisor.name}</td>
-                                    <td>{supervisor.email}</td>
-                                    <td>
-                                        {supervisor.events.map(eventoId => (
-                                            <span key={eventoId}>
-                                                {events[eventoId] || "Evento no encontrado"}
-                                                <br />
-                                            </span>
-                                        ))}
-                                    </td>
-                                    <td>{supervisor.status ? 'Activo' : 'Inactivo'}</td>
-                                    <td className={styles.edit}>
-                                        <img className={styles.img} src={pen} alt="Editar" onClick={() => handleEditClick(supervisor)} />
-                                    </td>
+                            {supervisores.length > 0 ? (
+                                supervisores.map(supervisor => (
+                                    <tr key={supervisor._id}>
+                                        <td>{supervisor.name}</td>
+                                        <td>{supervisor.email}</td>
+                                        <td>
+                                            {supervisor.events.map(eventoId => (
+                                                <span key={eventoId}>
+                                                    {events[eventoId] || "Evento no encontrado"}
+                                                    <br />
+                                                </span>
+                                            ))}
+                                        </td>
+                                        <td>{supervisor.status ? 'Activo' : 'Inactivo'}</td>
+                                        <td className={styles.edit}>
+                                            <img className={styles.img} src={pen} alt="Editar" onClick={() => handleEditClick(supervisor)} />
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="5">No hay checadores asignados a los eventos del administrador.</td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>
@@ -115,8 +132,8 @@ function TableChecadores() {
                                 onChange={(e) => setSelectedSupervisor({ ...selectedSupervisor, events: [e.target.value] })} 
                             >
                                 <option value="">Seleccionar evento</option>
-                                {adminEvents.map(event => (
-                                    <option key={event._id} value={event._id}>{event._id}</option>
+                                {adminEvents.map(eventId => (
+                                    <option key={eventId} value={eventId}>{events[eventId] || "Evento no encontrado"}</option>
                                 ))}
                             </select>
 
@@ -130,8 +147,8 @@ function TableChecadores() {
                             </select>
 
                             <button type="submit" className={styles.btn}>Guardar</button>
+                            <button onClick={() => setOpenEditModal(false)}>Cerrar</button>
                         </form>
-                        <button onClick={() => setOpenEditModal(false)}>Cerrar</button>
                     </div>
                 </div>
             )}

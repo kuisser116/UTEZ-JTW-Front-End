@@ -23,7 +23,9 @@ function Events() {
 
 
     const id = localStorage.getItem('adminId');
+    console.log(id)
     const token = localStorage.getItem("token");
+    console.log(token)
 
 
     useEffect(() => {
@@ -36,7 +38,7 @@ function Events() {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/event/admin/${id}`, {
+                const response = await axios.get(`http://localhost:3000/api/event/admin`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -90,21 +92,28 @@ function Events() {
         if (mainImgFile) {
             const renamedFile = new File(
                 [mainImgFile],
-                mainImgFile.name.replace(/\s+/g, "_"), // Reemplaza espacios por guiones bajos
+                mainImgFile.name.replace(/\s+/g, "_"),
                 { type: mainImgFile.type }
             );
             formData.append('mainImg', renamedFile);
-            console.log("mainImg renombrado:", renamedFile.name);
         }
     
         const bannerImgsFiles = bannerImgsRef.current.files;
+        if (bannerImgsFiles.length < 3) {
+            alert('Debes agregar al menos 3 imágenes para el banner');
+            return;
+        }
         for (let i = 0; i < bannerImgsFiles.length; i++) {
             formData.append('bannerImgs', bannerImgsFiles[i]);
-            console.log("bannerImgs añadido:", bannerImgsFiles[i].name);
         }
     
         try {
-            const response = await axios.post(`http://localhost:3000/api/event/create/${id}`, formData, {
+            if (!event.target.name.value || !event.target.description.value) {
+                alert('El nombre y la descripción son campos obligatorios');
+                return;
+            }
+    
+            const response = await axios.post(`http://localhost:3000/api/event/create`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
@@ -115,6 +124,11 @@ function Events() {
             window.location.reload();
         } catch (error) {
             console.error('Error al enviar los datos:', error);
+            if (error.response?.data?.data) {
+                alert(error.response.data.data);
+            } else {
+                alert('Ocurrió un error al crear el evento. Por favor, verifica todos los campos.');
+            }
         }
     };
     

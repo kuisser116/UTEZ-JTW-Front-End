@@ -154,7 +154,8 @@ function Eventpage() {
                         <form onSubmit={registrarParticipante}>
                             <input type="text" name='name' placeholder="Nombres" required />
                             <input type="text" name='lastname' placeholder="Apellidos" required />
-                            <input type="text" name='gender' placeholder="Género" required />
+                            <input type="text" name='gender' placeholder="Género 'Hombre/Mujer'" required /><br />
+                            <label htmlFor="" style={{color: 'black'}}>"Fecha de nacimiento"</label>
                             <input type="date" name='birthday' placeholder="Fecha de nacimiento" required />
                             <input type="email" name='email' placeholder="Email" required />
                             <input type="text" name='livingState' placeholder="Estado de residencia" required />
