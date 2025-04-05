@@ -162,7 +162,7 @@ function Events() {
             />
             </div>            
             <button onClick={() => setOpenModal(true)} className={styles.addEvent}>
-                Agregar evento <img className={styles.plusadd} src={plus} alt="" />
+                Agregar evento
             </button>
             <div className={styles.eventsGrid}>
                 {filteredEvents.length > 0 ? (
@@ -191,8 +191,8 @@ function Events() {
 
             {openModal && (
                 <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent}>
-                        <img onClick={() => setOpenModal(false)} className={styles.arrowM} src={arrow} alt="" />
+                    <div className={styles.modalContent4}>
+                        <img onClick={() => setOpenModal(false)} className={styles.arrowMC} src={arrow} alt="" />
                         <h2 className={styles.formT}>Agregar evento</h2>
                         <form onSubmit={enviarEvento}>
                             {/* Div que actúa como input file con fondo de imagen */}
@@ -227,7 +227,9 @@ function Events() {
                             />
                             
                             <div className={styles.formDataMain}>
-                                <input type="datetime-local" name="startDate" placeholder='Fecha de inicio' onFocus={verCalendario}/>
+                                <label htmlFor="" style={{color: '#252525'}}>Inicio del evento</label>
+                                <input type="datetime-local" name="startDate" placeholder='Fecha de inicio' onFocus={verCalendario}/> <br />
+                                <label htmlFor="" style={{color: '#252525'}}>Fin del evento</label>
                                 <input type="datetime-local" name="endDate" onFocus={verCalendario}/>
                                 <input type="text" name='name' placeholder='Nombre del evento' />
                                 <input type="text" name='description' placeholder='Descripción del evento' />

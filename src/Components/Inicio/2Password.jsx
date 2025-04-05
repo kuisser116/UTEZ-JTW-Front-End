@@ -3,20 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import styles from '../../assets/styles/stylesLogin/recoverPassword.module.css';
 import Header from '../Components/Header';
 import axios from 'axios';
+import { url } from '../../utils/base.url';
 
 function RecuperarContrasena() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const emailRef = useRef(null); // Crear la referencia para el input de correo
+  const passwordRef = useRef(null); // Crear la referencia para el input de correo
   const navigate = useNavigate();
-  const token = localStorage.getItem('token')
-  console.log(token)
 
-  // ⏳ Cuando el modal se abre, espera 2 segundos y redirige al login
+  // ⏳ Cuando el modal se abre, espera 5 segundos y redirige al login
   useEffect(() => {
     if (isModalOpen) {
       const timer = setTimeout(() => {
-        navigate('/Recover'); // Redirige al login
-      }, 2000);
+        navigate('/login'); // Redirige al login
+      }, 5000);
 
       return () => clearTimeout(timer); // Limpia el timeout si el componente se desmonta
     }
@@ -26,20 +25,30 @@ function RecuperarContrasena() {
     e.preventDefault();
 
     // Obtener el correo usando ref
-    const emailData = {
-      email: emailRef.current.value,
+    const newPasswordData = {
+      password: passwordRef.current.value,
     };
 
     try {
       // Enviar la solicitud POST con JSON en el cuerpo
-      const response = await axios.post(
-        'http://localhost:3000/api/user/validate-code',
-        emailData, {
+      console.log(localStorage.getItem('tempToken'));
+      const response = await axios.post(`
+        ${url}/user/change-pass`,
+        newPasswordData,
+        {
           headers: {
-              'Authorization': `Bearer ${token}`
+            'Content-Type': 'application/json', // Especificar que se envía JSON,
+            'Authorization':`Bearer ${localStorage.getItem('tempToken')}`
           }
-      });
+        }
+      );
 
+      if(response.data.status >= 300) {
+        alert(response.data.data);
+        return;
+      }
+
+      localStorage.removeItem('tempToken');
 
       console.log(response.data);
     } catch (error) {
@@ -50,20 +59,20 @@ function RecuperarContrasena() {
   return (
     <div className={styles.body}>
       <div className={styles.recover}>
-        <h2 className={styles.tittle} style={{fontSize: '50px'}}>Ingresa el codigo de verificacion</h2>
+        <h2 className={styles.tittle}>Actualizar contraseña</h2>
         <div>
           <input
-            ref={emailRef} // Asignar la referencia al input
+            ref={passwordRef} // Asignar la referencia al input
             className={styles.box}
-            name="email"
-            type="email"
-            placeholder="Codigo de verificacion"
+            name="password"
+            type="password"
+            placeholder="Nueva contraseña"
           />
         </div>
         <div>
           <button
             onClick={(e) => {
-              recover(e); 
+              recover(e);
               setIsModalOpen(true);
             }}
             className={styles.btn}
@@ -76,8 +85,8 @@ function RecuperarContrasena() {
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
-            <h2 className={styles.formT}>Validando codigo</h2>
-            <p className={styles.p}>Serás redirigido en 2 segundos...</p>
+            <h2 className={styles.formT}>Contraseña actualizada</h2>
+            <p className={styles.p}>Serás redirigido al login en 5 segundos...</p>
           </div>
         </div>
       )}

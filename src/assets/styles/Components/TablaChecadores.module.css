@@ -117,7 +117,7 @@ body {
   background: white;
   padding: 20px;
   border-radius: 20px;
-  width: 40%;
+  width: 30%;
   text-align: center;
   box-shadow: 0px 4px 10px rgba(164, 26, 26, 0.3);
   animation: fadeIn 0.3s ease-in-out;
@@ -168,7 +168,32 @@ body {
   margin-bottom: 21px;
   color: #252525;
 }
+.formT{
+  color: #252525;
+  font-size: 4vh;
+  margin: auto;
+  padding-bottom: 20px;
+  text-align: center;
+}
 
+.arrowM{
+  position: absolute;
+  width: 4vh;
+  left: 36%;
+  top: 34.5%;
+  cursor: pointer;
+}
+
+.add{
+  width: 10%;
+  height: 30%;
+  color: #252525;
+  background-color: #25252500;
+  border-radius: 10px;
+  border-width: 2px;
+  border-color: #252525;
+  margin-right: 10px;
+}
 
 
 

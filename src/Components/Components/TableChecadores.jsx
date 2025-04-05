@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import styles from '../../assets/styles/Components/TablaChecadores.module.css';
 import pen from '../../assets/img/Assets_admin/pencil-solid-240.png';
 import axios from 'axios';
+import { url } from '../../utils/base.url';
+import arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png';
 
 function TableChecadores() {
     const [supervisores, setSupervisores] = useState([]);
@@ -9,6 +11,8 @@ function TableChecadores() {
     const [openEditModal, setOpenEditModal] = useState(false);
     const [selectedSupervisor, setSelectedSupervisor] = useState(null);
     const [adminEvents, setAdminEvents] = useState([]);
+    const [workshops, setWorkshops] = useState([]);
+    const [selectedEventWorkshops, setSelectedEventWorkshops] = useState([]);
     
     const token = localStorage.getItem("token");
     const adminId = localStorage.getItem("adminId");
@@ -47,6 +51,12 @@ function TableChecadores() {
 
                     setSupervisores(supervisoresFiltrados);
                 }
+
+                // Add workshop fetching
+                const responseWorkshops = await axios.get('http://localhost:3000/api/workshop/all-workshops', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                setWorkshops(responseWorkshops.data.data);
             } catch (error) {
                 console.error('Error al obtener los datos:', error);
             }
@@ -58,13 +68,38 @@ function TableChecadores() {
     const handleEditClick = (supervisor) => {
         setSelectedSupervisor(supervisor);
         setOpenEditModal(true);
+    
+        // Cargar talleres del evento actual
+        if (supervisor.events && supervisor.events[0]) {
+            const currentEventId = supervisor.events[0];
+            const filteredWorkshops = workshops.filter(workshop => workshop.event === currentEventId);
+            setSelectedEventWorkshops(filteredWorkshops);
+        } else {
+            setSelectedEventWorkshops([]);
+        }
+    };
+    
+    const handleEventChange = (e) => {
+        const selectedEventId = e.target.value;
+        setSelectedSupervisor(prev => ({
+            ...prev,
+            events: [selectedEventId],
+            workshops: []
+        }));
+        
+        // Filter workshops for the selected event
+        const filteredWorkshops = workshops.filter(workshop => 
+            workshop.event === selectedEventId
+        );
+        setSelectedEventWorkshops(filteredWorkshops);
     };
 
     const handleEditSubmit = async (event) => {
         event.preventDefault();
         try {
             await axios.put(`http://localhost:3000/api/supervisor/${selectedSupervisor._id}`, {
-                events: selectedSupervisor.events, 
+                events: selectedSupervisor.events,
+                workshops: selectedSupervisor.workshops,
                 status: selectedSupervisor.status
             }, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -124,16 +159,33 @@ function TableChecadores() {
             {openEditModal && selectedSupervisor && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent}>
-                        <h2>Editar Checador</h2>
+                        <img onClick={() => setOpenEditModal(false)} className={styles.arrowM} src={arrow} alt="" />
+                        <h2 className={styles.formT}>Editar Checador</h2>
                         <form onSubmit={handleEditSubmit}>
                             <select 
                                 className={styles.inputS} 
                                 value={selectedSupervisor.events[0] || ''} 
-                                onChange={(e) => setSelectedSupervisor({ ...selectedSupervisor, events: [e.target.value] })} 
+                                onChange={handleEventChange}
                             >
                                 <option value="">Seleccionar evento</option>
                                 {adminEvents.map(eventId => (
                                     <option key={eventId} value={eventId}>{events[eventId] || "Evento no encontrado"}</option>
+                                ))}
+                            </select>
+
+                            <select 
+                                className={styles.inputS}
+                                multiple
+                                value={selectedSupervisor.workshops || []}
+                                onChange={(e) => setSelectedSupervisor({
+                                    ...selectedSupervisor,
+                                    workshops: Array.from(e.target.selectedOptions, option => option.value)
+                                })}
+                            >
+                                {selectedEventWorkshops.map(workshop => (
+                                    <option key={workshop._id} value={workshop._id}>
+                                        {workshop.name}
+                                    </option>
                                 ))}
                             </select>
 
@@ -146,8 +198,7 @@ function TableChecadores() {
                                 <option value="false">Inactivo</option>
                             </select>
 
-                            <button type="submit" className={styles.btn}>Guardar</button>
-                            <button onClick={() => setOpenEditModal(false)}>Cerrar</button>
+                            <button type="submit" className={styles.add}>Guardar</button>
                         </form>
                     </div>
                 </div>
