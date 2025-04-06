@@ -184,9 +184,7 @@ function Events() {
             <Header />
             <NavBar /> 
             <h2 className={styles.tittle}>Checadores</h2>
-            <div className={styles.search}>
-                <input className={styles.searchInput} type="text" placeholder="Buscar checador" />
-            </div>
+          
             
             <button onClick={() => setOpenModal(true)} className={styles.addEvent}>
                 Agregar checador 

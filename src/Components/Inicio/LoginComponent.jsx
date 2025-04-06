@@ -6,6 +6,9 @@ import Header from '../Components/Header';
 import {Link, useNavigate} from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
+import { Toaster, toast } from 'sonner'
+import { url } from '../../utils/base.url';
+
 
 function LoginComponent() {
     const [email, setEmail] = useState('');
@@ -15,6 +18,10 @@ function LoginComponent() {
 
     const Validacion = async () => {
         try {
+            if(email === '' || password === ''){
+                toast.error('Correo o contraseña incorrectos');
+                return;
+            }
             const response = await axios.post('http://localhost:3000/api/auth/login', {
                 email,
                 password
@@ -36,14 +43,21 @@ function LoginComponent() {
     
             // Redireccionar según el rol
             if (user.role === 'SuperAdmin') {
-                navigate('/HomeSA');
+                toast.success('Inicio de sesión exitoso');
+                setTimeout(() =>{
+                    navigate('/HomeSA');
+                },2000);
             } else if (user.role === 'EventAdmin') {
-                navigate('/HomeAdmin');
+                toast.success('Inicio de sesión exitoso');
+                setTimeout(() =>{
+                    navigate('/HomeAdmin');
+                },2000);
             } else {
                 console.log('Rol no reconocido');
             }
     
         } catch (error) {
+            toast.error('Correo o contraseña incorrectos');
             console.log('Error al hacer la petición:', error);
         }
     };
@@ -54,6 +68,7 @@ function LoginComponent() {
             <img className={styles.formas} src={forms} alt="" />
             <div className={styles.Login}>
                 <Header />
+                <Toaster position="top-center" />
                 <h2 className={styles.title1}>Iniciar sesión</h2>
                 <div>
                     <div>

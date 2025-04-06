@@ -4,6 +4,8 @@ import styles from '../../assets/styles/stylesSA/eventos.module.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Header from '../Components/HeaderAdminHC';
 import NavBar from '../Components/SNavBar';
+import { url } from '../../utils/base.url';
+
 
 function Events() {
     const [events, setEvents] = useState([]);

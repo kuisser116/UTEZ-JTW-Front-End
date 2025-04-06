@@ -7,6 +7,10 @@ import NavBar from '../Components/NavBar';
 import plus from '../../assets/img/Assets_admin/plus-regular-240.png';
 import fondoImg from '../../assets/img/Assets_admin/fondoa.png';
 import arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png';
+import { url } from '../../utils/base.url';
+import { Toaster, toast } from 'sonner'
+
+
 
 function Events() {
 
@@ -47,6 +51,7 @@ function Events() {
                 console.log(response.data.data)
             } catch (error) {
                 console.error('Error al obtener los eventos:', error);
+                toast.error('Error al obtener los eventos');
             }
         };
         fetchEvents();
@@ -61,7 +66,6 @@ function Events() {
         const hours = ("0" + d.getHours()).slice(-2);
         const minutes = ("0" + d.getMinutes()).slice(-2);
         const seconds = ("0" + d.getSeconds()).slice(-2);
-        
         return `${day}-${month}-${year}T${hours}:${minutes}:${seconds}`;
     };
 
@@ -100,7 +104,7 @@ function Events() {
     
         const bannerImgsFiles = bannerImgsRef.current.files;
         if (bannerImgsFiles.length < 3) {
-            alert('Debes agregar al menos 3 imágenes para el banner');
+            toast.error('Debes agregar al menos 3 imágenes para el banner');
             return;
         }
         for (let i = 0; i < bannerImgsFiles.length; i++) {
@@ -109,7 +113,7 @@ function Events() {
     
         try {
             if (!event.target.name.value || !event.target.description.value) {
-                alert('El nombre y la descripción son campos obligatorios');
+                toast.error('El nombre y la descripción son campos obligatorios');
                 return;
             }
     
@@ -125,9 +129,9 @@ function Events() {
         } catch (error) {
             console.error('Error al enviar los datos:', error);
             if (error.response?.data?.data) {
-                alert(error.response.data.data);
+                toast.error(error.response.data.data);
             } else {
-                alert('Ocurrió un error al crear el evento. Por favor, verifica todos los campos.');
+                toast.error('Ocurrió un error al crear el evento. Por favor, verifica todos los campos.');
             }
         }
     };
@@ -149,6 +153,7 @@ function Events() {
 
     return (
         <div>
+            <Toaster position="top-center" />
             <Header />
             <NavBar />
             <h2 className={styles.tittle}>Eventos</h2>
@@ -232,9 +237,11 @@ function Events() {
                                 <label htmlFor="" style={{color: '#252525'}}>Fin del evento</label>
                                 <input type="datetime-local" name="endDate" onFocus={verCalendario}/>
                                 <input type="text" name='name' placeholder='Nombre del evento' />
-                                <input type="text" name='description' placeholder='Descripción del evento' />
+                                <input type="text" name='description' placeholder='Descripción del evento' /> <br />
                                 
                                 {/* Input para las imágenes del banner */}
+                                <small className={styles.small} style={{color: '#252525'}}>Agrega al menos 3 imágenes</small>
+
                                 <input 
                                     type="file" 
                                     name="bannerImgs" 
@@ -242,7 +249,6 @@ function Events() {
                                     ref={bannerImgsRef} 
                                 />
                                 <br />
-                                <small style={{color: '#252525'}}>Agrega al menos 3 imágenes</small>
                             </div>
 
                             <div className={styles.btns}>

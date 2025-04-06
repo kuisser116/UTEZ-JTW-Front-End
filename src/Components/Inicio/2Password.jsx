@@ -4,7 +4,7 @@ import styles from '../../assets/styles/stylesLogin/recoverPassword.module.css';
 import Header from '../Components/Header';
 import axios from 'axios';
 import { url } from '../../utils/base.url';
-
+import { Toaster, toast } from 'sonner'
 function RecuperarContrasena() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const passwordRef = useRef(null); // Crear la referencia para el input de correo
@@ -13,6 +13,7 @@ function RecuperarContrasena() {
   // ⏳ Cuando el modal se abre, espera 5 segundos y redirige al login
   useEffect(() => {
     if (isModalOpen) {
+      toast.success('Contraseña actualizada correctamente, serás redirigido al login en 5 segundos...');
       const timer = setTimeout(() => {
         navigate('/login'); // Redirige al login
       }, 5000);
@@ -29,6 +30,11 @@ function RecuperarContrasena() {
       password: passwordRef.current.value,
     };
 
+    if(newPasswordData.password === '' || newPasswordData.password.length < 6){
+      toast.error('La contraseña no puede estar vacía o ser menor a 6 caracteres');
+      return;
+    }
+
     try {
       // Enviar la solicitud POST con JSON en el cuerpo
       console.log(localStorage.getItem('tempToken'));
@@ -44,11 +50,14 @@ function RecuperarContrasena() {
       );
 
       if(response.data.status >= 300) {
-        alert(response.data.data);
+        toast.error(response.data.data);
         return;
       }
 
+
       localStorage.removeItem('tempToken');
+      setIsModalOpen(true);
+
 
       console.log(response.data);
     } catch (error) {
@@ -58,6 +67,7 @@ function RecuperarContrasena() {
 
   return (
     <div className={styles.body}>
+      <Toaster position="top-center" />
       <div className={styles.recover}>
         <h2 className={styles.tittle}>Actualizar contraseña</h2>
         <div>
@@ -73,7 +83,6 @@ function RecuperarContrasena() {
           <button
             onClick={(e) => {
               recover(e);
-              setIsModalOpen(true);
             }}
             className={styles.btn}
           >
@@ -82,14 +91,6 @@ function RecuperarContrasena() {
         </div>
       </div>
 
-      {isModalOpen && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <h2 className={styles.formT}>Contraseña actualizada</h2>
-            <p className={styles.p}>Serás redirigido al login en 5 segundos...</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import styles from '../../assets/styles/Components/NavBar.module.css';
 import { useState } from 'react';
-
+import { url } from '../../utils/base.url';
 function NavBar() {
     const location = useLocation(); 
     const [isMenuOpen, setIsModalOpen] = useState(false);

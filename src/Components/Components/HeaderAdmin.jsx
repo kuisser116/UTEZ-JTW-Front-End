@@ -3,7 +3,7 @@ import styles from '../../assets/styles/Components/Header.module.css';
 import logo from '../../assets/img/Assets_inicio/logo.svg';
 import Arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png';
 import { Link, useLocation } from 'react-router-dom';
-
+import { url } from '../../utils/base.url';
 function Header() {
     const today = new Date().toLocaleDateString();
     const location = useLocation();

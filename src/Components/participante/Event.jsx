@@ -13,6 +13,8 @@ import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import { Autoplay, EffectCoverflow, Pagination } from 'swiper/modules';
+import { url } from '../../utils/base.url';
+import { Toaster, toast } from 'sonner'
 
 
 function Eventpage() {
@@ -58,6 +60,7 @@ function Eventpage() {
        const formData = new FormData();
        formData.append('name', e.target.name.value);
        formData.append('email', e.target.email.value);
+       formData.append('password', e.target.email.value);
        formData.append('lastname', e.target.lastname.value);
        formData.append('birthday', formattedBirthday); // Usar la fecha convertida
        formData.append('livingState', e.target.livingState.value);
@@ -72,17 +75,20 @@ function Eventpage() {
                     'Content-Type': 'application/json',
                 },
             });
+            
             setIsModalOpen(false);
             console.log('Respuesta del servidor', response.data);
             navigate('/ListEvent');
         } catch (error) {
             console.log(error);
+            toast.error('Correo ya registrado');
         }
     };
     
 
     return (
         <div>
+            <Toaster position="top-center" />
             <Header />
 
             {/* Imagen del evento */}
@@ -154,7 +160,10 @@ function Eventpage() {
                         <form onSubmit={registrarParticipante}>
                             <input type="text" name='name' placeholder="Nombres" required />
                             <input type="text" name='lastname' placeholder="Apellidos" required />
-                            <input type="text" name='gender' placeholder="Género 'Hombre/Mujer'" required /><br />
+                            <select name="gender" id="gender" className={styles.options} required>
+                                <option value="Hombre">Hombre</option>
+                                <option value="Mujer">Mujer</option>
+                            </select><br />
                             <label htmlFor="" style={{color: 'black'}}>"Fecha de nacimiento"</label>
                             <input type="date" name='birthday' placeholder="Fecha de nacimiento" required />
                             <input type="email" name='email' placeholder="Email" required />

@@ -3,6 +3,8 @@ import axios from 'axios';
 import styles from '../../assets/styles/stylesLogin/eventos.module.css';
 import { Link, useLocation } from 'react-router-dom';
 import Header from '../Components/Header';
+import { url } from '../../utils/base.url';
+
 
 function Events() {
     const [events, setEvents] = useState([]);

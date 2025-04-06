@@ -3,6 +3,8 @@ import styles from '../../assets/styles/stylesLogin/JTW.module.css';
 import logo from '../../assets/img/Assets_inicio/logo4.png'
 import formas from '../../assets/img/Assets_inicio/formasInicio.svg'
 import { Link, useLocation } from 'react-router-dom';
+import { url } from '../../utils/base.url';
+
 
 
 function JumpToWorkPage() {

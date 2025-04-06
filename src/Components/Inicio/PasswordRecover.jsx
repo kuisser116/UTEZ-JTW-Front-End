@@ -4,6 +4,7 @@ import styles from '../../assets/styles/stylesLogin/recoverPassword.module.css';
 import Header from '../Components/Header';
 import axios from 'axios';
 import { url } from '../../utils/base.url';
+import { Toaster, toast } from 'sonner'
 
 function RecuperarContrasena() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,7 +20,7 @@ function RecuperarContrasena() {
     const email = emailRef.current.value.trim();
   
     if (email === '') {
-      alert('El correo no puede estar vacío');
+      toast.error('El correo no puede estar vacío');
       return; // Detiene la ejecución de la función
     }
   
@@ -48,6 +49,7 @@ function RecuperarContrasena() {
 
   return (
     <div className={styles.body}>
+      <Toaster position="top-center" />
       <Header />
       <div className={styles.recover}>
         <h2 className={styles.tittle}>Recuperar contraseña</h2>
@@ -113,7 +115,7 @@ function RecuperarContrasena() {
                       navigate('/Password');
                     } catch (err) {
                       console.log(err);
-                      alert('Codigo invalido');
+                      toast.error('Codigo invalido');
                     }
                   }}
                 >

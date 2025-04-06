@@ -16,6 +16,9 @@ import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import { Autoplay, EffectCoverflow, Pagination } from 'swiper/modules';
+import { url } from '../../utils/base.url';
+import { Toaster, toast } from 'sonner'
+
 
 function EventWorkshop() {
     const today = new Date().toLocaleDateString();
@@ -95,24 +98,52 @@ function EventWorkshop() {
 
     const crearTaller = async (e) => {
         e.preventDefault();
-        const eventId = localStorage.getItem('idEvent');
+
+        const workshopStartDate = e.target.startDate.value;
+        const workshopEndDate = e.target.endDate.value;
+
+
+    // Asegúrate de que las fechas sean objetos Date
+    const workshopStart = new Date(workshopStartDate);
+    const workshopEnd = new Date(workshopEndDate);
+
+        // Función para formatear las fechas al formato DD/MM/YYYY hh:mm:ss
+        const formatDate = (date) => {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const seconds = date.getSeconds().toString().padStart(2, '0');
+            return `${day}-${month}-${year}T${hours}:${minutes}:${seconds}`;
+        };
     
-        const formData = new FormData();
+        // Formatear las fechas de inicio y fin del taller
+        const startDate = formatDate(workshopStart);
+        const endDate = formatDate(workshopEnd);
+
+        const es = event.startDate;
+        const ee = event.endDate;
+
+        console.log(es)
+        console.log(ee)
+    
+        // Para depuración
+        console.log(startDate);
+        console.log(endDate);
+
+        if (startDate >= es && endDate <= ee) {
+            
+            console.log('El taller está dentro del rango del evento');
+
+
+
+            const formData = new FormData();
         formData.append('name', e.target.name.value);
         formData.append('description', e.target.description.value);
-        
-        if (!e.target.startDate.value || !e.target.endDate.value) {
-            console.error('Las fechas son requeridas');
-            return;
-        }
-    
-        const startDate = formatDate(e.target.startDate.value);
-        const endDate = formatDate(e.target.endDate.value);
     
         formData.append('startDate', startDate);
-        console.log(startDate)
         formData.append('endDate', endDate);
-        console.log(endDate)
         formData.append('limitQuota', e.target.limitQuota.value);
         formData.append('instructor', e.target.instructor.value);
         formData.append('event', eventId);
@@ -125,29 +156,35 @@ function EventWorkshop() {
         try {
             const response = await axios.post(
                 `http://localhost:3000/api/workshop/create`, 
-                {
-                    name: e.target.name.value,
-                    description: e.target.description.value,
-                    startDate: startDate,
-                    endDate: endDate,
-                    limitQuota: e.target.limitQuota.value,
-                    instructor: e.target.instructor.value,
-                    event: eventId,
-                    img: imgFile
-                }, {
+                formData, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data'
                     }
-                });
-            
+                }
+            );
+    
             console.log('Taller creado:', response.data);
             setOpenModal(false);
             window.location.reload();
+            toast.success('Taller creado correctamente');
         } catch (error) {
             console.error('Error al crear el taller:', error);
+            toast.error('Error al crear el taller');
         }
+
+
+        } else {
+            console.log('El taller está fuera del rango del evento');
+            toast.error('El taller está fuera del rango del evento');
+        }
+    
+        // Si las validaciones pasan, continuar con la creación del taller
+        
     };
+    
+    
+    
     
     const actualizarEvento = async (e) => {
         e.preventDefault();
@@ -199,14 +236,19 @@ function EventWorkshop() {
             );
             console.log('Evento actualizado:', response.data);
             setOpenEditModal(false);
-            window.location.reload();
+            toast.success('Evento actualizado correctamente');
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         } catch (error) {
             console.error('Error al actualizar el evento:', error);
+            toast.error('Error al actualizar el evento');
         }
     };
 
     return (
         <div>
+            <Toaster position="top-center" />
             <Header/>
             <div className={styles.EventImg}>
                 <div className={styles.gradient} style={{background: 'linear-gradient(to right,#F4F2EE,rgba(197, 106, 37, 0))'}}></div>
@@ -401,6 +443,7 @@ function EventWorkshop() {
                                 ref={editMainImgRef}
                                 onChange={handleEditFileChange}
                                 style={{ display: 'none' }} 
+                                
                             />
                             
                             <div className={styles.formDataMain}>

@@ -2,7 +2,7 @@ import 'react';
 import styles from '../../assets/styles/Components/HeaderAdmin.module.css';
 import logo from '../../assets/img/Assets_inicio/logo.svg';
 import { Link, useLocation } from 'react-router-dom';
-
+import { url } from '../../utils/base.url';
 function Header() {
     const today = new Date().toLocaleDateString();
     const location = useLocation();

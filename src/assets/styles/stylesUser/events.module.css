@@ -138,7 +138,16 @@ h3{
     
 }
 
-  
+.options{
+    width: 90%;
+    border-radius: 10px;
+    border-width: 3px;
+    border-color: #252525;
+    color: #252525;
+    background-color: #25252500;
+    padding: 10px;
+    font-size: 2vh;
+  }
   
 
 

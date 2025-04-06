@@ -7,6 +7,9 @@ import NavBar from '../Components/SNavBar';
 import TableAdmin from '../Components/TableAdmin';
 import plus from '../../assets/img/Assets_admin/plus-regular-240.png';
 import arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png';
+import { url } from '../../utils/base.url';
+import { Toaster, toast } from 'sonner'
+
 
 function Events() {
     const [openModal, setOpenModal] = useState(false);
@@ -15,7 +18,7 @@ function Events() {
         lastname: '',
         email: '',
         password: '',  // Inicialmente vacío
-        role: 'SuperAdmin', // Valor predeterminado
+        role: 'EventAdmin', // Valor predeterminado
         cellphoneNumber: '',
         company: ''
     });
@@ -61,18 +64,17 @@ function Events() {
             window.location.reload();
         } catch (error) {
             console.error('Error al agregar usuario', error);
-            alert('Hubo un error al agregar el usuario');
+            toast.error('Correo ya registrado');
         }
     };
 
     return (
         <div>
+            <Toaster position="top-center" />
             <Header />
             <NavBar /> 
             <h2 className={styles.tittle}>Administradores</h2>
-            <div className={styles.search}>
-                <input className={styles.searchInput} type="text" placeholder="Buscar administrador" />
-            </div>
+           
             
             <button onClick={() => setOpenModal(true)} className={styles.addEvent}>
                 Agregar usuario <img className={styles.plusadd} src={plus} alt="" />
@@ -111,16 +113,6 @@ function Events() {
                                 onChange={handleChange}
                                 required
                             />
-                            <select
-                                className={styles.inputS}
-                                name="role"
-                                value={formData.role}
-                                onChange={handleChange}
-                                required
-                            >
-                                <option value="SuperAdmin">SuperAdmin</option>
-                                <option value="EventAdmin">EventAdmin</option>
-                            </select>
                             <input
                                 className={styles.input}
                                 name="cellphoneNumber"
@@ -139,7 +131,6 @@ function Events() {
                                 onChange={handleChange}
                                 required
                             />
-                           
                             <button type="submit" className={styles.btn}>Guardar</button>
                         </form>
                     </div>

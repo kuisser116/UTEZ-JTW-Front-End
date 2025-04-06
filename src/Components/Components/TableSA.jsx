@@ -3,6 +3,8 @@ import axios from 'axios';
 import styles from '../../assets/styles/Components/TablaAdministradores.module.css';
 import arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png'; // Asegúrate de tener esta imagen
 import pen from '../../assets/img/Assets_admin/pencil-solid-240.png';
+import { url } from '../../utils/base.url';
+
 
 function TableAdministradores() {
     const [administradores, setAdministradores] = useState([]);
@@ -12,7 +14,7 @@ function TableAdministradores() {
         name: '',
         lastname: '',
         email: '',
-        role: '',
+        role: 'SuperAdmin',
         cellphoneNumber: ''
     });
     const token = localStorage.getItem("token");
@@ -148,15 +150,6 @@ function TableAdministradores() {
                                 onChange={handleInputChange}
                                 required
                             />
-                             <select
-                                    className={styles.inputS}
-                                    name="role"
-                                    value={formData.role}
-                                    onChange={handleInputChange}
-                                    required>
-                                <option value="EventAdmin">EventAdmin</option>
-                                <option value="SuperAdmin">SuperAdmin</option>
-                            </select>
                             <input
                                 className={styles.input}
                                 name="cellphoneNumber"
