@@ -120,7 +120,6 @@ function TableTalleres() {
                                 <th>Fecha fin</th>
                                 <th>Cupo límite</th>
                                 <th>Información</th>
-                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -132,9 +131,7 @@ function TableTalleres() {
                                     <td>{taller.endDate}</td>
                                     <td>{taller.limitQuota}</td>
                                     <td>{taller.description}</td>
-                                    <td>
-                                        <button onClick={() => handleEditClick(taller)} className="eb">Editar</button>
-                                    </td>
+
                                 </tr>
                             ))}
                         </tbody>

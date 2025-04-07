@@ -1,7 +1,6 @@
 import 'react';
 import Header from '../Components/HeaderAdmin'
 import TableTalleres from '../Components/TableTalleres';
-import EventImg from '../../assets/img/assets_participante/wallpaperflare.com_wallpaper.jpg'
 import styles from '../../assets/styles/stylesAdmin/WorkshopList.module.css'
 import plus from '../../assets/img/Assets_admin/plus-regular-240.png'
 import grafic from '../../assets/img/Assets_admin/grafico-de-barras.png'
@@ -10,6 +9,7 @@ import arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png
 import { Link, useLocation, useNavigate} from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import arrowD from '../../assets/img/Assets_admin/down-arrow-solid-240 (2).png'
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -58,7 +58,7 @@ function EventWorkshop() {
  
         const fetchEventDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/event/${eventId}`);
+                const response = await axios.get(`${url}/event/${eventId}`);
                 setEvent(response.data.data);
                 console.log(response.data.data)
             } catch (error) {
@@ -155,7 +155,7 @@ function EventWorkshop() {
     
         try {
             const response = await axios.post(
-                `http://localhost:3000/api/workshop/create`, 
+                `${url}/workshop/create`, 
                 formData, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -225,7 +225,7 @@ function EventWorkshop() {
     
         try {
             const response = await axios.put(
-                `http://localhost:3000/api/event/update/${eventId}`,
+                `${url}/event/update/${eventId}`,
                 formData,
                 {
                     headers: {
@@ -252,13 +252,14 @@ function EventWorkshop() {
             <Header/>
             <div className={styles.EventImg}>
                 <div className={styles.gradient} style={{background: 'linear-gradient(to right,#F4F2EE,rgba(197, 106, 37, 0))'}}></div>
-                <img className={styles.img} src={`http://localhost:3000/api/event/image?filename=${event.mainImg}`} alt="" />
+                <img className={styles.img} src={`${url}/event/image?filename=${event.mainImg}`} alt="" />
                 <div className={styles.eventPart}>
                     <h2>{event.name} </h2>
                     <p>{event.description} </p>
                     <p className=''>{event.startDate} </p>
                     <h3>Activo</h3>
                 </div>
+                <img className={styles.arrowD} src={arrowD} alt="" />
             </div>
 
             <div className={styles.carousel}>
@@ -284,7 +285,7 @@ function EventWorkshop() {
                 {event.bannerImgs.map((img, index) => (
                     <SwiperSlide key={index} className={styles.swiperSlide}>
                         <img 
-                            src={`http://localhost:3000/api/event/image?filename=${img}`} 
+                            src={`${url}/event/image?filename=${img}`} 
                             alt={`Imagen ${index + 1}`} 
                             className={styles.bannerImage}
                         />
@@ -422,7 +423,7 @@ function EventWorkshop() {
                                 style={{
                                     backgroundImage: previewEditImage ? 
                                         `url(${previewEditImage})` : 
-                                        `url(http://localhost:3000/api/event/image?filename=${event.mainImg})`,
+                                        `url(${url}/event/image?filename=${event.mainImg})`,
                                     backgroundSize: 'cover',
                                     backgroundPosition: 'center',
                                     cursor: 'pointer',

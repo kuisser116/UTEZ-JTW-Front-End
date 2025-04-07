@@ -56,7 +56,7 @@ function Dashboard() {
         const fetchData = async () => {
             try {
                 // Fetch event details
-                const eventResponse = await axios.get(`http://localhost:3000/api/event/${eventId}`, {
+                const eventResponse = await axios.get(`${url}/event/${eventId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -64,7 +64,7 @@ function Dashboard() {
                 setEvent(eventResponse.data.data);
 
                 // Fetch supervisors (checadores)
-                const supervisorsResponse = await axios.get('http://localhost:3000/api/supervisor/', {
+                const supervisorsResponse = await axios.get(`${url}/supervisor/`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -76,14 +76,14 @@ function Dashboard() {
                 console.log('Checadores',eventSupervisors.length);
 
                 // Fetch participants
-                const participantsResponse = await axios.get(`http://localhost:3000/api/event/participants/${eventId}`, {
+                const participantsResponse = await axios.get(`${url}/event/participants/${eventId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
 
                 // Fetch workshops
-                const workshopsResponse = await axios.get('http://localhost:3000/api/workshop/all-workshops');
+                    const workshopsResponse = await axios.get(`${url}/workshop/all-workshops`);
                 const eventWorkshops = workshopsResponse.data.data.filter(
                     workshop => workshop.event === eventId
                 );
@@ -111,7 +111,7 @@ function Dashboard() {
         const fetchWorkshopStats = async () => {
             try {
                 // Fetch workshops
-                const workshopsResponse = await axios.get('http://localhost:3000/api/workshop/all-workshops');
+                const workshopsResponse = await axios.get(`${url}/workshop/all-workshops`);
                 const eventWorkshops = workshopsResponse.data.data.filter(
                     workshop => workshop.event === eventId
                 );
@@ -121,7 +121,7 @@ function Dashboard() {
                     eventWorkshops.map(async (workshop) => {
                         try {
                             const participantsResponse = await axios.get(
-                                `http://localhost:3000/api/workshop/participants/${workshop._id}`
+                                `${url}/workshop/participants/${workshop._id}`
                             );
                             return {
                                 ...workshop,

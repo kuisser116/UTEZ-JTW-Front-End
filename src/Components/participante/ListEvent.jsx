@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom'
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { url } from '../../utils/base.url';
-
+import arrowD from '../../assets/img/Assets_admin/down-arrow-solid-240 (2).png'
 
 
 function ListEvent() {
@@ -21,7 +21,7 @@ function ListEvent() {
  
         const fetchEventDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/event/${eventId}`);
+                const response = await axios.get(`${url}/event/${eventId}`);
                 setEvent(response.data.data);
                 console.log(response.data.data)
             } catch (error) {
@@ -41,13 +41,15 @@ function ListEvent() {
             <Header/>
             <div className={styles.EventImg}>
                 <div className={styles.gradient} style={{background: 'linear-gradient(to right,#F4F2EE,rgba(254, 180, 123, 0))'}}></div>
-                <img className={styles.img} src={`http://localhost:3000/api/event/image?filename=${event.mainImg}`} alt="" />
+                <img className={styles.img} src={`${url}/event/image?filename=${event.mainImg}`} alt="" />
                 <div className={styles.eventPart}>
                     <h2>{event.name} </h2>
                     <button className={styles.btnRdo}>Registrado</button>
                     <p>{event.description} </p>
                     <p className=''>{event.startDate} </p>
                 </div>
+                <img className={styles.arrowD} src={arrowD} alt="" />
+
             </div>
 
             <div className={styles.table}>

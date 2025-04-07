@@ -16,7 +16,16 @@ body {
   
 
 
-
+  .arrowD{
+    position: absolute;
+    width: 20vh;
+    height: 8vh;
+    left: 45%;
+    margin-top: 41%;
+    z-index: 3;
+  
+  }
+  
 /*Contenido*/
 
 .EventImg{

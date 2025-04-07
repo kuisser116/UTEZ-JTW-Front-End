@@ -15,7 +15,7 @@ import 'swiper/css/pagination';
 import { Autoplay, EffectCoverflow, Pagination } from 'swiper/modules';
 import { url } from '../../utils/base.url';
 import { Toaster, toast } from 'sonner'
-
+import arrowD from '../../assets/img/Assets_admin/down-arrow-solid-240 (2).png'
 
 function Eventpage() {
     const today = new Date().toLocaleDateString();
@@ -28,7 +28,7 @@ function Eventpage() {
     useEffect(() => {
         const fetchEventDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/event/${eventId}`);
+                const response = await axios.get(`${url}/event/${eventId}`);
                 setEvent(response.data.data);
             } catch (error) {
                 console.error('Error al obtener los detalles del evento:', error);
@@ -70,7 +70,7 @@ function Eventpage() {
        formData.append('profession', e.target.profession.value);
     
         try {
-            const response = await axios.post(`http://localhost:3000/api/event/inscription/${eventId}`, formData,  {
+            const response = await axios.post(`${url}/event/inscription/${eventId}`, formData,  {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -94,7 +94,7 @@ function Eventpage() {
             {/* Imagen del evento */}
             <div className={styles.EventImg}>
                 <div className={styles.gradient} style={{ background: 'linear-gradient(to right,#F4F2EE,rgba(254, 180, 123, 0))' }}></div>
-                <img className={styles.img} src={`http://localhost:3000/api/event/image?filename=${event.mainImg}`} alt="" />
+                <img className={styles.img} src={`${url}/event/image?filename=${event.mainImg}`} alt="" />
 
                 {/* Información del evento */}
                 <div className={styles.eventPart}>
@@ -110,6 +110,7 @@ function Eventpage() {
                     <p>{event.description}</p>
                     <p>{event.startDate}</p>
                 </div>
+                <img className={styles.arrowD} src={arrowD} alt="" />
 
             
             </div>
@@ -137,7 +138,7 @@ function Eventpage() {
                 {event.bannerImgs.map((img, index) => (
                     <SwiperSlide key={index} className={styles.swiperSlide}>
                         <img 
-                            src={`http://localhost:3000/api/event/image?filename=${img}`} 
+                                src={`${url}/event/image?filename=${img}`} 
                             alt={`Imagen ${index + 1}`} 
                             className={styles.bannerImage}
                         />

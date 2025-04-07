@@ -49,7 +49,7 @@ function Events() {
     const enviarUsuario = async (event) => {
         event.preventDefault();
         try {
-            const responseUser = await axios.post('http://localhost:3000/api/auth/register', formData, {
+            const responseUser = await axios.post(`${url}/auth/register`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -71,7 +71,6 @@ function Events() {
             <Header />
             <NavBar />
             <h2 className={styles.tittle}>Super Administradores</h2>
-                     
             <button onClick={() => setOpenModal(true)} className={styles.addEvent}>
                 Agregar usuario <img className={styles.plusadd} src={plus} alt="" />
             </button>

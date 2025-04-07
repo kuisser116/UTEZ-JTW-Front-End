@@ -71,7 +71,7 @@ function Events() {
 
     const fetchAdminEvents = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/event/admin`, {
+            const response = await axios.get(`${url}/event/admin`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setAdminEvents(response.data.data);
@@ -82,7 +82,7 @@ function Events() {
 
     const fetchChecadores = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/api/supervisor/', {
+            const response = await axios.get(`${url}/supervisor/`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setChecadores(response.data.data);
@@ -93,7 +93,7 @@ function Events() {
 
     const fetchWorkshops = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/api/workshop/all-workshops', {
+            const response = await axios.get(`${url}/workshop/all-workshops`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setWorkshops(response.data.data);
@@ -104,7 +104,7 @@ function Events() {
 
     const handleAssignEvent = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/supervisor/${sId}`, {
+            const response = await axios.get(`${url}/supervisor/${sId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             
@@ -112,7 +112,7 @@ function Events() {
             console.log(existingEvents)
             const updatedEvents = [...new Set([...existingEvents, selectedEvent])];
             console.log(updatedEvents)
-            await axios.put(`http://localhost:3000/api/supervisor/${sId}`, {
+            await axios.put(`${url}/supervisor/${sId}`, {
                 events: updatedEvents
             }, {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -167,7 +167,7 @@ function Events() {
                 status: true
             };
 
-            await axios.post('http://localhost:3000/api/supervisor/', supervisorData, {
+            await axios.post(`${url}/supervisor/`, supervisorData, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 

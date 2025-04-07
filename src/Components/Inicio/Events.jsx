@@ -14,7 +14,7 @@ function Events() {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/event/all-events');
+                const response = await axios.get(`${url}/event/all-events`);
                 console.log("Eventos recibidos en el frontend:", response.data.data); // 🛠 Debug
 
                 setEvents(response.data.data);
@@ -43,7 +43,7 @@ function Events() {
                     <Link 
                         className={styles.eventCard} 
                         style={{ 
-                            backgroundImage: `url(http://localhost:3000/api/event/image?filename=${event.mainImg})`,
+                            backgroundImage: `url(${url}/event/image?filename=${event.mainImg})`,
                         }}
                         key={event._id} 
                         to={`/Event`} 
