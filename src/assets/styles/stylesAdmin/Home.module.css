@@ -204,7 +204,7 @@ body {
     border-radius: 25px;
     text-align: center; 
     width: 30%;
-    height: 60%;
+    height: 45%;
 }
 
 
@@ -322,7 +322,7 @@ body {
     position: absolute;
     width: 4vh;
     left: 35%;
-    top: 21%;
+    top: 28%;
     cursor: pointer;
 }
 
@@ -377,7 +377,7 @@ body {
   .add{
     width: 100px;
     height: 30px;
-    font-size: 15px;
+    font-size: 20px;
   }
 
   .options{

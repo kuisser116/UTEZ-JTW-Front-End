@@ -9,6 +9,7 @@ import TableCheck from '../Components/TableChecadores';
 import plus from '../../assets/img/Assets_admin/plus-regular-240.png';
 import arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png';
 import { url } from '../../utils/base.url';
+import { Toaster, toast } from 'sonner'
 
 
 function Events() {
@@ -164,20 +165,24 @@ function Events() {
                 ...formData,
                 password: formData.email,
                 role: "Checador",
-                status: true
+                status: true,
+                administrator: adminId
             };
 
             const response = await axios.post(`${url}/supervisor/`, supervisorData, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
-        
-
             setOpenModalRegister(false);
-            fetchChecadores();
-            window.location.reload();
+            await fetchChecadores();
+
+            toast.success('Checador registrado exitosamente');
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
         } catch (error) {
             console.error('Error al registrar checador:', error);
+            toast.error('Error al registrar checador');
         }
     };
 
@@ -188,7 +193,7 @@ function Events() {
             <h2 className={styles.tittle}>Checadores</h2>
           
             
-            <button onClick={() => setOpenModal(true)} className={styles.addEvent}>
+            <button onClick={() => setOpenModalRegister(true)} className={styles.addEvent}>
                 Agregar checador 
             </button>
 
@@ -324,32 +329,7 @@ function Events() {
                                 required
                                 className={styles.input}
                             />
-                            <select
-                                name="events"
-                                onChange={handleEventChange}
-                                required
-                                className={styles.options2}
-                            >
-                                <option value="">Seleccionar evento</option>
-                                {adminEvents.map((event) => (
-                                    <option key={event._id} value={event._id}>
-                                        {event.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <select
-                                name="workshops"
-                                multiple
-                                onChange={handleWorkshopChange}
-                                required
-                                className={styles.options2}
-                            >
-                                {selectedEventWorkshops.map((workshop) => (
-                                    <option key={workshop._id} value={workshop._id}>
-                                        {workshop.name}
-                                    </option>
-                                ))}
-                            </select>
+
                             <div className={styles.buttonContainer}>
                                 <button type="submit" className={styles.add}>
                                     Registrar Checador

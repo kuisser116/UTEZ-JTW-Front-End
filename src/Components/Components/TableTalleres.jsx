@@ -11,6 +11,9 @@ function TableTalleres() {
     const [selectedTaller, setSelectedTaller] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
     const imgRef = useRef(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [paginaActual, setPaginaActual] = useState(1);
+    const [itemsPorPagina] = useState(5);
 
     const fetchTalleres = async () => {
         try {
@@ -105,15 +108,157 @@ function TableTalleres() {
         }
     };
 
+    // Función para cambiar de página
+    const cambiarPagina = (numeroPagina) => {
+        setPaginaActual(numeroPagina);
+    };
+
+    // Función para ir a la página anterior
+    const irPaginaAnterior = () => {
+        if (paginaActual > 1) {
+            setPaginaActual(paginaActual - 1);
+        }
+    };
+
+    // Función para ir a la página siguiente
+    const irPaginaSiguiente = () => {
+        const totalPaginas = Math.ceil(talleres.length / itemsPorPagina);
+        if (paginaActual < totalPaginas) {
+            setPaginaActual(paginaActual + 1);
+        }
+    };
+
+    // Función para generar los botones de paginación con elipsis
+    const generarBotonesPaginacion = () => {
+        const botones = [];
+        const totalPaginas = Math.ceil(talleres.length / itemsPorPagina);
+        
+        if (totalPaginas <= 5) {
+            for (let i = 1; i <= totalPaginas; i++) {
+                botones.push(
+                    <button
+                        key={i}
+                        onClick={() => cambiarPagina(i)}
+                        className={`paginationButton ${paginaActual === i ? 'paginationActive' : ''}`}
+                    >
+                        {i}
+                    </button>
+                );
+            }
+        } else {
+            // Siempre mostrar la primera página
+            botones.push(
+                <button
+                    key={1}
+                    onClick={() => cambiarPagina(1)}
+                    className={`paginationButton ${paginaActual === 1 ? 'paginationActive' : ''}`}
+                >
+                    1
+                </button>
+            );
+
+            let startPage, endPage;
+            
+            if (paginaActual <= 3) {
+                startPage = 2;
+                endPage = 4;
+                botones.push(
+                    ...Array.from({ length: endPage - startPage + 1 }, (_, i) => {
+                        const pagina = startPage + i;
+                        return (
+                            <button
+                                key={pagina}
+                                onClick={() => cambiarPagina(pagina)}
+                                className={`paginationButton ${paginaActual === pagina ? 'paginationActive' : ''}`}
+                            >
+                                {pagina}
+                            </button>
+                        );
+                    })
+                );
+                botones.push(<span key="ellipsis1" className="paginationEllipsis">...</span>);
+            } else if (paginaActual >= totalPaginas - 2) {
+                botones.push(<span key="ellipsis1" className="paginationEllipsis">...</span>);
+                startPage = totalPaginas - 3;
+                endPage = totalPaginas - 1;
+                botones.push(
+                    ...Array.from({ length: endPage - startPage + 1 }, (_, i) => {
+                        const pagina = startPage + i;
+                        return (
+                            <button
+                                key={pagina}
+                                onClick={() => cambiarPagina(pagina)}
+                                className={`paginationButton ${paginaActual === pagina ? 'paginationActive' : ''}`}
+                            >
+                                {pagina}
+                            </button>
+                        );
+                    })
+                );
+            } else {
+                botones.push(<span key="ellipsis1" className="paginationEllipsis">...</span>);
+                botones.push(
+                    ...Array.from({ length: 3 }, (_, i) => {
+                        const pagina = paginaActual - 1 + i;
+                        return (
+                            <button
+                                key={pagina}
+                                onClick={() => cambiarPagina(pagina)}
+                                className={`paginationButton ${paginaActual === pagina ? 'paginationActive' : ''}`}
+                            >
+                                {pagina}
+                            </button>
+                        );
+                    })
+                );
+                botones.push(<span key="ellipsis2" className="paginationEllipsis">...</span>);
+            }
+
+            // Siempre mostrar la última página
+            botones.push(
+                <button
+                    key={totalPaginas}
+                    onClick={() => cambiarPagina(totalPaginas)}
+                    className={`paginationButton ${paginaActual === totalPaginas ? 'paginationActive' : ''}`}
+                >
+                    {totalPaginas}
+                </button>
+            );
+        }
+        
+        return botones;
+    };
+
+    // Filtrar talleres según el término de búsqueda
+    const talleresFiltrados = talleres.filter(taller =>
+        taller.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Calcular los talleres a mostrar en la página actual
+    const indexUltimoItem = paginaActual * itemsPorPagina;
+    const indexPrimerItem = indexUltimoItem - itemsPorPagina;
+    const talleresActuales = talleresFiltrados.slice(indexPrimerItem, indexUltimoItem);
+
     return (
         <div>
             <Toaster position="top-center" />
             <div className='tableContent'>
                 <h2 className='tableTittle'>Talleres</h2>
+
                 <div className="tabla-container">
+                <div className="searchContainer">
+                    <input
+                        type="text"
+                        placeholder="Buscar taller por nombre..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="searchInput"
+                    />
+                </div>
                     <table className="tabla-talleres">
                         <thead>
                             <tr className="encabezado">
+                                <th>Número</th>
                                 <th>Nombre del taller</th>
                                 <th>Instructor</th>
                                 <th>Fecha inicio</th>
@@ -124,8 +269,9 @@ function TableTalleres() {
                             </tr>
                         </thead>
                         <tbody>
-                            {talleres.map((taller) => (
+                            {talleresActuales.map((taller, index) => (
                                 <tr key={taller._id}>
+                                    <td>{(paginaActual - 1) * itemsPorPagina + index + 1}</td>
                                     <td>{taller.name}</td>
                                     <td>{taller.instructor}</td>
                                     <td>{taller.startDate}</td>
@@ -139,7 +285,32 @@ function TableTalleres() {
                             ))}
                         </tbody>
                     </table>
+                    <div className="paginationContainer">
+                    <button 
+                        onClick={irPaginaAnterior} 
+                        disabled={paginaActual === 1}
+                        className={`paginationArrow ${paginaActual === 1 ? 'disabled' : ''}`}
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                    </button>
+                    
+                    {generarBotonesPaginacion()}
+                    
+                    <button 
+                        onClick={irPaginaSiguiente} 
+                        disabled={paginaActual === Math.ceil(talleres.length / itemsPorPagina)}
+                        className={`paginationArrow ${paginaActual === Math.ceil(talleres.length / itemsPorPagina) ? 'disabled' : ''}`}
+                    >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                    </button>
                 </div>
+                </div>
+
+
             </div>
 
             {openEditModal && selectedTaller && (

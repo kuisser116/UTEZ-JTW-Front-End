@@ -156,3 +156,179 @@ body {
 
 
 
+
+
+/* Contenedor de la paginación */
+.paginationContainer {
+  display: flex;
+  justify-content: flex-start;  /* Cambiado de center a flex-start para alinear a la izquierda */
+  align-items: center;
+  position: fixed;  /* Añadido para mantener fijo en la parte inferior */
+  bottom: 20px;    /* Añadido para posicionar desde abajo */
+  left: 4%;      /* Añadido para dar margen desde la izquierda */
+  padding: 10px 0;
+  gap: 6px;        /* Reducido de 8px a 6px para hacer los botones más compactos */
+  font-family: inherit;
+  z-index: 2; 
+  top: 90%;  /* Asegura que esté por encima de otros elementos */
+}
+
+.paginationButton {
+  min-width: 30px;  /* Reducido de 36px a 30px */
+  height: 30px;     /* Reducido de 36px a 30px */
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  background-color: white;
+  color: #252525;
+  font-size: 12px;  /* Reducido de 14px a 12px */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.paginationButton:hover {
+  background-color: #f5f5f5;
+  border-color: #d0d0d0;
+}
+
+/* Botón activo */
+.paginationActive {
+  background-color: #252525;
+  color: white;
+  border-color: #252525;
+}
+
+.paginationActive:hover {
+  background-color: #333333;
+  border-color: #333333;
+}
+
+/* Botones de flechas */
+.paginationArrow {
+  min-width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  background-color: white;
+  color: #252525;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.paginationArrow:hover:not(.disabled) {
+  background-color: #f5f5f5;
+  border-color: #d0d0d0;
+}
+
+/* Estilo para botones deshabilitados */
+.paginationArrow.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  color: #aaaaaa;
+}
+
+/* Estilo para los puntos suspensivos */
+.paginationEllipsis {
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #252525;
+  font-weight: bold;
+}
+
+/* Adaptación para móviles */
+@media (max-width: 600px) {
+  .paginationContainer {
+    gap: 4px;
+  }
+  
+  .paginationButton, .paginationArrow {
+    min-width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+}
+
+
+
+.searchContainer {
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.searchInput {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 15px;
+  border: 1px solid #252525;
+  border-radius: 15px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.searchInput:focus {
+  border-color: #74a9e2;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.btnCancel {
+  padding: 8px 16px;
+  background-color: #6c757d00;
+  color: #252525;
+  border: 3px solid #252525;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 20px;
+  font-size: 20px;
+  
+
+}
+
+.btnConfirm {
+  padding: 8px 16px;
+  background-color: #dc354600;
+  color: #252525;
+  border: 3px solid #252525;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 20px;
+  font-size: 20px;
+
+}
+
+.img {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.modalContentStatus{
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 25px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.pStatus{
+  font-size: 20px;
+  color: #252525;
+}
