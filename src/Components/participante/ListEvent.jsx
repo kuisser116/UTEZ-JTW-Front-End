@@ -2,7 +2,7 @@ import 'react';
 import EventImg from '../../assets/img/assets_participante/wallpaperflare.com_wallpaper.jpg'
 import styles from '../../assets/styles/stylesUser/listEvent.module.css'
 import Header from '../Components/Header'
-import TableTalleres from '../Components/TableTalleres';
+import TableTalleres from '../Components/TableTalleresSA';
 import {Link} from 'react-router-dom'
 import axios from 'axios';
 import { useState, useEffect } from 'react';

@@ -69,7 +69,7 @@ function LoginComponent() {
             <img className={styles.formas} src={forms} alt="" />
             <div className={styles.Login}>
                 <Header />
-                <Toaster position="top-center" />
+                <Toaster position="top-center" richColors />
                 <h2 className={styles.title1}>Iniciar sesión</h2>
                 <div>
                     <div>

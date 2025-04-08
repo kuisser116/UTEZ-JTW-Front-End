@@ -4,7 +4,8 @@ import styles from '../../assets/styles/Components/TablaAdministradores.module.c
 import arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png'; // Asegúrate de tener esta imagen
 import pen from '../../assets/img/Assets_admin/pencil-solid-240.png';
 import { url } from '../../utils/base.url';
-
+import disable from '../../assets/img/Assets_admin/user-minus-regular-240.png';
+import check from '../../assets/img/Assets_admin/user-plus-regular-240.png'
 
 function TableAdministradores() {
     const [administradores, setAdministradores] = useState([]);
@@ -17,12 +18,20 @@ function TableAdministradores() {
         role: 'SuperAdmin',
         cellphoneNumber: ''
     });
+
+    const [openConfirmModal, setOpenConfirmModal] = useState(false);
+    const [confirmAction, setConfirmAction] = useState(null);
+    
     const token = localStorage.getItem("token");
+    // Nuevos estados para búsqueda y paginación
+    const [searchTerm, setSearchTerm] = useState('');
+    const [paginaActual, setPaginaActual] = useState(1);
+    const [itemsPorPagina] = useState(10);
 
     useEffect(() => {
         const fetchAdministradores = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/administrator/');
+                const response = await axios.get(`${url}/administrator/`);
                 console.log("Administradores recibidos en el frontend:", response.data.data);
                 // Filtrar solo los administradores con el rol "EventAdmin"
                 const filteredAdmins = response.data.data.filter(admin => admin.role === 'SuperAdmin');
@@ -62,7 +71,7 @@ function TableAdministradores() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:3000/api/administrator/${selectedAdmin._id}`, formData, {
+            await axios.put(`${url}/administrator/${selectedAdmin._id}`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -79,30 +88,207 @@ function TableAdministradores() {
         }
     };
 
+    const handleStatusChange = async (admin) => {
+        try {
+            const newStatus = !admin.status;
+            await axios.put(`${url}/administrator/${admin._id}`, 
+                { status: newStatus },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+            
+            // Actualizar el estado local
+            setAdministradores((prevState) =>
+                prevState.map((a) =>
+                    a._id === admin._id ? { ...a, status: newStatus } : a
+                )
+            );
+            
+            setOpenConfirmModal(false);
+        } catch (error) {
+            console.error('Error al actualizar el estado del administrador:', error);
+        }
+    };
+
+    // Nuevas funciones de paginación
+    const cambiarPagina = (numeroPagina) => {
+        setPaginaActual(numeroPagina);
+    };
+
+    const irPaginaAnterior = () => {
+        if (paginaActual > 1) {
+            setPaginaActual(paginaActual - 1);
+        }
+    };
+
+    const irPaginaSiguiente = () => {
+        const totalPaginas = Math.ceil(administradoresFiltrados.length / itemsPorPagina);
+        if (paginaActual < totalPaginas) {
+            setPaginaActual(paginaActual + 1);
+        }
+    };
+
+    const generarBotonesPaginacion = () => {
+        const botones = [];
+        const totalPaginas = Math.ceil(administradoresFiltrados.length / itemsPorPagina);
+        
+        if (totalPaginas <= 5) {
+            for (let i = 1; i <= totalPaginas; i++) {
+                botones.push(
+                    <button
+                        key={i}
+                        onClick={() => cambiarPagina(i)}
+                        className={`${styles.paginationButton} ${paginaActual === i ? styles.paginationActive : ''}`}
+                    >
+                        {i}
+                    </button>
+                );
+            }
+        } else {
+            // Primera página
+            botones.push(
+                <button
+                    key={1}
+                    onClick={() => cambiarPagina(1)}
+                    className={`${styles.paginationButton} ${paginaActual === 1 ? styles.paginationActive : ''}`}
+                >
+                    1
+                </button>
+            );
+
+            let startPage, endPage;
+            
+            if (paginaActual <= 3) {
+                startPage = 2;
+                endPage = 4;
+                botones.push(
+                    ...Array.from({ length: endPage - startPage + 1 }, (_, i) => {
+                        const pagina = startPage + i;
+                        return (
+                            <button
+                                key={pagina}
+                                onClick={() => cambiarPagina(pagina)}
+                                className={`${styles.paginationButton} ${paginaActual === pagina ? styles.paginationActive : ''}`}
+                            >
+                                {pagina}
+                            </button>
+                        );
+                    })
+                );
+                botones.push(<span key="ellipsis1">...</span>);
+            } else if (paginaActual >= totalPaginas - 2) {
+                botones.push(<span key="ellipsis1">...</span>);
+                startPage = totalPaginas - 3;
+                endPage = totalPaginas - 1;
+                botones.push(
+                    ...Array.from({ length: endPage - startPage + 1 }, (_, i) => {
+                        const pagina = startPage + i;
+                        return (
+                            <button
+                                key={pagina}
+                                onClick={() => cambiarPagina(pagina)}
+                                className={`${styles.paginationButton} ${paginaActual === pagina ? styles.paginationActive : ''}`}
+                            >
+                                {pagina}
+                            </button>
+                        );
+                    })
+                );
+            } else {
+                botones.push(<span key="ellipsis1">...</span>);
+                botones.push(
+                    ...Array.from({ length: 3 }, (_, i) => {
+                        const pagina = paginaActual - 1 + i;
+                        return (
+                            <button
+                                key={pagina}
+                                onClick={() => cambiarPagina(pagina)}
+                                className={`${styles.paginationButton} ${paginaActual === pagina ? styles.paginationActive : ''}`}
+                            >
+                                {pagina}
+                            </button>
+                        );
+                    })
+                );
+                botones.push(<span key="ellipsis2">...</span>);
+            }
+
+            // Última página
+            botones.push(
+                <button
+                    key={totalPaginas}
+                    onClick={() => cambiarPagina(totalPaginas)}
+                    className={`${styles.paginationButton} ${paginaActual === totalPaginas ? styles.paginationActive : ''}`}
+                >
+                    {totalPaginas}
+                </button>
+            );
+        }
+        
+        return botones;
+    };
+
+    // Filtrado de administradores
+    const administradoresFiltrados = administradores.filter(admin =>
+        `${admin.name} ${admin.lastname}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        admin.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Cálculo de elementos para la página actual
+    const indexUltimoItem = paginaActual * itemsPorPagina;
+    const indexPrimerItem = indexUltimoItem - itemsPorPagina;
+    const administradoresActuales = administradoresFiltrados.slice(indexPrimerItem, indexUltimoItem);
+
     return (
         <div>
             <div className={styles.tableContent}>
                 <div className={styles.tablaContainer}>
+                    <div className={styles.searchContainer}>
+                        <input
+                            type="text"
+                            placeholder="Buscar administrador..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className={styles.searchInput}
+                        />
+                    </div>
+                    
                     <table className={styles.tablaTalleres}>
                         <thead>
                             <tr className={styles.encabezado}>
+                                <th>Numero</th>
                                 <th>Nombre</th>
                                 <th>Correo</th>
                                 <th>Rol</th>
                                 <th>Teléfono</th>
+                                <th>Estado</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {administradores.length > 0 ? (
-                                administradores.map((admin, index) => (
+                            {administradoresActuales.length > 0 ? (
+                                administradoresActuales.map((admin, index) => (
                                     <tr key={index}>
+                                        <td>{indexPrimerItem + index + 1}</td>
                                         <td>{admin.name} {admin.lastname}</td>
                                         <td>{admin.email}</td>
                                         <td>{admin.role}</td>
                                         <td>{admin.cellphoneNumber}</td>
+                                        <td>{admin.status === true ? "Activo" : "Inactivo"}</td>
                                         <td className={styles.edit}>
-                                                <img className={styles.img} src={pen} onClick={() => handleEdit(admin)} />
+                                            <img className={styles.img} src={pen} onClick={() => handleEdit(admin)} />
+                                            <img 
+                                                className={styles.img} 
+                                                src={admin.status ? disable : check} 
+                                                onClick={() => {
+                                                    setSelectedAdmin(admin);
+                                                    setConfirmAction(admin.status ? 'desactivar' : 'activar');
+                                                    setOpenConfirmModal(true);
+                                                }}
+                                            />
                                         </td>
                                     </tr>
                                 ))
@@ -113,6 +299,30 @@ function TableAdministradores() {
                             )}
                         </tbody>
                     </table>
+
+                    <div className={styles.paginationContainer}>
+                        <button 
+                            onClick={irPaginaAnterior} 
+                            disabled={paginaActual === 1}
+                            className={`${styles.paginationArrow} ${paginaActual === 1 ? styles.disabled : ''}`}
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
+                        
+                        {generarBotonesPaginacion()}
+                        
+                        <button 
+                            onClick={irPaginaSiguiente} 
+                            disabled={paginaActual === Math.ceil(administradoresFiltrados.length / itemsPorPagina)}
+                            className={`${styles.paginationArrow} ${paginaActual === Math.ceil(administradoresFiltrados.length / itemsPorPagina) ? styles.disabled : ''}`}
+                        >
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -161,6 +371,32 @@ function TableAdministradores() {
                             />
                             <button type="submit" className={styles.btn}>Guardar cambios</button>
                         </form>
+                    </div>
+                </div>
+            )}
+
+                        {/* Modal de Confirmación */}
+                        {openConfirmModal && (
+                <div className={styles.modalOverlay}>
+                    <div className={styles.modalContentStatus}>
+                        <h2 className={styles.formT}>Confirmar Acción</h2>
+                        <p className={styles.pStatus}>
+                            ¿Seguro que quieres {confirmAction} a {selectedAdmin.name} {selectedAdmin.lastname}?
+                        </p>
+                        <div className={styles.buttonContainer}>
+                            <button 
+                                className={styles.btnCancel}
+                                onClick={() => setOpenConfirmModal(false)}
+                            >
+                                Cancelar
+                            </button>
+                            <button 
+                                className={styles.btnConfirm}
+                                onClick={() => handleStatusChange(selectedAdmin)}
+                            >
+                                Confirmar
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
