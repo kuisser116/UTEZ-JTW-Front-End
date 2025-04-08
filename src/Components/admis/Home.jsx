@@ -42,7 +42,7 @@ function Events() {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/event/admin`, {
+                const response = await axios.get(`${url}/event/admin`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -117,7 +117,7 @@ function Events() {
                 return;
             }
     
-            const response = await axios.post(`http://localhost:3000/api/event/create`, formData, {
+            const response = await axios.post(`${url}/event/create`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
@@ -175,7 +175,7 @@ function Events() {
                     <Link 
                         className={styles.eventCard} 
                         style={{ 
-                            backgroundImage: `url(http://localhost:3000/api/event/image?filename=${event.mainImg})`,
+                            backgroundImage: `url(${url}/event/image?filename=${event.mainImg})`,
                         }}
                         key={event._id} 
                         to={`/EventWorkshop`} 
@@ -234,10 +234,16 @@ function Events() {
                             <div className={styles.formDataMain}>
                                 <label htmlFor="" style={{color: '#252525'}}>Inicio del evento</label>
                                 <input type="datetime-local" name="startDate" placeholder='Fecha de inicio' onFocus={verCalendario}/> <br />
+                                
                                 <label htmlFor="" style={{color: '#252525'}}>Fin del evento</label>
-                                <input type="datetime-local" name="endDate" onFocus={verCalendario}/>
-                                <input type="text" name='name' placeholder='Nombre del evento' />
+                                <input type="datetime-local" name="endDate" onFocus={verCalendario}/> <br />
+                                
+                                <label htmlFor="" style={{color: '#252525'}}>Nombre del evento</label>
+                                <input type="text" name='name' placeholder='Nombre del evento' /> <br />
+                                
+                                <label htmlFor="" style={{color: '#252525'}}>Descripción del evento</label>
                                 <input type="text" name='description' placeholder='Descripción del evento' /> <br />
+                                
                                 
                                 {/* Input para las imágenes del banner */}
                                 <small className={styles.small} style={{color: '#252525'}}>Agrega al menos 3 imágenes</small>

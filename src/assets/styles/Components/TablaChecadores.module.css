@@ -163,9 +163,20 @@ body {
   color: #252525;
 }
 
+.inputS1{
+  width: 90%;
+  height: 6vh;
+  background-color: #25252500;
+  border-color: #252525;
+  border-width: 3px;
+  border-radius: 10px;
+  margin-bottom: 21px;
+  color: #252525;
+}
+
 .inputS{
   width: 90%;
-  height: 5vh;
+  height: 15vh;
   background-color: #25252500;
   border-color: #252525;
   border-width: 3px;
@@ -185,7 +196,7 @@ body {
   position: absolute;
   width: 4vh;
   left: 36%;
-  top: 38%;
+  top: 30%;
   cursor: pointer;
 }
 
@@ -379,3 +390,14 @@ body {
   font-size: 20px;
   color: #252525;
 }
+
+.formT2{
+  color: #252525;
+  font-size: 3vh;
+  margin: auto;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+
+

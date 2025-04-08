@@ -122,7 +122,7 @@ body {
   justify-content: center;
   align-items: center;
   width: 40%;
-  height: 50%;
+  height: 55%;
 }
 
 
@@ -139,7 +139,7 @@ body {
   position: absolute;
   width: 4vh;
   left: 31%;
-  top: 26%;
+  top: 23%;
   cursor: pointer;
 }
 

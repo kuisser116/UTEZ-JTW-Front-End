@@ -13,7 +13,6 @@ import { Toaster, toast } from 'sonner'
 
 function Events() {
     const [openModal, setOpenModal] = useState(false);
-    const [opernModalC, setOpenModalC] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         lastname: '',
@@ -53,7 +52,7 @@ function Events() {
     const enviarUsuario = async (event) => {
         event.preventDefault();
         try {
-            const responseUser = await axios.post('http://localhost:3000/api/auth/register', formData, {
+            const responseUser = await axios.post(`${url}/auth/register`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -87,51 +86,16 @@ function Events() {
                         <img onClick={() => setOpenModal(false)} className={styles.arrowM} src={arrow} alt="" />
                         <h2 className={styles.formT}>Agregar usuario</h2>
                         <form onSubmit={enviarUsuario}>
-                            <input
-                                className={styles.input}
-                                name="name"
-                                type="text"
-                                placeholder="Nombre"
-                                value={formData.name}
-                                onChange={handleChange}
-                                required
-                            />
-                            <input
-                                className={styles.input}
-                                name="lastname"
-                                type="text"
-                                placeholder="Apellido"
-                                value={formData.lastname}
-                                onChange={handleChange}
-                                required
-                            />
-                            <input
-                                className={styles.input}
-                                name="email"
-                                type="email"
-                                placeholder="Correo"
-                                value={formData.email}
-                                onChange={handleChange}
-                                required
-                            />
-                            <input
-                                className={styles.input}
-                                name="cellphoneNumber"
-                                type="tel"
-                                placeholder="Número de celular"
-                                value={formData.cellphoneNumber}
-                                onChange={handleChange}
-                                required
-                            />
-                            <input
-                                className={styles.input}
-                                name="company"
-                                type="text"
-                                placeholder="Compañía"
-                                value={formData.company}
-                                onChange={handleChange}
-                                required
-                            />
+                        <label htmlFor="" style={{color:'#252525'}}>Nombre</label><br />
+                            <input className={styles.input} name="name" type="text" placeholder="Nombre" value={formData.name} onChange={handleChange} required />
+                            <br /><label htmlFor="" style={{color:'#252525'}}>Apellido</label> <br />
+                            <input className={styles.input} name="lastname" type="text" placeholder="Apellido" value={formData.lastname} onChange={handleChange} required />
+                            <br /><label htmlFor="" style={{color:'#252525'}}>Correo</label> <br />
+                            <input className={styles.input} name="email" type="email" placeholder="Correo" value={formData.email} onChange={handleChange} required />
+                            <br /><label htmlFor="" style={{color: '#252525'}}>Numero de telefono</label><br />
+                            <input className={styles.input} name="cellphoneNumber" type="tel" placeholder="Número de celular" value={formData.cellphoneNumber} onChange={handleChange} required />
+                            <br /> <label htmlFor="" style={{color: '#252525'}}>Compañia</label><br />
+                            <input className={styles.input} name="company" type="text" placeholder="Compañía" value={formData.company} onChange={handleChange} required />
                             <button type="submit" className={styles.btn}>Guardar</button>
                         </form>
                     </div>

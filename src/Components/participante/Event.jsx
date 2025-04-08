@@ -51,10 +51,29 @@ function Eventpage() {
     };
 
     const registrarParticipante = async (e) => {
-        e.preventDefault();  // ← Cambié `event` por `e`
-       // Convertir la fecha de nacimiento al formato DD-MM-YYYY
-       const birthday = new Date(e.target.birthday.value); // Obtén la fecha del input
-       const formattedBirthday = `${birthday.getDate().toString().padStart(2, '0')}-${(birthday.getMonth() + 1).toString().padStart(2, '0')}-${birthday.getFullYear()}`;
+        e.preventDefault();
+
+        // Validación de la fecha de nacimiento
+        const birthdayInput = e.target.birthday.value;
+        const birthdayDate = new Date(birthdayInput);
+        const today = new Date();
+
+        // Verificar si la fecha es válida y anterior a hoy
+        if (birthdayDate >= today) {
+            toast.error('La fecha de nacimiento debe ser anterior al día de hoy');
+            return;
+        }
+
+        // Verificar que la fecha no sea muy antigua (por ejemplo, más de 120 años)
+        const maxAge = new Date();
+        maxAge.setFullYear(today.getFullYear() - 120);
+        if (birthdayDate < maxAge) {
+            toast.error('La fecha de nacimiento no es válida');
+            return;
+        }
+
+        // Convertir la fecha de nacimiento al formato DD-MM-YYYY
+        const formattedBirthday = `${birthdayDate.getDate().toString().padStart(2, '0')}-${(birthdayDate.getMonth() + 1).toString().padStart(2, '0')}-${birthdayDate.getFullYear()}`;
    
        // Crear el objeto con los datos del formulario
        const formData = new FormData();
@@ -159,19 +178,36 @@ function Eventpage() {
                     <div className={styles.modalContent}>
                         <h2 className={styles.formT}>Registro al Evento</h2>
                         <form onSubmit={registrarParticipante}>
-                            <input type="text" name='name' placeholder="Nombres" required />
-                            <input type="text" name='lastname' placeholder="Apellidos" required />
+                            <label htmlFor="name" style={{color:'#252525'}}>Nombres</label><br />
+                            <input type="text" name='name' placeholder="Nombres" required id="name" />
+                            
+                            <label htmlFor="lastname" style={{color:'#252525'}}>Apellidos</label><br />
+                            <input type="text" name='lastname' placeholder="Apellidos" required id="lastname" />
+                            
+                            <label htmlFor="gender" style={{color:'#252525'}}>Género</label><br />
                             <select name="gender" id="gender" className={styles.options} required>
                                 <option value="Hombre">Hombre</option>
                                 <option value="Mujer">Mujer</option>
                             </select><br />
-                            <label htmlFor="" style={{color: 'black'}}>"Fecha de nacimiento"</label>
-                            <input type="date" name='birthday' placeholder="Fecha de nacimiento" required />
-                            <input type="email" name='email' placeholder="Email" required />
-                            <input type="text" name='livingState' placeholder="Estado de residencia" required />
-                            <input type="text" name='profession' placeholder="Profesion"/>
-                            <input type="text" name='workplace' placeholder="Lugar de trabajo (Opcional)" />
-                            <input type="text" name='eventAwarness' placeholder="Como te enteraste de nosotros" required />
+                            
+                            <label htmlFor="birthday" style={{color:'#252525'}}>Fecha de nacimiento</label><br />
+                            <input type="date" name='birthday' placeholder="Fecha de nacimiento" required id="birthday" /><br />
+                            
+                            <label htmlFor="email" style={{color:'#252525'}} >Correo electrónico</label><br />
+                            <input type="email" name='email' placeholder="Email" required id="email" /> <br />
+                            
+                            <label htmlFor="livingState" style={{color:'#252525'}}>Estado de residencia</label><br />
+                            <input type="text" name='livingState' placeholder="Estado de residencia" required id="livingState" /><br />
+                            
+                            <label htmlFor="profession"style={{color:'#252525'}}>Profesión</label><br />
+                            <input type="text" name='profession' placeholder="Profesion" id="profession" /><br />
+                            
+                            <label htmlFor="workplace" style={{color:'#252525'}}>Lugar de trabajo</label><br />
+                            <input type="text" name='workplace' placeholder="Lugar de trabajo (Opcional)" id="workplace" /><br />
+                            
+                            <label htmlFor="eventAwarness" style={{color:'#252525'}}>¿Cómo te enteraste de nosotros?</label><br />
+                            <input type="text" name='eventAwarness' placeholder="Como te enteraste de nosotros" required id="eventAwarness" /><br />
+                            
                             <button type='submit' className={styles.Mbtn}>Confirmar</button>
                             <button type="button" onClick={() => setIsModalOpen(false)} className={styles.Mbtn}>Cerrar</button>
                         </form>

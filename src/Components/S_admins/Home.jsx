@@ -81,10 +81,15 @@ function Events() {
                         <img onClick={() => setOpenModal(false)} className={styles.arrowM} src={arrow} alt="" />
                         <h2 className={styles.formT}>Agregar usuario</h2>
                         <form onSubmit={enviarUsuario}>
+                            <label htmlFor="" style={{color:'#252525'}}>Nombre</label><br />
                             <input className={styles.input} name="name" type="text" placeholder="Nombre" value={formData.name} onChange={handleChange} required />
+                            <br /><label htmlFor="" style={{color:'#252525'}}>Apellido</label> <br />
                             <input className={styles.input} name="lastname" type="text" placeholder="Apellido" value={formData.lastname} onChange={handleChange} required />
+                            <br /><label htmlFor="" style={{color:'#252525'}}>Correo</label> <br />
                             <input className={styles.input} name="email" type="email" placeholder="Correo" value={formData.email} onChange={handleChange} required />
+                            <br /><label htmlFor="" style={{color: '#252525'}}>Numero de telefono</label><br />
                             <input className={styles.input} name="cellphoneNumber" type="tel" placeholder="Número de celular" value={formData.cellphoneNumber} onChange={handleChange} required />
+                            <br /> <label htmlFor="" style={{color: '#252525'}}>Compañia</label><br />
                             <input className={styles.input} name="company" type="text" placeholder="Compañía" value={formData.company} onChange={handleChange} required />
                             <button type="submit" className={styles.btn}>Guardar</button>
                         </form>

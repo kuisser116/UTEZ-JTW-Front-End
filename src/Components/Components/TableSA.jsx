@@ -272,12 +272,12 @@ function TableAdministradores() {
                             {administradoresActuales.length > 0 ? (
                                 administradoresActuales.map((admin, index) => (
                                     <tr key={index}>
-                                        <td>{indexPrimerItem + index + 1}</td>
-                                        <td>{admin.name} {admin.lastname}</td>
-                                        <td>{admin.email}</td>
-                                        <td>{admin.role}</td>
-                                        <td>{admin.cellphoneNumber}</td>
-                                        <td>{admin.status === true ? "Activo" : "Inactivo"}</td>
+                                        <td className={styles.edit}>{indexPrimerItem + index + 1}</td>
+                                        <td className={styles.edit}>{admin.name} {admin.lastname}</td>
+                                        <td className={styles.edit}>{admin.email}</td>
+                                        <td className={styles.edit}>{admin.role}</td>
+                                        <td className={styles.edit}>{admin.cellphoneNumber}</td>
+                                        <td className={styles.edit}>{admin.status === true ? "Activo" : "Inactivo"}</td>
                                         <td className={styles.edit}>
                                             <img className={styles.img} src={pen} onClick={() => handleEdit(admin)} />
                                             <img 
@@ -333,6 +333,8 @@ function TableAdministradores() {
                         <img onClick={handleCloseModal} className={styles.arrowM} src={arrow} alt="Cerrar" />
                         <h2 className={styles.formT}>Editar Administrador</h2>
                         <form onSubmit={handleSubmit}>
+                        <label style={{ color: '#252525' }}>Nombre:</label>
+                            <br />
                             <input
                                 className={styles.input}
                                 name="name"
@@ -342,6 +344,9 @@ function TableAdministradores() {
                                 onChange={handleInputChange}
                                 required
                             />
+                            <br />
+                            <label style={{ color: '#252525' }}>Apellido:</label>
+                            <br />
                             <input
                                 className={styles.input}
                                 name="lastname"
@@ -351,6 +356,9 @@ function TableAdministradores() {
                                 onChange={handleInputChange}
                                 required
                             />
+                            <br />
+                            <label style={{ color: '#252525' }}>Correo:</label>
+                            <br />
                             <input
                                 className={styles.input}
                                 name="email"
@@ -360,6 +368,9 @@ function TableAdministradores() {
                                 onChange={handleInputChange}
                                 required
                             />
+                            <br />
+                            <label style={{ color: '#252525' }}>Teléfono:</label>
+                            <br />
                             <input
                                 className={styles.input}
                                 name="cellphoneNumber"

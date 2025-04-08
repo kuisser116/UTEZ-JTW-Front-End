@@ -40,6 +40,7 @@ function LoginComponent() {
             // Guardar en localStorage
             localStorage.setItem('token', token);
             localStorage.setItem('adminId', user._id);
+            console.log(user.role)
     
             // Redireccionar según el rol
             if (user.role === 'SuperAdmin') {

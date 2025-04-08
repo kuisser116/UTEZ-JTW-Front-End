@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import styles from '../../assets/styles/Components/TablaChecadores.module.css';
-import pen from '../../assets/img/Assets_admin/pencil-solid-240.png';
+import pen from '../../assets/img/Assets_admin/select-multiple-solid-240.png';
 import axios from 'axios';
 import { url } from '../../utils/base.url';
 import arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png';
@@ -348,6 +348,7 @@ function TableChecadores() {
                                 <th>Correo</th>
                                 <th>Evento Asignado</th>
                                 <th>Status</th>
+                                <th>Asignar Evento</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -355,10 +356,10 @@ function TableChecadores() {
                             {supervisoresActuales.length > 0 ? (
                                 supervisoresActuales.map((supervisor, index) => (
                                     <tr key={supervisor._id}>
-                                        <td>{(paginaActual - 1) * itemsPorPagina + index + 1}</td>
-                                        <td>{supervisor.name}</td>
-                                        <td>{supervisor.email}</td>
-                                        <td>
+                                        <td className={styles.edit}>{(paginaActual - 1) * itemsPorPagina + index + 1}</td>
+                                        <td className={styles.edit}>{supervisor.name}</td>
+                                        <td className={styles.edit}>{supervisor.email}</td>
+                                        <td className={styles.edit}>
                                             {supervisor.events.map(eventoId => (
                                                 <span key={eventoId}>
                                                     {events[eventoId] || "Evento no encontrado"}
@@ -366,10 +367,13 @@ function TableChecadores() {
                                                 </span>
                                             ))}
                                         </td>
-                                        <td>{supervisor.status ? 'Activo' : 'Inactivo'}</td>
+                                        <td className={styles.edit}>{supervisor.status ? 'Activo' : 'Inactivo'}</td>
                                         <td className={styles.edit}>
                                             <img className={styles.img} src={pen} alt="Editar" onClick={() => handleEditClick(supervisor)} />
-                                            <img 
+                                          
+                                        </td>
+                                        <td className={styles.edit}>
+                                        <img 
                                                 className={styles.img} 
                                                 src={supervisor.status ? disable : check} 
                                                 onClick={() => {
@@ -421,8 +425,9 @@ function TableChecadores() {
                         <img onClick={() => setOpenEditModal(false)} className={styles.arrowM} src={arrow} alt="" />
                         <h2 className={styles.formT}>Editar Checador</h2>
                         <form onSubmit={handleEditSubmit}>
+                            <label htmlFor="" style={{color: '#252525'}}>Selecciona el evento</label>
                             <select 
-                                className={styles.inputS} 
+                                className={styles.inputS1} 
                                 value={selectedSupervisor.events[0] || ''} 
                                 onChange={handleEventChange}
                             >
@@ -432,6 +437,7 @@ function TableChecadores() {
                                 ))}
                             </select>
 
+                            <label htmlFor="" style={{color: '#252525'}}>Selecciona los talleres del evento</label>
                             <select 
                                 className={styles.inputS}
                                 multiple
@@ -460,7 +466,7 @@ function TableChecadores() {
             {openConfirmModal && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContentStatus}>
-                        <h2 className={styles.formT}>Confirmar Acción</h2>
+                        <h2 className={styles.formT2}>Confirmar Acción</h2>
                         <p className={styles.pStatus}>
                             ¿Seguro que quieres {confirmAction} a {selectedSupervisor.name}?
                         </p>

@@ -293,6 +293,7 @@ function Events() {
                         <img onClick={() => setOpenModalRegister(false)} className={styles.arrowMR} src={arrow} alt="" />
                         <h2 className={styles.formT}>Registrar checador</h2>
                         <form onSubmit={handleSubmit} className={styles.form}>
+                            <label htmlFor="" style={{color: "#252525"}}>Nombre</label> <br />
                             <input
                                 type="text"
                                 name="name"
@@ -301,7 +302,8 @@ function Events() {
                                 onChange={handleInputChange}
                                 required
                                 className={styles.input}
-                            />
+                            /> <br />
+                            <label htmlFor="" style={{color: "#252525"}}>Apellido</label> <br />
                             <input
                                 type="text"
                                 name="lastname"
@@ -311,6 +313,8 @@ function Events() {
                                 required
                                 className={styles.input}
                             />
+                            <br />
+                            <label htmlFor="" style={{color: "#252525"}}>Correo electrónico</label> <br />
                             <input
                                 type="email"
                                 name="email"
@@ -320,6 +324,8 @@ function Events() {
                                 required
                                 className={styles.input}
                             />
+                            <br />
+                            <label htmlFor="" style={{color: "#252525"}}>Número de teléfono</label> <br />
                             <input
                                 type="tel"
                                 name="cellphoneNumber"

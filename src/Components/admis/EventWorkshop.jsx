@@ -18,6 +18,8 @@ import 'swiper/css/pagination';
 import { Autoplay, EffectCoverflow, Pagination } from 'swiper/modules';
 import { url } from '../../utils/base.url';
 import { Toaster, toast } from 'sonner'
+import classNames from 'classnames';
+import ReporteImg from '../../assets/img/Assets_admin/report-analysis-5-45.png'
 
 
 function EventWorkshop() {
@@ -46,6 +48,16 @@ function EventWorkshop() {
 
     const token = localStorage.getItem("token");
 
+    const [counts, setCounts] = useState({
+        checadores: 0,
+        participantes: 0,
+        talleres: 0
+    });
+
+    const [workshopStats, setWorkshopStats] = useState({
+        participantesPorTaller: 0,
+        talleresPopulares: []
+    });
 
     useEffect(() => {
         if (!token) {
@@ -67,6 +79,92 @@ function EventWorkshop() {
         };
         fetchEventDetails();
     },[eventId]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Obtener supervisores (checadores)
+                const supervisorsResponse = await axios.get(`${url}/supervisor/`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const eventSupervisors = supervisorsResponse.data.data.filter(
+                    supervisor => supervisor.events.includes(eventId)
+                );
+
+                // Obtener participantes
+                const participantsResponse = await axios.get(`${url}/event/participants/${eventId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                // Obtener talleres
+                const workshopsResponse = await axios.get(`${url}/workshop/all-workshops`);
+                const eventWorkshops = workshopsResponse.data.data.filter(
+                    workshop => workshop.event === eventId
+                );
+
+                setCounts({
+                    checadores: eventSupervisors.length,
+                    participantes: participantsResponse.data.data.length,
+                    talleres: eventWorkshops.length
+                });
+
+            } catch (error) {
+                console.error('Error al obtener datos:', error);
+            }
+        };
+
+        fetchData();
+    }, [eventId, token]);
+
+    useEffect(() => {
+        const fetchWorkshopStats = async () => {
+            try {
+                const workshopsResponse = await axios.get(`${url}/workshop/all-workshops`);
+                const eventWorkshops = workshopsResponse.data.data.filter(
+                    workshop => workshop.event === eventId
+                );
+
+                console.log('Todos los talleres del evento:', eventWorkshops);
+
+                // Modificamos esta parte para usar directamente el array de participants
+                const workshopsWithParticipants = eventWorkshops.map(workshop => {
+                    return {
+                        ...workshop,
+                        participantCount: workshop.participants ? workshop.participants.length : 0
+                    };
+                });
+
+                console.log('Talleres con número de participantes:', workshopsWithParticipants);
+
+                // Ordenar talleres por número de participantes (descendente)
+                const sortedWorkshops = workshopsWithParticipants.sort(
+                    (a, b) => b.participantCount - a.participantCount
+                );
+
+                const totalParticipants = workshopsWithParticipants.reduce(
+                    (sum, workshop) => sum + workshop.participantCount, 
+                    0
+                );
+                const averageParticipants = workshopsWithParticipants.length > 0 
+                    ? Math.round(totalParticipants / workshopsWithParticipants.length) 
+                    : 0;
+
+                setWorkshopStats({
+                    participantesPorTaller: averageParticipants,
+                    talleresPopulares: sortedWorkshops
+                });
+
+            } catch (error) {
+                console.error('Error al obtener estadísticas de talleres:', error);
+            }
+        };
+
+        fetchWorkshopStats();
+    }, [eventId]);
 
     if (!event) return <p>Cargando evento...</p>;
 
@@ -317,9 +415,7 @@ function EventWorkshop() {
                 >
                     Agregar taller <img className={styles.plusadd} src={plus} alt="" />
                 </button>
-                <Link to='/Dashboard' state={'/EventWorkshop'}>
-                    <img className={styles.graficView} src={grafic} alt="" />
-                </Link>
+
                 <img 
                     className={styles.configView} 
                     src={config} 
@@ -327,6 +423,49 @@ function EventWorkshop() {
                     onClick={() => setOpenEditModal(true)}
                 />
                 <TableTalleres/>
+
+                
+            </div>
+
+
+            <div className={styles.dashboardcontent}>
+            <h2 className={styles.tittleDashboard}>Dashboard</h2>
+                <div className={styles.dashboard}>
+                    <div className={styles.dashboardItem}>
+                        <div className={classNames(styles.dashboardModule, styles.dashboardModuleChecador)}>
+                            <h3 className={styles.h3}>Checadores</h3>
+                            <h4 className={styles.datos}>{counts.checadores}</h4>
+                        </div>
+                        <div className={classNames(styles.dashboardModule, styles.dashboardModuleAsistentes)}>
+                            <h3 className={styles.h3}>Participantes</h3>
+                            <h4 className={styles.datos}>{counts.participantes}</h4>
+                        </div>
+                        <div className={classNames(styles.dashboardModule, styles.dashboardModuleTalleres)}>
+                            <h3 className={styles.h3}>Talleres</h3>
+                            <h4 className={styles.datos}>{counts.talleres}</h4>
+                        </div>
+                        <div className={classNames(styles.dashboardModule, styles.dashboardModuleList)}>
+                            <h3 className={styles.h3}>Talleres más Populares</h3>
+                            <div className={styles.datosList}>
+                                {workshopStats.talleresPopulares.map((taller, index) => (
+                                    <div key={taller._id} className={styles.tallerItem}>
+                                        {`${index + 1}. ${taller.name} (${taller.participantCount} participantes)`}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className={classNames(styles.dashboardModule, styles.dashboardModuleActividad)}>
+                            <h3 className={styles.h3}>Promedio de Participantes por Taller</h3>
+                            <h4 className={styles.datos}>{workshopStats.participantesPorTaller}</h4>
+                        </div>
+                        <img src={ReporteImg} alt="" className={styles.grafico}/>
+                        <div className={styles.f1}></div>
+                        <div className={styles.f2}></div>
+                        <div className={styles.f3}></div>
+                        <div className={styles.f4}></div>
+                    </div>
+                </div>
             </div>
 
             {openModal && (
@@ -386,24 +525,32 @@ function EventWorkshop() {
                                     required
                                     onFocus={verCalendario}
                                 />
+                                <br />
+                                <label htmlFor="" style={{color: "#252525"}}>Nombre</label> <br />
                                 <input 
                                     type="text" 
                                     name='name' 
                                     placeholder='Nombre del taller' 
                                     required
                                 />
+                                <br />
+                                <label htmlFor="" style={{color: "#252525"}}>Descripción</label> <br />
                                 <input 
                                     type="text" 
                                     name='description' 
                                     placeholder='Descripción del taller' 
                                     required
                                 />
+                                <br />
+                                <label htmlFor="" style={{color: "#252525"}}>Cupo límite</label> <br />
                                 <input 
                                     type="number" 
                                     name='limitQuota' 
                                     placeholder='Cupo límite' 
                                     required
                                 />
+                                <br />
+                                <label htmlFor="" style={{color: "#252525"}}>Nombre del instructor</label> <br />
                                 <input 
                                     type="text" 
                                     name='instructor' 
@@ -462,30 +609,34 @@ function EventWorkshop() {
                             />
                             
                             <div className={styles.formDataMain}>
+                                <label htmlFor="" style={{color:'#252525'}}>Fecha de inicio</label> <br />
                                 <input 
                                     type="datetime-local" 
                                     name="startDate" 
                                     placeholder='Fecha de inicio'
                                     onFocus={verCalendario}
                                 />
+                                <br /> <label htmlFor="" style={{color:'#252525'}}>Fecha de fin"</label> <br />
                                 <input 
                                     type="datetime-local" 
                                     name="endDate" 
                                     onFocus={verCalendario}
                                 />
+                                <br /> <label htmlFor="" style={{color:'#252525'}}>Nombre del evento</label> <br />
                                 <input 
                                     type="text" 
                                     name='name' 
                                     placeholder='Nombre del evento'
                                     defaultValue={event.name}
                                 />
+                                <br /> <label htmlFor="" style={{color:'#252525'}}>Descripción del evento</label> <br />
                                 <input 
                                     type="text" 
                                     name='description' 
                                     placeholder='Descripción del evento'
                                     defaultValue={event.description}
                                 />
-                                
+                                <br /> <label htmlFor="" style={{color: '#252525'}}>Imagenes para el banner</label> <br />
                                 <input 
                                     type="file" 
                                     name="bannerImgs" 

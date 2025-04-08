@@ -175,7 +175,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 25%;
-    height: 60%;
+    height: 65%;
 }
 
 
@@ -193,7 +193,7 @@ body {
     position: absolute;
     width: 3vh;
     left: 38.5%;
-    top: 22%;
+    top: 19%;
     cursor: pointer;
 }
 

@@ -354,7 +354,7 @@ function TableTalleres() {
 
                             <div className="formDataMain">
                                 <div className="date-input-container">
-                                    <label htmlFor="startDate">Fecha de inicio:</label>
+                                    <label htmlFor="startDate" style={{color:'#252525'}}>Fecha de inicio:</label>
                                     <input
                                         type="datetime-local"
                                         id="startDate"
@@ -366,7 +366,7 @@ function TableTalleres() {
                                 </div>
 
                                 <div className="date-input-container">
-                                    <label htmlFor="endDate">Fecha de fin:</label>
+                                    <label htmlFor="endDate" style={{color:'#252525'}}>Fecha de fin:</label>
                                     <input
                                         type="datetime-local"
                                         id="endDate"
@@ -377,29 +377,40 @@ function TableTalleres() {
                                     />
                                 </div>
 
+                                <br />
+                                <label style={{ color: '#252525' }}>Nombre del taller</label>
+                                <br />
                                 <input
                                     type="text"
                                     name="name"
                                     defaultValue={selectedTaller.name || ''}
-                                    placeholder="Nombre del taller"
                                 />
+
+                                <br />
+                                <label style={{ color: '#252525' }}>Descripción del taller</label>
+                                <br />
                                 <input
                                     type="text"
                                     name="description"
                                     defaultValue={selectedTaller.description || ''}
-                                    placeholder="Descripción del taller"
                                 />
+
+                                <br />
+                                <label style={{ color: '#252525' }}>Cupo límite</label>
+                                <br />
                                 <input
                                     type="number"
                                     name="limitQuota"
                                     defaultValue={selectedTaller.limitQuota || ''}
-                                    placeholder="Cupo límite"
                                 />
+
+                                <br />
+                                <label style={{ color: '#252525' }}>Nombre del instructor</label>
+                                <br />
                                 <input
                                     type="text"
                                     name="instructor"
                                     defaultValue={selectedTaller.instructor || ''}
-                                    placeholder="Nombre del instructor"
                                 />
                             </div>
 
