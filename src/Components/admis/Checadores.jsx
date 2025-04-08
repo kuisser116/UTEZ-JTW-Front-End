@@ -167,9 +167,11 @@ function Events() {
                 status: true
             };
 
-            await axios.post(`${url}/supervisor/`, supervisorData, {
+            const response = await axios.post(`${url}/supervisor/`, supervisorData, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
+
+        
 
             setOpenModalRegister(false);
             fetchChecadores();

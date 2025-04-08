@@ -146,7 +146,6 @@ function EventWorkshop() {
         formData.append('endDate', endDate);
         formData.append('limitQuota', e.target.limitQuota.value);
         formData.append('instructor', e.target.instructor.value);
-        formData.append('event', eventId);
     
         const imgFile = imgRef.current.files[0];
         if (imgFile) {
@@ -163,7 +162,22 @@ function EventWorkshop() {
                     }
                 }
             );
-    
+
+            const { createdWorkshop } = response.data;
+            const workshopId = createdWorkshop._id;
+            
+            const response2 = await axios.put(
+              `${url}/event/workshop/?eventId=${eventId}&workshopId=${workshopId}`,
+              { startDate, endDate, },
+              {
+                headers: {
+                  'Authorization': `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+                }
+              }
+            );
+            
+            console.log('taller en evento:', response2.data)
             console.log('Taller creado:', response.data);
             setOpenModal(false);
             window.location.reload();

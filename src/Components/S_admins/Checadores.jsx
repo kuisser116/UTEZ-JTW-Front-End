@@ -13,6 +13,7 @@ import { Toaster, toast } from 'sonner'
 
 function Events() {
     const [openModal, setOpenModal] = useState(false);
+    const [opernModalC, setOpenModalC] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         lastname: '',

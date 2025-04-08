@@ -4,6 +4,7 @@ import pen from '../../assets/img/Assets_admin/pencil-solid-240.png';
 import axios from 'axios';
 import { url } from '../../utils/base.url';
 import arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png';
+import { Toaster, toast } from 'sonner'
 
 function TableChecadores() {
     const [supervisores, setSupervisores] = useState([]);
@@ -16,19 +17,20 @@ function TableChecadores() {
     
     const token = localStorage.getItem("token");
     const adminId = localStorage.getItem("adminId");
+    console.log(token)
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Obtener todos los supervisores
-                const responseSupervisores = await axios.get('http://localhost:3000/api/supervisor/', {
+                const responseSupervisores = await axios.get(`${url}/supervisor/`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
                 console.log(responseSupervisores.data)
 
                 // Obtener eventos de la base de datos
-                const responseEventos = await axios.get('http://localhost:3000/api/event/all-events');
+                const responseEventos = await axios.get(`${url}/event/all-events`);
                 const eventosMap = responseEventos.data.data.reduce((acc, evento) => {
                     acc[evento._id] = evento.name;
                     return acc;
@@ -37,7 +39,7 @@ function TableChecadores() {
 
                 // Obtener eventos asignados al administrador actual
                 if (adminId) {
-                    const responseAdminEvents = await axios.get(`http://localhost:3000/api/event/admin`, {
+                    const responseAdminEvents = await axios.get(`${url}/event/admin`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
 
@@ -53,7 +55,7 @@ function TableChecadores() {
                 }
 
                 // Add workshop fetching
-                const responseWorkshops = await axios.get('http://localhost:3000/api/workshop/all-workshops', {
+                const responseWorkshops = await axios.get(`${url}/workshop/all-workshops`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 setWorkshops(responseWorkshops.data.data);
@@ -97,23 +99,36 @@ function TableChecadores() {
     const handleEditSubmit = async (event) => {
         event.preventDefault();
         try {
-            await axios.put(`http://localhost:3000/api/supervisor/${selectedSupervisor._id}`, {
+                await axios.put(`${url}/supervisor/${selectedSupervisor._id}`, {
                 events: selectedSupervisor.events,
                 workshops: selectedSupervisor.workshops,
                 status: selectedSupervisor.status
             }, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
+
+            const workshopId = selectedSupervisor.workshops;
+            const response = await axios.put(
+                `${url}/workshop/add-supervisor/${workshopId}/${selectedSupervisor._id}`,
+                {},
+                { headers: { 'Authorization': `Bearer ${token}` } }
+            );
+            
+            console.log(response.data)
+            
+            
+
             setOpenEditModal(false);
             location.reload();
         } catch (error) {
+            toast.error('Este supervisor ya está asignado a este taller');
             console.error('Error al actualizar el supervisor:', error);
-            alert('Error al actualizar el supervisor');
         }
     };
 
     return (
         <div>
+            <Toaster position="top-center" />
             <div className={styles.tableContent}>
                 <div className={styles.tablaContainer}>
                     <table className={styles.tablaTalleres}>

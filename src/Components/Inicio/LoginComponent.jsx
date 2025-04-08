@@ -22,7 +22,7 @@ function LoginComponent() {
                 toast.error('Correo o contraseña incorrectos');
                 return;
             }
-            const response = await axios.post('http://localhost:3000/api/auth/login', {
+            const response = await axios.post(`${url}/auth/login`, {
                 email,
                 password
             });
@@ -53,6 +53,7 @@ function LoginComponent() {
                     navigate('/HomeAdmin');
                 },2000);
             } else {
+                toast.error('Acceso denegado');
                 console.log('Rol no reconocido');
             }
     
