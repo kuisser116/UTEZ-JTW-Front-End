@@ -422,7 +422,7 @@ function EventWorkshop() {
                     alt="" 
                     onClick={() => setOpenEditModal(true)}
                 />
-                <TableTalleres/>
+                <TableTalleres />
 
                 
             </div>
@@ -478,7 +478,7 @@ function EventWorkshop() {
                             alt="" 
                         />
                         <h2 className={styles.formT}>Agregar Taller</h2>
-                        <form onSubmit={crearTaller}>
+                        <form className={styles.formTalleres} onSubmit={crearTaller}>
                             <div 
                                 className={styles.fileImg} 
                                 onClick={() => imgRef.current.click()}
