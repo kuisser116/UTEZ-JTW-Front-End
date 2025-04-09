@@ -422,7 +422,7 @@ function EventWorkshop() {
                     alt="" 
                     onClick={() => setOpenEditModal(true)}
                 />
-                <TableTalleres />
+                <TableTalleres className={styles.tableTalleres} />
 
                 
             </div>

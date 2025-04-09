@@ -103,10 +103,13 @@ h3{
     z-index: 2;
 }
 
+
+
 .tableContent{
     position: absolute;
     color: #252525;
     width: 100%;
+    z-index: 2;
 }
 
 .tableTittle{
