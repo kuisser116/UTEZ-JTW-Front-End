@@ -1,0 +1,49 @@
+.topNav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    z-index: 2;
+    background-color: white;
+    height: 9%;
+}
+
+.nav{
+    padding: 20px;
+}
+
+.perfil{
+    position: absolute;
+    background-color: #252525;
+    width:15vh;
+    height: 5vh;
+    right: 20px;
+    border-radius: 20px;
+}
+
+.today{
+    position: absolute;
+    color: #252525;
+    font-size: 2.4vh;
+    margin: 0;
+    left: 8%;
+    top: 23px;
+}
+
+.logo{
+  width: 150px;
+  position: absolute;
+  right: 5%;
+  top: 2%;
+}
+
+.arrow{
+    position: absolute;
+    left: 5%;
+    width: 2%;
+    margin-top: 3px;
+    top: 20px;
+}

@@ -1,0 +1,447 @@
+body {
+    background-color: #F4F2EE;
+    margin: 0;
+    font-family: 'Geomanist', sans-serif;
+}
+
+
+
+.search{
+    position: absolute;
+    width: 100%;
+    top: 12%;
+}
+
+.searchInput{
+    padding: 15px;
+    background-color: #25252500;
+    border-radius: 25px;
+    border-style: solid;
+    border-width: 3px;
+    border-color: #252525;
+    width: 20%;
+    margin-left: 15%;
+    font-size: 2vh;
+    color: #252525;
+    align-content: center;
+}
+
+.selection{
+    position: absolute;
+    color: #252525;
+    top: 0%;
+    left: 40%;
+    width: 60%;
+}
+
+.tittle{
+    color: #252525;
+    position: absolute;
+    margin-left: 5%;
+    font-size: 5vh;
+    margin-bottom: 0;
+    margin-top: 0;
+    top: 10%;
+
+}
+
+#dropdown{
+    background-color: #25252500;
+    padding: 10px ;
+    color: #252525;
+    border-radius: 25px;
+    width: 15%;
+    font-size: 2vh;
+    height: 5vh;
+    border-width: 3px;
+    border-color: #252525;
+    border-style: solid;
+}
+
+.eventsGrid{
+    position: absolute;
+    width: 90%;
+    height: 70%;
+    top: 30%;
+    display: grid;
+    overflow-y: auto;
+    left: 5%;
+    right: 5%;
+    grid-template-columns: repeat(4, 1fr);
+
+}
+
+.eventCard{
+    width: 90%;
+    border-radius: 10px;
+    background-Size: cover;
+    background-Repeat: no-repeat;
+    background-Position: center;
+    min-height: 350px; /* Define un tamaño mínimo para evitar que se encojan */
+    height: 50%; 
+    margin-bottom: 45px;
+}
+
+.eventInfo {
+    color: #ffffff;
+    justify-content: center;
+    border-radius: 0px 0px 15px 15px;
+    font-size: 2vh;
+    height: 100%;
+    opacity: 0;  /* Inicia invisible */
+    transition: opacity 0.2s ease-in-out;  /* Fade-in de 2 segundos */
+}
+
+.eventCard:hover .eventInfo {
+    background: linear-gradient(to top, #25252580 10%, rgba(0, 0, 0, 0) 50%);
+    opacity: 1;  /* Se hace visible */
+}
+
+
+
+.eventCard:hover .p {
+    color: #ffffff;
+}
+
+.eventCard:hover .pt {
+    color: #ffffff;
+    font-size: 2vh;
+}
+
+.info{
+    color: white;
+    padding: 30px;
+    padding-top: 27vh;
+}
+
+.p{
+    color: rgba(255, 255, 255, 0);
+    margin: 0;
+    font-size: 2vh;
+}
+
+.pt{
+    color: rgba(219, 181, 55, 0);
+    margin: 0;
+    font-size: 2vh;
+}
+
+.addEvent{
+    position: absolute;
+    color: #252525;
+    border-color: #252525;
+    border-width: 3px;
+    border-radius: 40px;
+    background-color: #25252500;
+    width: 13%;
+    font-size: 2vh;
+    right: 6%;
+    top: 21%;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    height: 5%;
+}
+
+.plusadd{
+    width: 4vh;
+    padding-left: 40px;    
+}
+
+/*Modal*/
+
+/* Fondo difuminado cuando el modal está abierto */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+}
+
+/* Contenedor del modal */
+.modalContent {
+    background: white;
+    padding: 20px;
+    border-radius: 25px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 80%;
+}
+
+.modalContent4 {
+    background: white;
+    padding: 20px;
+    border-radius: 25px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    height: 90%;
+}
+
+.modalContent2 {
+    background: white;
+    padding: 20px;
+    border-radius: 25px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 10%;
+}
+
+.modalContent3 {
+    background: white;
+    padding: 20px;
+    border-radius: 25px;
+    text-align: center; 
+    width: 30%;
+    height: 55%;
+}
+
+
+/* Estilo de los inputs y botones */
+.modalContent input {
+    width: 100%;
+    padding: 8px;
+    margin: 5px ;
+    border-radius: 10px;
+    font-size: 20px;
+    height: 45px;
+    margin-bottom: 10px;
+    border-width: 2px;
+    text-align: center;
+}
+
+.modalContent button {
+    margin: 20px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.Mbtn{
+    width: 25%;
+    font-size: 2vh;
+    border-color: #252525;
+    background-color: #25252500;
+    color: #252525;
+    border-style: solid;
+    border-width: 3px;
+    margin-top: 0;
+    
+}
+
+.formT{
+    color: #252525;
+    font-size: 4vh;
+    margin: auto;
+    padding-bottom: 20px;
+    text-align: center;
+}
+
+
+
+.fileImg{
+    position: absolute;
+    width: 27%;
+    height: 17%;
+    background-color: #25252577;
+    left: 36.5%;
+    top: 70%;
+    border-radius: 20px ;
+}
+
+.formDataMain{
+    position: absolute;
+    left: 35%;
+    top: 20%;
+    height: 30%;
+    width: 30%;
+    gap: 0px;
+    
+}
+
+
+
+.btns{
+    position: absolute;
+    top: 90%;
+    width: 30%;
+    margin: 0;
+}
+
+.btns button{
+    height: 50px;
+    border-radius: 20px;
+    border-color: #2525258d;
+}
+
+.formDataMain label{
+    text-align: center;
+}
+
+.btnA{
+    background-color: #25252500;
+    width: 10px;
+    height: 45px;
+    font-size: 20px;
+    color:#252525;
+    border-color: #252525;
+    margin: 0;
+}
+
+.alertaImg{
+    margin: 10px;
+}
+
+.arrowM{
+    position: absolute;
+    width: 4vh;
+    left: 11%;
+    top: 11%;
+    cursor: pointer;
+}
+
+.arrowMC{
+    position: absolute;
+    width: 4vh;
+    left: 36%;
+    top: 6%;
+    cursor: pointer;
+}
+
+.arrowMR{
+    position: absolute;
+    width: 4vh;
+    left: 35%;
+    top: 24%;
+    cursor: pointer;
+}
+
+.advice{
+    color: #252525;
+    position: absolute;
+    left: 15%;
+    top: 80%;
+    font-size: 15px;
+}
+
+
+  /*Tabla*/
+  
+  .tablaContainer {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    color: #252525;
+    max-height: 69%; /* Ajusta según necesidad */
+    overflow-y: auto;
+  }
+  
+  .tablaTalleres {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .encabezado {
+    background-color: #f2f2f2;
+    height: 50px;
+  }
+  
+  .tabla-talleres th {
+    text-align: center;
+    padding: 12px 16px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .tabla-talleres tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+    height: 54px;
+    text-align: center;
+  }
+  
+  .tabla-talleres td {
+    padding: 8px 16px;
+    color: #333;
+  }
+  
+  .add{
+    width: 100px;
+    height: 30px;
+    font-size: 20px;
+  }
+
+  .options{
+    width: 100%;
+    height: 30%;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: #252525;
+    color: #252525;
+    background-color: #25252500;
+  }
+
+  .siC{
+    position: absolute;
+    top: 50%;
+    width: 20%;
+  }
+
+  .add{
+    width: 10%;
+    height: 30%;
+    color: #252525;
+    background-color: #25252500;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: #252525;
+    margin-right: 10px;
+  }
+
+  .cancel{
+    width: 10%;
+    height: 30%;
+    color: #252525;
+    background-color: #25252500;
+    font-size: 15px;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: #252525;
+  }
+
+  .btnc{
+    position: absolute;
+    top: 8.5%;
+    width: 15%;
+    font-size: 20px;
+    background-color: #f4f2ee00;
+    color: #252525;
+    border-radius: 40px;
+    height: 5%;
+    right: 10%;
+    border-color: #252525;
+    border-width: 3px;
+    border-style: solid;
+  }
+
+  .options2{
+    width: 90%;
+    height: 0%;
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: #252525;
+    color: #252525;
+    background-color: #25252500;
+    font-size: 2vh;
+    padding: 10px;
+    margin-bottom: 10px;
+  }

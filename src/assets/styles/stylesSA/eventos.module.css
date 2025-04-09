@@ -1,0 +1,124 @@
+body {
+    background-color: #ffffff;
+    margin: 0;
+    font-family: 'Geomanist', sans-serif;
+}
+
+
+
+.search{
+    position: absolute;
+    width: 100%;
+    top: 12%;
+}
+
+.searchInput{
+    padding: 15px;
+    background-color: #25252500;
+    border-radius: 25px;
+    border-style: solid;
+    border-width: 3px;
+    border-color: #252525;
+    width: 20%;
+    margin-left: 16%;
+    font-size: 2vh;
+    color: #252525;
+    align-content: center;
+}
+
+.selection{
+    position: absolute;
+    color: #252525;
+    top: 0%;
+    left: 40%;
+    width: 60%;
+}
+
+.tittle{
+    color: #252525;
+    position: absolute;
+    margin-left: 5%;
+    font-size: 5vh;
+    margin-bottom: 0;
+    margin-top: 0;
+    top: 10%;
+
+}
+
+#dropdown{
+    background-color: #25252500;
+    padding: 10px ;
+    color: #252525;
+    border-radius: 25px;
+    width: 15%;
+    font-size: 2vh;
+    height: 5vh;
+    border-width: 3px;
+    border-color: #252525;
+    border-style: solid;
+}
+.eventsGrid{
+    position: absolute;
+    width: 90%;
+    height: 70%;
+    top: 30%;
+    display: grid;
+    overflow-y: auto;
+    left: 5%;
+    right: 5%;
+    grid-template-columns: repeat(4, 1fr);
+
+}
+
+.eventCard{
+    width: 90%;
+    border-radius: 10px;
+    background-Size: cover;
+    background-Repeat: no-repeat;
+    background-Position: center;
+    min-height: 350px; /* Define un tamaño mínimo para evitar que se encojan */
+    height: 50%; 
+    margin-bottom: 45px;
+}
+
+
+.eventInfo {
+    color: #ffffff;
+    justify-content: center;
+    border-radius: 0px 0px 15px 15px;
+    font-size: 2vh;
+    height: 100%;
+    opacity: 0;  /* Inicia invisible */
+    transition: opacity 0.2s ease-in-out;  /* Fade-in de 2 segundos */
+}
+
+.eventCard:hover .eventInfo {
+    background: linear-gradient(to top, #25252580 10%, rgba(0, 0, 0, 0) 50%);
+    opacity: 1;  /* Se hace visible */
+}
+
+.eventCard:hover .p {
+    color: #ffffff;
+}
+
+
+
+
+.info{
+    color: white;
+    padding: 30px;
+    padding-top: 27vh;
+}
+
+.p{
+    color: rgba(255, 255, 255, 0);
+    margin: 0;
+    font-size: 2vh;
+}
+
+
+
+
+
+
+

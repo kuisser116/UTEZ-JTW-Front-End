@@ -1,0 +1,37 @@
+/* navbar.module.css */
+.navbar {
+    position: absolute;
+    top: 20%;
+    left: 5%;
+    width: 90%;
+    background-color: #f4f2ee;
+    border-radius: 10px;
+}
+
+.navList {
+    list-style-type: none;
+    display: flex;
+    justify-content: left;
+}
+
+.navItem {
+    margin: 0 8vh;
+    margin-left: 0px;
+}
+
+.navLink {
+    color: #252525;
+    text-decoration: none;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.navLink:hover {
+    text-decoration: underline;
+}
+
+.active {
+    font-weight: bold;
+    color: #252525; /* O el color que prefieras */
+    border-bottom: 2px solid #252525;
+}
