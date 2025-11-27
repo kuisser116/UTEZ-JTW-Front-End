@@ -1,20 +1,28 @@
 import { useState, useEffect } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from "jwt-decode";
 import styles from '../../assets/styles/stylesUser/events.module.css';
 import Header from '../Components/Header';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { url } from '../../utils/base.url';
 import { Toaster, toast } from 'sonner';
+import { useAuth } from '../../context/AuthContext';
 
 function Eventpage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [event, setEvent] = useState(null);
     const [workshops, setWorkshops] = useState([]);
     const [selectedWorkshop, setSelectedWorkshop] = useState(null);
+    const [isRegistering, setIsRegistering] = useState(false);
     const eventId = localStorage.getItem('idEvent');
     const navigate = useNavigate();
+
+    // Usar el contexto de autenticación
+    const { user, isAuthenticated, loginWithGoogle, registerToEvent, isRegisteredInEvent } = useAuth();
+
+    // Verificar si ya está registrado en este evento
+    const isAlreadyRegistered = isRegisteredInEvent(eventId);
 
     useEffect(() => {
         const fetchEventDetails = async () => {
@@ -42,32 +50,46 @@ function Eventpage() {
 
     if (!event) return <p>Cargando evento...</p>;
 
-    const handleGoogleLogin = async (credentialResponse) => {
-        try {
-            const decoded = jwtDecode(credentialResponse.credential);
+    // Manejar el click en el botón de inscripción
+    const handleRegisterClick = async () => {
+        // Si no está autenticado, abrir modal de login
+        if (!isAuthenticated) {
+            setIsModalOpen(true);
+            return;
+        }
 
-            const userData = {
-                name: decoded.given_name,
-                lastname: decoded.family_name || "Sin apellido",
-                email: decoded.email,
-                profession: "Sin especificar",
-                livingState: "Sin especificar",
-                birthday: null,
-                gender: "Sin especificar",
-                eventAwarness: "Google",
-                workplace: "Sin especificar"
-            };
+        // Si ya está autenticado, registrar directamente
+        await handleDirectRegistration();
+    };
 
-            const response = await axios.post(`${url}/event/inscription/google/${eventId}`, userData, {
-                headers: { 'Content-Type': 'application/json' },
-            });
+    // Registro directo (cuando ya está autenticado)
+    const handleDirectRegistration = async () => {
+        setIsRegistering(true);
 
+        const result = await registerToEvent(eventId);
+
+        if (result.success) {
+            setShowSuccessModal(true);
+            toast.success('¡Registrado exitosamente!');
+        } else if (result.alreadyRegistered) {
+            toast.info('Ya estás registrado en este evento');
+        } else {
+            toast.error(result.error || 'Error al registrarse');
+        }
+
+        setIsRegistering(false);
+    };
+
+    // Manejar login con Google desde el modal
+    const handleGoogleLoginFromModal = async (credentialResponse) => {
+        const result = await loginWithGoogle(credentialResponse);
+
+        if (result.success) {
             setIsModalOpen(false);
-            navigate('/ListEvent');
-            toast.success('Registro exitoso con Google');
-        } catch (error) {
-            console.error("Google Login Error:", error);
-            toast.error('Error al registrarse con Google');
+            // Después del login, registrar automáticamente
+            await handleDirectRegistration();
+        } else {
+            toast.error('Error al iniciar sesión con Google');
         }
     };
 
@@ -76,7 +98,7 @@ function Eventpage() {
             <Toaster position="top-center" />
             <Header />
 
-            {/* HERO SECTION - Full Width Modern */}
+            {/* HERO SECTION */}
             <section className={styles.heroSection}>
                 <div className={styles.heroImageBg}>
                     <img src={`${url}/event/image?filename=${event.mainImg}`} alt={event.name} />
@@ -116,12 +138,18 @@ function Eventpage() {
                         </div>
 
                         <div className={styles.heroActions}>
-                            <button className={styles.ctaButton} onClick={() => setIsModalOpen(true)}>
-                                Inscríbete Ahora
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    <polyline points="12 5 19 12 12 19"></polyline>
-                                </svg>
+                            <button
+                                className={`${styles.ctaButton} ${isAlreadyRegistered ? styles.ctaButtonDisabled : ''}`}
+                                onClick={handleRegisterClick}
+                                disabled={isAlreadyRegistered || isRegistering}
+                            >
+                                {isRegistering ? 'Registrando...' : isAlreadyRegistered ? 'Inscrito ✓' : 'Inscríbete Ahora'}
+                                {!isAlreadyRegistered && !isRegistering && (
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        <polyline points="12 5 19 12 12 19"></polyline>
+                                    </svg>
+                                )}
                             </button>
 
                             <button
@@ -134,7 +162,6 @@ function Eventpage() {
                     </div>
                 </div>
 
-                {/* Scroll Indicator */}
                 <div className={styles.scrollIndicator}>
                     <div className={styles.scrollMouse}></div>
                     <span>Scroll para explorar</span>
@@ -412,16 +439,11 @@ function Eventpage() {
                 </div>
             )}
 
-            {/* REGISTRATION MODAL */}
+            {/* LOGIN MODAL */}
             {isModalOpen && (
                 <div className={styles.modalOverlay} onClick={() => setIsModalOpen(false)}>
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                        <button className={styles.closeBtn} onClick={() => setIsModalOpen(false)}>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
+
 
                         <div className={styles.modalIcon}>
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -430,14 +452,14 @@ function Eventpage() {
                             </svg>
                         </div>
 
-                        <h2 className={styles.formT}>Inscríbete al Evento</h2>
+                        <h2 className={styles.formT}>Iniciar Sesión</h2>
                         <p className={styles.modalSubtitle}>
-                            Únete con tu cuenta de Google de forma rápida y segura
+                            Inicia sesión con tu cuenta de Google para inscribirte al evento
                         </p>
 
                         <div className={styles.googleBtnWrapper}>
                             <GoogleLogin
-                                onSuccess={handleGoogleLogin}
+                                onSuccess={handleGoogleLoginFromModal}
                                 onError={() => {
                                     console.log('Login Failed');
                                     toast.error('Fallo el inicio de sesión con Google');
@@ -450,6 +472,35 @@ function Eventpage() {
 
                         <button className={styles.Mbtn} onClick={() => setIsModalOpen(false)}>
                             Cancelar
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* SUCCESS MODAL */}
+            {showSuccessModal && (
+                <div className={styles.modalOverlay} onClick={() => setShowSuccessModal(false)}>
+                    <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+
+
+                        <div className={styles.modalIcon} style={{ background: '#dcfce7', color: '#16a34a' }}>
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                            </svg>
+                        </div>
+
+                        <h2 className={styles.formT}>¡Registro Exitoso!</h2>
+                        <p className={styles.modalSubtitle}>
+                            Te has inscrito correctamente al evento. Recibirás más información en tu correo electrónico.
+                        </p>
+
+                        <button
+                            className={styles.Mbtn}
+                            style={{ background: '#16a34a', color: 'white', borderColor: '#16a34a' }}
+                            onClick={() => setShowSuccessModal(false)}
+                        >
+                            Entendido
                         </button>
                     </div>
                 </div>
