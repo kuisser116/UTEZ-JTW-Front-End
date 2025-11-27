@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
 import EventImg from '../../assets/img/assets_participante/wallpaperflare.com_wallpaper.jpg';
 import styles from '../../assets/styles/stylesUser/events.module.css';
 import Header from '../Components/Header';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css'; 
+import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -74,27 +76,28 @@ function Eventpage() {
 
         // Convertir la fecha de nacimiento al formato DD-MM-YYYY
         const formattedBirthday = `${birthdayDate.getDate().toString().padStart(2, '0')}-${(birthdayDate.getMonth() + 1).toString().padStart(2, '0')}-${birthdayDate.getFullYear()}`;
-   
-       // Crear el objeto con los datos del formulario
-       const formData = new FormData();
-       formData.append('name', e.target.name.value);
-       formData.append('email', e.target.email.value);
-       formData.append('password', e.target.email.value);
-       formData.append('lastname', e.target.lastname.value);
-       formData.append('birthday', formattedBirthday); // Usar la fecha convertida
-       formData.append('livingState', e.target.livingState.value);
-       formData.append('gender', e.target.gender.value);
-       formData.append('eventAwarness', e.target.eventAwarness.value);
-       formData.append('workplace', e.target.workplace.value);
-       formData.append('profession', e.target.profession.value);
-    
+
+        // Crear el objeto con los datos del formulario
+        const userData = {
+            name: e.target.name.value,
+            email: e.target.email.value,
+            password: e.target.email.value,
+            lastname: e.target.lastname.value,
+            birthday: formattedBirthday,
+            livingState: e.target.livingState.value,
+            gender: e.target.gender.value,
+            eventAwarness: e.target.eventAwarness.value,
+            workplace: e.target.workplace.value,
+            profession: e.target.profession.value
+        };
+
         try {
-            const response = await axios.post(`${url}/event/inscription/${eventId}`, formData,  {
+            const response = await axios.post(`${url}/event/inscription/${eventId}`, userData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
-            
+
             setIsModalOpen(false);
             console.log('Respuesta del servidor', response.data);
             navigate('/ListEvent');
@@ -103,7 +106,43 @@ function Eventpage() {
             toast.error('Correo ya registrado');
         }
     };
-    
+
+    const handleGoogleLogin = async (credentialResponse) => {
+        try {
+            const decoded = jwtDecode(credentialResponse.credential);
+            console.log("Google User:", decoded);
+
+            const userData = {
+                name: decoded.given_name,
+                lastname: decoded.family_name || "Sin apellido",
+                email: decoded.email,
+                // Mandamos vacíos o null los que no tenemos
+                profession: "Sin especificar",
+                livingState: "Sin especificar",
+                birthday: null,
+                gender: "Sin especificar",
+                eventAwarness: "Google",
+                workplace: "Sin especificar"
+            };
+
+            // Send to backend (Ruta especifica para Google)
+            const response = await axios.post(`${url}/event/inscription/google/${eventId}`, userData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            setIsModalOpen(false);
+            console.log('Respuesta del servidor', response.data);
+            navigate('/ListEvent');
+            toast.success('Registro exitoso con Google');
+
+        } catch (error) {
+            console.error("Google Login Error:", error);
+            toast.error('Error al registrarse con Google');
+        }
+    };
+
 
     return (
         <div>
@@ -118,12 +157,12 @@ function Eventpage() {
                 {/* Información del evento */}
                 <div className={styles.eventPart}>
                     <h2>{event.name}</h2>
-                    
+
                     {/* Botón para abrir el modal */}
                     <button onClick={() => setIsModalOpen(true)}>Registrarse</button>
 
                     <Link to={'/List'} state={'/Event'}>
-                    <p style={{cursor: 'pointer', textDecoration: 'underline'}}>Ver talleres</p>
+                        <p style={{ cursor: 'pointer', textDecoration: 'underline' }}>Ver talleres</p>
                     </Link>
 
                     <p>{event.description}</p>
@@ -131,86 +170,83 @@ function Eventpage() {
                 </div>
                 <img className={styles.arrowD} src={arrowD} alt="" />
 
-            
+
             </div>
 
             <div className={styles.carousel}>
-            <Swiper
-                effect={'coverflow'}
-                grabCursor={true}
-                centeredSlides={true}
-                slidesPerView={'auto'}
-                loop={true}
-                autoplay={{delay: 3000}}
-                speed={1500}
-                coverflowEffect={{
-                    rotate: 0,
-                    stretch: 0,
-                    depth: 0,
-                    modifier: 2,
-                    slideShadows: false,
-                }}
-                pagination={{ clickable: true }}
-                modules={[EffectCoverflow, Pagination, Autoplay]}
-                className={styles.swiperContainer}
-            >
-                {event.bannerImgs.map((img, index) => (
-                    <SwiperSlide key={index} className={styles.swiperSlide}>
-                        <img 
-                                src={`${url}/event/image?filename=${img}`} 
-                            alt={`Imagen ${index + 1}`} 
-                            className={styles.bannerImage}
-                        />
-                    </SwiperSlide>
-                ))}
-            </Swiper>
-        </div>
+                <Swiper
+                    effect={'coverflow'}
+                    grabCursor={true}
+                    centeredSlides={true}
+                    slidesPerView={'auto'}
+                    loop={true}
+                    autoplay={{ delay: 3000 }}
+                    speed={1500}
+                    coverflowEffect={{
+                        rotate: 0,
+                        stretch: 0,
+                        depth: 0,
+                        modifier: 2,
+                        slideShadows: false,
+                    }}
+                    pagination={{ clickable: true }}
+                    modules={[EffectCoverflow, Pagination, Autoplay]}
+                    className={styles.swiperContainer}
+                >
+                    {event.bannerImgs.map((img, index) => (
+                        <SwiperSlide key={index} className={styles.swiperSlide}>
+                            <img
+                                src={`${url}/event/image?filename=${img}`}
+                                alt={`Imagen ${index + 1}`}
+                                className={styles.bannerImage}
+                            />
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
+            </div>
 
-        <div>
-            <footer>
+            <div>
+                <footer>
 
-            </footer>
-        </div>
+                </footer>
+            </div>
 
             {/* Modal de registro */}
             {isModalOpen && (
                 <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent}>
-                        <h2 className={styles.formT}>Registro al Evento</h2>
-                        <form onSubmit={registrarParticipante}>
-                            <label htmlFor="name" style={{color:'#252525'}}>Nombres</label><br />
-                            <input type="text" name='name' placeholder="Nombres" required id="name" />
-                            
-                            <label htmlFor="lastname" style={{color:'#252525'}}>Apellidos</label><br />
-                            <input type="text" name='lastname' placeholder="Apellidos" required id="lastname" />
-                            
-                            <label htmlFor="gender" style={{color:'#252525'}}>Género</label><br />
-                            <select name="gender" id="gender" className={styles.options} required>
-                                <option value="Hombre">Hombre</option>
-                                <option value="Mujer">Mujer</option>
-                            </select><br />
-                            
-                            <label htmlFor="birthday" style={{color:'#252525'}}>Fecha de nacimiento</label><br />
-                            <input type="date" name='birthday' placeholder="Fecha de nacimiento" required id="birthday" /><br />
-                            
-                            <label htmlFor="email" style={{color:'#252525'}} >Correo electrónico</label><br />
-                            <input type="email" name='email' placeholder="Email" required id="email" /> <br />
-                            
-                            <label htmlFor="livingState" style={{color:'#252525'}}>Estado de residencia</label><br />
-                            <input type="text" name='livingState' placeholder="Estado de residencia" required id="livingState" /><br />
-                            
-                            <label htmlFor="profession"style={{color:'#252525'}}>Profesión</label><br />
-                            <input type="text" name='profession' placeholder="Profesion" id="profession" /><br />
-                            
-                            <label htmlFor="workplace" style={{color:'#252525'}}>Lugar de trabajo</label><br />
-                            <input type="text" name='workplace' placeholder="Lugar de trabajo (Opcional)" id="workplace" /><br />
-                            
-                            <label htmlFor="eventAwarness" style={{color:'#252525'}}>¿Cómo te enteraste de nosotros?</label><br />
-                            <input type="text" name='eventAwarness' placeholder="Como te enteraste de nosotros" required id="eventAwarness" /><br />
-                            
-                            <button type='submit' className={styles.Mbtn}>Confirmar</button>
-                            <button type="button" onClick={() => setIsModalOpen(false)} className={styles.Mbtn}>Cerrar</button>
-                        </form>
+                    <div className={styles.modalContent} style={{ maxWidth: '400px', padding: '40px 20px', borderRadius: '15px', textAlign: 'center' }}>
+                        <h2 className={styles.formT} style={{ marginBottom: '20px', fontSize: '24px', color: '#333' }}>Inscríbete al Evento</h2>
+
+                        <p style={{ marginBottom: '30px', color: '#666', fontSize: '16px' }}>
+                            Para registrarte, inicia sesión de forma segura con tu cuenta de Google.
+                        </p>
+
+                        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px' }}>
+                            <GoogleLogin
+                                onSuccess={handleGoogleLogin}
+                                onError={() => {
+                                    console.log('Login Failed');
+                                    toast.error('Fallo el inicio de sesión con Google');
+                                }}
+                                size="large"
+                                shape="pill"
+                                width="250"
+                            />
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={() => setIsModalOpen(false)}
+                            className={styles.Mbtn}
+                            style={{
+                                backgroundColor: '#f44336',
+                                marginTop: '10px',
+                                width: '100%',
+                                maxWidth: '250px'
+                            }}
+                        >
+                            Cancelar
+                        </button>
                     </div>
                 </div>
             )}
