@@ -1,24 +1,29 @@
-import 'react';
+import React, { useState } from 'react';
 import styles from '../../assets/styles/stylesLogin/login.module.css';
 import conferenceImage from '../../assets/img/conference-3-100.svg';
 import forms from '../../assets/img/formasLogin.svg';
 import Header from '../Components/Header';
-import {Link, useNavigate} from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Toaster, toast } from 'sonner'
+import { Toaster, toast } from 'sonner';
 import { url } from '../../utils/base.url';
 
+// Importaciones de Google
+import { GoogleLogin } from '@react-oauth/google';
+import { useAuth } from '../../context/AuthContext'; // Importamos el contexto
 
 function LoginComponent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
- 
 
+    // Usamos la función del contexto que acabamos de crear
+    const { loginWithGoogle } = useAuth();
+
+    // Lógica para Login Normal (Email/Pass)
     const Validacion = async () => {
         try {
-            if(email === '' || password === ''){
+            if (email === '' || password === '') {
                 toast.error('Correo o contraseña incorrectos');
                 return;
             }
@@ -26,44 +31,53 @@ function LoginComponent() {
                 email,
                 password
             });
-    
-            console.log('Datos obtenidos:', response.data);
-    
-            const token = response.data.token;
-            const user = response.data.user;
-    
+
+            const { token, user, role } = response.data;
+
             if (!token || !user) {
-                console.log('Error: Usuario o token no válidos');
+                toast.error('Error: Usuario o token no válidos');
                 return;
             }
-    
-            // Guardar en localStorage
+
+            // Validar restricción de Checadores en Web
+            if (role === 'Supervisor') {
+                toast.error('Acceso denegado: Los checadores deben usar la App Móvil.');
+                return;
+            }
+
+            // Guardar datos
             localStorage.setItem('token', token);
             localStorage.setItem('adminId', user._id);
-            console.log(user.role)
-    
-            // Redireccionar según el rol
-            if (user.role === 'SuperAdmin') {
-                toast.success('Inicio de sesión exitoso');
-                setTimeout(() =>{
-                    navigate('/HomeSA');
-                },2000);
-            } else if (user.role === 'EventAdmin') {
-                toast.success('Inicio de sesión exitoso');
-                setTimeout(() =>{
-                    navigate('/HomeAdmin');
-                },2000);
-            } else {
-                toast.error('Acceso denegado');
-                console.log('Rol no reconocido');
-            }
-    
+            localStorage.setItem('user', JSON.stringify(user));
+
+            Redireccionar(role);
+
         } catch (error) {
-            toast.error('Correo o contraseña incorrectos');
-            console.log('Error al hacer la petición:', error);
+            toast.error('Credenciales incorrectas');
+            console.log(error);
         }
     };
-    
+
+    // Lógica para Login con Google
+    const handleGoogleSuccess = async (credentialResponse) => {
+        const result = await loginWithGoogle(credentialResponse);
+
+        if (result.success) {
+            toast.success(`Bienvenido ${result.user.name}`);
+            Redireccionar(result.role);
+        } else {
+            toast.error(result.error || 'Error al iniciar sesión con Google');
+        }
+    };
+
+    const Redireccionar = (role) => {
+        setTimeout(() => {
+            if (role === 'SuperAdmin') navigate('/HomeSA');
+            else if (role === 'EventAdmin') navigate('/HomeAdmin');
+            else if (role === 'Participant') navigate('/events'); // Asumiendo ruta de participante
+            else navigate('/'); // Default
+        }, 1500);
+    };
 
     return (
         <div className={styles.body}>
@@ -72,6 +86,8 @@ function LoginComponent() {
                 <Header />
                 <Toaster position="top-center" richColors />
                 <h2 className={styles.title1}>Iniciar sesión</h2>
+
+                {/* Formulario Normal */}
                 <div>
                     <div>
                         <input
@@ -90,8 +106,27 @@ function LoginComponent() {
                         />
                     </div>
                     <Link to={'/RecoverPassword'} state={'/login'}><p>¿Olvidaste tu contraseña?</p></Link>
-                    <hr />
+
                     <button onClick={Validacion}>Iniciar sesión</button>
+                    <div style={{ marginTop: '10px' }}>
+                        <p>¿No tienes cuenta? <Link to="/register">Regístrate aquí</Link></p>
+                    </div>
+
+                    <hr style={{ margin: '20px 0', border: '0', borderTop: '1px solid #ddd' }} />
+
+                    {/* Botón de Google */}
+                    <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={() => {
+                                toast.error('Falló el inicio de sesión con Google');
+                            }}
+                            theme="outline"
+                            size="large"
+                            text="signin_with"
+                            width="300" // Ajusta el ancho según tu diseño
+                        />
+                    </div>
                 </div>
             </div>
             <div className={styles.bienvenida}>

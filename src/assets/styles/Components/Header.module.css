@@ -47,3 +47,31 @@
     margin-top: 3px;
     top: 20px;
 }
+
+/* ... tus estilos anteriores ... */
+
+.logoutBtn {
+    background: transparent;
+    border: none;
+    color: #ef4444; /* Color rojo suave */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    margin-left: 10px; /* Separarlo del logo */
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.logoutBtn:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* Ajuste para que el contenedor .nav permita el nuevo elemento */
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* O el que tengas actualmente */
+    padding: 0 10px;
+}

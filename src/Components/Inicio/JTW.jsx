@@ -52,8 +52,19 @@ function JumpToWorkPage() {
                                 Eventos
                             </a>
                         </li>
+
+                        {/* --- NUEVO BOTÓN DE REGISTRO --- */}
+                        <Link to={'/register'}>
+                            {/* Usamos marginRight para separarlo un poco del otro botón */}
+                            <button className={styles.logoututton} style={{ marginRight: '200px' }}>
+                                Registrarse
+                            </button>
+                        </Link>
+
                         <Link to={'/login'} state={'/'}>
-                            <button className={styles.logoututton}>Iniciar Sesión Admin</button>
+                            <button className={styles.logoututton}>
+                                Iniciar Sesión Admin
+                            </button>
                         </Link>
                     </ul>
                 </div>
@@ -68,7 +79,6 @@ function JumpToWorkPage() {
             {showLoginModal && (
                 <div className={styles.modalOverlay} onClick={() => setShowLoginModal(false)}>
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-
 
                         <div className={styles.modalIcon}>
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
