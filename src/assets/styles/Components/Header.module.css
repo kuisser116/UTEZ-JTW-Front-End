@@ -1,49 +1,268 @@
+/* ===== HEADER CONTAINER ===== */
 .topNav {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     display: flex;
-    justify-content: center; 
+    justify-content: center;
     align-items: center;
-    z-index: 2;
-    background-color: white;
-    height: 9%;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    height: 80px;
+    padding: 0 2rem;
 }
 
-.nav{
-    padding: 20px;
+.navContainer {
+    width: 100%;
+    max-width: 1400px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
 }
 
-.perfil{
+/* ===== BACK BUTTON ===== */
+.backButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.backButton:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateX(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.arrow {
+    width: 18px;
+    height: 18px;
+    opacity: 0.8;
+}
+
+/* ===== DATE DISPLAY ===== */
+.dateContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
     position: absolute;
-    background-color: #252525;
-    width:15vh;
-    height: 5vh;
-    right: 20px;
-    border-radius: 20px;
+    left: 80px;
 }
 
-.today{
-    position: absolute;
-    color: #252525;
-    font-size: 2.4vh;
+.dateContainer svg {
+    color: #1a1a1a;
+    opacity: 0.7;
+}
+
+.today {
     margin: 0;
-    left: 8%;
-    top: 23px;
+    color: #1a1a1a;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-transform: capitalize;
 }
 
-.logo{
-  width: 150px;
-  position: absolute;
-  right: 5%;
-  top: 2%;
-}
-
-.arrow{
+/* ===== LOGO ===== */
+.logo {
+    width: 140px;
+    height: auto;
     position: absolute;
-    left: 5%;
-    width: 2%;
-    margin-top: 3px;
-    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* ===== USER SECTION ===== */
+.userSection {
+    position: relative;
+    width: clamp(200px, 10vw, 500px);
+    height: 100%;
+
+}
+
+.userButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1rem 0.5rem 0.5rem;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    height: clamp(40px, 10vw, 50px);
+    margin: auto;
+}
+
+.userButton:hover {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.userAvatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.userName {
+    color: #1a1a1a;
+    font-size: 0.95rem;
+    font-weight: 600;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chevronDown,
+.chevronUp {
+    color: #1a1a1a;
+    opacity: 0.6;
+    transition: transform 0.3s ease;
+}
+
+.chevronUp {
+    transform: rotate(180deg);
+}
+
+/* ===== DROPDOWN MENU ===== */
+.userMenu {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    right: 0;
+    min-width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    padding: 1rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.userInfo {
+    padding: 0.75rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    margin-bottom: 0.5rem;
+}
+
+.userEmail {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.logoutButton {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 0.875rem 1rem;
+    border-radius: 12px;
+    color: #ef4444;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logoutButton:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.logoutButton svg {
+    flex-shrink: 0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .dateContainer {
+        display: none;
+    }
+
+    .logo {
+        left: 60px;
+        transform: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .topNav {
+        height: 70px;
+        padding: 0 1rem;
+    }
+
+    .userName {
+        display: none;
+    }
+
+    .userButton {
+        padding: 0.5rem;
+    }
+
+    .logo {
+        width: 120px;
+    }
+
+    .userMenu {
+        min-width: 240px;
+    }
+}
+
+@media (max-width: 480px) {
+    .topNav {
+        height: 60px;
+    }
+
+    .backButton {
+        width: 36px;
+        height: 36px;
+    }
+
+    .arrow {
+        width: 14px;
+        height: 14px;
+    }
+
+    .logo {
+        width: 100px;
+        left: 50px;
+    }
 }

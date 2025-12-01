@@ -48,7 +48,7 @@ function JumpToWorkPage() {
                 <div className={styles.nav}>
                     <ul className={styles.navLinks}>
                         <li>
-                            <a href="#eventos" onClick={handleEventosClick}>
+                            <a className={styles.aEventos} href="#eventos" onClick={handleEventosClick}>
                                 Eventos
                             </a>
                         </li>
@@ -68,14 +68,6 @@ function JumpToWorkPage() {
             {showLoginModal && (
                 <div className={styles.modalOverlay} onClick={() => setShowLoginModal(false)}>
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-
-
-                        <div className={styles.modalIcon}>
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="12" cy="7" r="4"></circle>
-                            </svg>
-                        </div>
 
                         <h2 className={styles.modalTitle}>Inicia Sesión para Continuar</h2>
                         <p className={styles.modalSubtitle}>

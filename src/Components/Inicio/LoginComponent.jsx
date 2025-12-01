@@ -2,8 +2,8 @@ import 'react';
 import styles from '../../assets/styles/stylesLogin/login.module.css';
 import conferenceImage from '../../assets/img/conference-3-100.svg';
 import forms from '../../assets/img/formasLogin.svg';
-import Header from '../Components/Header';
-import {Link, useNavigate} from 'react-router-dom';
+import Header from '../Components/HeaderAdmin';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 import { Toaster, toast } from 'sonner'
@@ -14,11 +14,11 @@ function LoginComponent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
- 
+
 
     const Validacion = async () => {
         try {
-            if(email === '' || password === ''){
+            if (email === '' || password === '') {
                 toast.error('Correo o contraseña incorrectos');
                 return;
             }
@@ -26,44 +26,44 @@ function LoginComponent() {
                 email,
                 password
             });
-    
+
             console.log('Datos obtenidos:', response.data);
-    
+
             const token = response.data.token;
             const user = response.data.user;
-    
+
             if (!token || !user) {
                 console.log('Error: Usuario o token no válidos');
                 return;
             }
-    
+
             // Guardar en localStorage
             localStorage.setItem('token', token);
             localStorage.setItem('adminId', user._id);
             console.log(user.role)
-    
+
             // Redireccionar según el rol
             if (user.role === 'SuperAdmin') {
                 toast.success('Inicio de sesión exitoso');
-                setTimeout(() =>{
+                setTimeout(() => {
                     navigate('/HomeSA');
-                },2000);
+                }, 2000);
             } else if (user.role === 'EventAdmin') {
                 toast.success('Inicio de sesión exitoso');
-                setTimeout(() =>{
+                setTimeout(() => {
                     navigate('/HomeAdmin');
-                },2000);
+                }, 2000);
             } else {
                 toast.error('Acceso denegado');
                 console.log('Rol no reconocido');
             }
-    
+
         } catch (error) {
             toast.error('Correo o contraseña incorrectos');
             console.log('Error al hacer la petición:', error);
         }
     };
-    
+
 
     return (
         <div className={styles.body}>

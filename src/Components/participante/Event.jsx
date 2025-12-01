@@ -15,6 +15,8 @@ function Eventpage() {
     const [workshops, setWorkshops] = useState([]);
     const [selectedWorkshop, setSelectedWorkshop] = useState(null);
     const [isRegistering, setIsRegistering] = useState(false);
+    const [participantCount, setParticipantCount] = useState(0);
+    const [selectedImage, setSelectedImage] = useState(null);
     const eventId = localStorage.getItem('idEvent');
     const navigate = useNavigate();
 
@@ -44,8 +46,19 @@ function Eventpage() {
             }
         };
 
+        const fetchParticipants = async () => {
+            try {
+                const response = await axios.get(`${url}/event/participants/${eventId}`);
+                setParticipantCount(response.data.data.length);
+            } catch (error) {
+                console.error('Error al obtener participantes:', error);
+                setParticipantCount(0);
+            }
+        };
+
         fetchEventDetails();
         fetchWorkshops();
+        fetchParticipants();
     }, [eventId]);
 
     if (!event) return <p>Cargando evento...</p>;
@@ -133,7 +146,7 @@ function Eventpage() {
                                     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                     <circle cx="12" cy="10" r="3"></circle>
                                 </svg>
-                                <span>UTEZ Campus</span>
+                                <span>{event.location || "Sin especificar"}</span>
                             </div>
                         </div>
 
@@ -180,7 +193,7 @@ function Eventpage() {
                         </svg>
                     </div>
                     <div className={styles.statContent}>
-                        <span className={styles.statValue}>500+</span>
+                        <span className={styles.statValue}>{participantCount}</span>
                         <span className={styles.statLabel}>Participantes</span>
                     </div>
                 </div>
@@ -202,6 +215,7 @@ function Eventpage() {
 
                 <div className={styles.statDivider}></div>
 
+                {/*
                 <div className={styles.statItem}>
                     <div className={styles.statIcon}>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -213,6 +227,7 @@ function Eventpage() {
                         <span className={styles.statLabel}>Gratuito</span>
                     </div>
                 </div>
+            */}
             </section>
 
             {/* ABOUT SECTION */}
@@ -250,7 +265,12 @@ function Eventpage() {
                     <div className={styles.aboutImage}>
                         <div className={styles.imageGrid}>
                             {event.bannerImgs.slice(0, 4).map((img, index) => (
-                                <div key={index} className={styles.gridImage}>
+                                <div
+                                    key={index}
+                                    className={styles.gridImage}
+                                    onClick={() => setSelectedImage(`${url}/event/image?filename=${img}`)}
+                                    style={{ cursor: 'pointer' }}
+                                >
                                     <img src={`${url}/event/image?filename=${img}`} alt={`Preview ${index + 1}`} />
                                 </div>
                             ))}
@@ -355,12 +375,7 @@ function Eventpage() {
             {selectedWorkshop && (
                 <div className={styles.modalOverlay} onClick={() => setSelectedWorkshop(null)}>
                     <div className={styles.workshopModal} onClick={(e) => e.stopPropagation()}>
-                        <button className={styles.closeBtn} onClick={() => setSelectedWorkshop(null)}>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
+
 
                         <div className={styles.workshopModalImage}>
                             {selectedWorkshop.img ? (
@@ -502,6 +517,23 @@ function Eventpage() {
                         >
                             Entendido
                         </button>
+                    </div>
+                </div>
+            )}
+
+            {/* IMAGE LIGHTBOX MODAL */}
+            {selectedImage && (
+                <div
+                    className={styles.modalOverlay}
+                    onClick={() => setSelectedImage(null)}
+                    style={{ zIndex: 10000 }}
+                >
+                    <div
+                        className={styles.imageLightbox}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+
+                        <img src={selectedImage} alt="Vista ampliada" />
                     </div>
                 </div>
             )}
