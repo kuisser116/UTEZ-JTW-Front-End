@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import styles from '../../assets/styles/stylesLogin/JTW.module.css';
-import logo from '../../assets/img/Assets_inicio/logo4.png';
 import formas from '../../assets/img/Assets_inicio/formasInicio.svg';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -12,9 +11,6 @@ function JumpToWorkPage() {
     const [showLoginModal, setShowLoginModal] = useState(false);
     const { isAuthenticated, loginWithGoogle } = useAuth();
     const navigate = useNavigate();
-
-
-
 
     // Manejar click en "Eventos"
     const handleEventosClick = (e) => {
@@ -49,6 +45,7 @@ function JumpToWorkPage() {
             <ParticleBackground />
             <Toaster position="top-center" />
             <img className={styles.formas} src={formas} alt="" />
+            
             <nav className={styles.topNav}>
                 <div className={styles.nav}>
                     <ul className={styles.navLinks}>
@@ -57,18 +54,26 @@ function JumpToWorkPage() {
                                 Eventos
                             </a>
                         </li>
+                        
+                        {/* --- BOTÓN DE REGISTRO --- */}
+                        <Link to={'/register'}>
+                            <button 
+                                className={styles.logoututtonRe} 
+                                style={{ marginRight: '15px' }} // Separación visual
+                            >
+                                Registrarse
+                            </button>
+                        </Link>
+
+                        {/* --- BOTÓN DE LOGIN ADMIN --- */}
                         <Link to={'/login'} state={'/'}>
-                            <button className={styles.logoututton}>Iniciar Sesión Admin</button>
+                            <button className={styles.logoututton}>
+                                Iniciar Sesión Admin
+                            </button>
                         </Link>
                     </ul>
                 </div>
             </nav>
-
-            {/* Logo ahora formado por partículas interactivas */}
-            {/* <div className={styles.div_logo}>
-                <img src={logo} alt="" className={styles.logo} />
-               
-            </div> */}
 
             <p className={styles.p}>Arreglamos y solucionamos tu vida</p>
 
