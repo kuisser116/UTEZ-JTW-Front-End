@@ -48,8 +48,14 @@ function Eventpage() {
 
         const fetchParticipants = async () => {
             try {
-                const response = await axios.get(`${url}/event/participants/${eventId}`);
+                const token = localStorage.getItem('token');
+                const response = await axios.get(`${url}/event/participants/${eventId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 setParticipantCount(response.data.data.length);
+                console.log(response.data.data.length);
             } catch (error) {
                 console.error('Error al obtener participantes:', error);
                 setParticipantCount(0);

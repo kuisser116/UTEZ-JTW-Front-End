@@ -6,11 +6,16 @@ import formas from '../../assets/img/Assets_inicio/formasInicio.svg';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { toast, Toaster } from 'sonner';
+import ParticleBackground from '../Components/ParticleBackground';
 
 function JumpToWorkPage() {
     const [showLoginModal, setShowLoginModal] = useState(false);
     const { isAuthenticated, loginWithGoogle } = useAuth();
     const navigate = useNavigate();
+
+    //recargar pagina cada que se renderice
+
+
 
     // Manejar click en "Eventos"
     const handleEventosClick = (e) => {
@@ -42,6 +47,7 @@ function JumpToWorkPage() {
 
     return (
         <div>
+            <ParticleBackground />
             <Toaster position="top-center" />
             <img className={styles.formas} src={formas} alt="" />
             <nav className={styles.topNav}>
@@ -59,10 +65,13 @@ function JumpToWorkPage() {
                 </div>
             </nav>
 
-            <div className={styles.div_logo}>
+            {/* Logo ahora formado por partículas interactivas */}
+            {/* <div className={styles.div_logo}>
                 <img src={logo} alt="" className={styles.logo} />
-                <p>Arreglamos y solucionamos tu vida</p>
-            </div>
+               
+            </div> */}
+
+            <p className={styles.p}>Arreglamos y solucionamos tu vida</p>
 
             {/* MODAL DE LOGIN CON GOOGLE */}
             {showLoginModal && (

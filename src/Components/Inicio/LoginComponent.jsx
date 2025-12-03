@@ -1,7 +1,6 @@
 import 'react';
 import styles from '../../assets/styles/stylesLogin/login.module.css';
 import conferenceImage from '../../assets/img/conference-3-100.svg';
-import forms from '../../assets/img/formasLogin.svg';
 import Header from '../Components/HeaderAdmin';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -9,12 +8,10 @@ import axios from 'axios';
 import { Toaster, toast } from 'sonner'
 import { url } from '../../utils/base.url';
 
-
 function LoginComponent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-
 
     const Validacion = async () => {
         try {
@@ -64,39 +61,69 @@ function LoginComponent() {
         }
     };
 
-
     return (
-        <div className={styles.body}>
-            <img className={styles.formas} src={forms} alt="" />
-            <div className={styles.Login}>
-                <Header />
-                <Toaster position="top-center" richColors />
-                <h2 className={styles.title1}>Iniciar sesión</h2>
-                <div>
-                    <div>
-                        <input
-                            type="email"
-                            placeholder="Correo electrónico"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <input
-                            type="password"
-                            placeholder="Contraseña"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
-                    <Link to={'/RecoverPassword'} state={'/login'}><p>¿Olvidaste tu contraseña?</p></Link>
-                    <hr />
-                    <button onClick={Validacion}>Iniciar sesión</button>
-                </div>
+        <div className={styles.container}>
+            <div className={styles.backgroundShapes}>
+                <div className={`${styles.shape} ${styles.shape1}`}></div>
+                <div className={`${styles.shape} ${styles.shape2}`}></div>
+                <div className={`${styles.shape} ${styles.shape3}`}></div>
             </div>
-            <div className={styles.bienvenida}>
-                <h2 className={styles.title2}>¡Bienvenido!</h2>
-                <img className={styles.img} src={conferenceImage} alt="Bienvenida" />
+
+            <Header />
+            <Toaster position="top-center" richColors />
+
+            <div className={styles.contentWrapper}>
+                <div className={styles.loginCard}>
+                    {/* Left Side - Form */}
+                    <div className={styles.formSection}>
+                        <div className={styles.headerWrapper}>
+                            <h2 className={styles.title}>Bienvenido de nuevo</h2>
+                            <p className={styles.subtitle}>Ingresa tus credenciales para acceder al panel</p>
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <div className={styles.inputWrapper}>
+                                <input
+                                    className={styles.input}
+                                    type="email"
+                                    placeholder="Correo electrónico"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
+                            </div>
+                            <div className={styles.inputWrapper}>
+                                <input
+                                    className={styles.input}
+                                    type="password"
+                                    placeholder="Contraseña"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        <div className={styles.forgotPassword}>
+                            <Link to={'/RecoverPassword'} state={'/login'}>
+                                ¿Olvidaste tu contraseña?
+                            </Link>
+                        </div>
+
+                        <button className={styles.loginButton} onClick={Validacion}>
+                            Iniciar Sesión
+                        </button>
+                    </div>
+
+                    {/* Right Side - Welcome/Image */}
+                    <div className={styles.welcomeSection}>
+                        <div className={styles.welcomeContent}>
+                            <h2 className={styles.welcomeTitle}>¡Hola!</h2>
+                            <p className={styles.welcomeText}>
+                                Gestiona tus eventos y talleres de manera eficiente con nuestra plataforma.
+                            </p>
+                            <img className={styles.welcomeImage} src={conferenceImage} alt="Conference" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
