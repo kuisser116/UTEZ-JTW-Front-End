@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import styles from '../../assets/styles/stylesLogin/JTW.module.css';
 import logo from '../../assets/img/Assets_inicio/logo4.png';
@@ -13,7 +13,6 @@ function JumpToWorkPage() {
     const { isAuthenticated, loginWithGoogle } = useAuth();
     const navigate = useNavigate();
 
-    //recargar pagina cada que se renderice
 
 
 

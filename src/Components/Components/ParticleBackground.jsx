@@ -13,23 +13,24 @@ const ParticleBackground = () => {
         }
 
         const ctx = canvas.getContext('2d');
-        let animationFrameId;
+        let animationFrameId = null;
         let particles = [];
-        let logoPoints = []; // Puntos de atracción del logo
+        let logoPoints = [];
+        let isMounted = true; // 🚩 Flag para controlar si el componente está montado
 
         // Configuración
-        const particleCount = 1000; // Más partículas para logo más denso
+        const particleCount = 1000;
         const particleSize = 3;
         const mouseRadius = 150;
         const disperseForce = 20;
-        const logoAttractionForce = 0.1; // Atracción más fuerte
-        const logoAttractionRadius = 120; // Radio más grande para atraer más partículas
+        const logoAttractionForce = 0.1;
+        const logoAttractionRadius = 120;
         const maxSpeed = 10;
 
         const resizeCanvas = () => {
+            if (!isMounted) return; // 🛑 No redimensionar si está desmontado
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            console.log('📐 Canvas redimensionado:', canvas.width, 'x', canvas.height);
         };
 
         window.addEventListener('resize', resizeCanvas);
@@ -148,6 +149,7 @@ const ParticleBackground = () => {
             img.crossOrigin = 'anonymous';
 
             img.onload = () => {
+                if (!isMounted) return; // 🛑 Si ya se desmontó, no continuar
                 console.log('✅ Imagen cargada:', img.width, 'x', img.height);
 
                 const tempCanvas = document.createElement('canvas');
@@ -191,7 +193,7 @@ const ParticleBackground = () => {
 
                 // Crear partículas
                 // 75% empiezan cerca del logo, 25% empiezan aleatorias
-                const particlesNearLogo = Math.floor(particleCount * 0.75);
+                const particlesNearLogo = Math.floor(particleCount * 0.90);
 
                 for (let i = 0; i < particleCount; i++) {
                     const particle = new Particle();
@@ -229,6 +231,8 @@ const ParticleBackground = () => {
         window.addEventListener('mousemove', handleMouseMove);
 
         const animate = () => {
+            if (!isMounted) return; // 🛑 Detener animación si está desmontado
+
             ctx.fillStyle = '#faf8f8ff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -244,9 +248,12 @@ const ParticleBackground = () => {
         loadImage();
 
         return () => {
+            isMounted = false; // 🛑 Marcar como desmontado
             window.removeEventListener('resize', resizeCanvas);
             window.removeEventListener('mousemove', handleMouseMove);
-            cancelAnimationFrame(animationFrameId);
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+            }
         };
     }, []);
 
