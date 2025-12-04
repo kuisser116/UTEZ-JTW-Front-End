@@ -45,34 +45,26 @@ function JumpToWorkPage() {
             <ParticleBackground />
             <Toaster position="top-center" />
             <img className={styles.formas} src={formas} alt="" />
-            
-            <nav className={styles.topNav}>
-                <div className={styles.nav}>
-                    <ul className={styles.navLinks}>
-                        <li>
-                            <a className={styles.aEventos} href="#eventos" onClick={handleEventosClick}>
-                                Eventos
-                            </a>
-                        </li>
-                        
-                        {/* --- BOTÓN DE REGISTRO --- */}
-                        <Link to={'/register'}>
-                            <button 
-                                className={styles.logoututtonRe} 
-                                style={{ marginRight: '15px' }} // Separación visual
-                            >
-                                Registrarse
-                            </button>
-                        </Link>
 
-                        {/* --- BOTÓN DE LOGIN ADMIN --- */}
-                        <Link to={'/login'} state={'/'}>
-                            <button className={styles.logoututton}>
-                                Iniciar Sesión Admin
-                            </button>
-                        </Link>
-                    </ul>
-                </div>
+            <nav className={styles.topNav}>
+
+
+                {/* --- BOTÓN DE REGISTRO --- */}
+                <Link to={'/register'}>
+                    <button
+                        className={styles.logoututton}
+                        style={{ marginRight: '15px' }} // Separación visual
+                    >
+                        Registrarse
+                    </button>
+                </Link>
+
+                {/* --- BOTÓN DE LOGIN ADMIN --- */}
+                <Link to={'/login'} state={'/'}>
+                    <button className={styles.logoututton}>
+                        Iniciar Sesión
+                    </button>
+                </Link>
             </nav>
 
             <p className={styles.p}>Arreglamos y solucionamos tu vida</p>

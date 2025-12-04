@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from '../../assets/styles/Components/TablaAdministradores.module.css';
+import styles from '../../assets/styles/Components/TablaChecadores.module.css';
 import arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png'; // Asegúrate de tener esta imagen
 import pen from '../../assets/img/Assets_admin/pencil-solid-240.png';
 import { url } from '../../utils/base.url';
@@ -21,12 +21,12 @@ function TableAdministradores() {
 
     const [openConfirmModal, setOpenConfirmModal] = useState(false);
     const [confirmAction, setConfirmAction] = useState(null);
-    
+
     const token = localStorage.getItem("token");
     // Nuevos estados para búsqueda y paginación
     const [searchTerm, setSearchTerm] = useState('');
     const [paginaActual, setPaginaActual] = useState(1);
-    const [itemsPorPagina] = useState(10);
+    const [itemsPorPagina] = useState(5);
 
     useEffect(() => {
         const fetchAdministradores = async () => {
@@ -91,7 +91,7 @@ function TableAdministradores() {
     const handleStatusChange = async (admin) => {
         try {
             const newStatus = !admin.status;
-            await axios.put(`${url}/administrator/${admin._id}`, 
+            await axios.put(`${url}/administrator/${admin._id}`,
                 { status: newStatus },
                 {
                     headers: {
@@ -99,14 +99,14 @@ function TableAdministradores() {
                     }
                 }
             );
-            
+
             // Actualizar el estado local
             setAdministradores((prevState) =>
                 prevState.map((a) =>
                     a._id === admin._id ? { ...a, status: newStatus } : a
                 )
             );
-            
+
             setOpenConfirmModal(false);
         } catch (error) {
             console.error('Error al actualizar el estado del administrador:', error);
@@ -134,7 +134,7 @@ function TableAdministradores() {
     const generarBotonesPaginacion = () => {
         const botones = [];
         const totalPaginas = Math.ceil(administradoresFiltrados.length / itemsPorPagina);
-        
+
         if (totalPaginas <= 5) {
             for (let i = 1; i <= totalPaginas; i++) {
                 botones.push(
@@ -160,7 +160,7 @@ function TableAdministradores() {
             );
 
             let startPage, endPage;
-            
+
             if (paginaActual <= 3) {
                 startPage = 2;
                 endPage = 4;
@@ -227,7 +227,7 @@ function TableAdministradores() {
                 </button>
             );
         }
-        
+
         return botones;
     };
 
@@ -255,7 +255,7 @@ function TableAdministradores() {
                             className={styles.searchInput}
                         />
                     </div>
-                    
+
                     <table className={styles.tablaTalleres}>
                         <thead>
                             <tr className={styles.encabezado}>
@@ -280,9 +280,9 @@ function TableAdministradores() {
                                         <td className={styles.edit}>{admin.status === true ? "Activo" : "Inactivo"}</td>
                                         <td className={styles.edit}>
                                             <img className={styles.img} src={pen} onClick={() => handleEdit(admin)} />
-                                            <img 
-                                                className={styles.img} 
-                                                src={admin.status ? disable : check} 
+                                            <img
+                                                className={styles.img}
+                                                src={admin.status ? disable : check}
                                                 onClick={() => {
                                                     setSelectedAdmin(admin);
                                                     setConfirmAction(admin.status ? 'desactivar' : 'activar');
@@ -301,25 +301,25 @@ function TableAdministradores() {
                     </table>
 
                     <div className={styles.paginationContainer}>
-                        <button 
-                            onClick={irPaginaAnterior} 
+                        <button
+                            onClick={irPaginaAnterior}
                             disabled={paginaActual === 1}
                             className={`${styles.paginationArrow} ${paginaActual === 1 ? styles.disabled : ''}`}
                         >
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </button>
-                        
+
                         {generarBotonesPaginacion()}
-                        
-                        <button 
-                            onClick={irPaginaSiguiente} 
+
+                        <button
+                            onClick={irPaginaSiguiente}
                             disabled={paginaActual === Math.ceil(administradoresFiltrados.length / itemsPorPagina)}
                             className={`${styles.paginationArrow} ${paginaActual === Math.ceil(administradoresFiltrados.length / itemsPorPagina) ? styles.disabled : ''}`}
                         >
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </button>
                     </div>
@@ -333,10 +333,10 @@ function TableAdministradores() {
                         <img onClick={handleCloseModal} className={styles.arrowM} src={arrow} alt="Cerrar" />
                         <h2 className={styles.formT}>Editar Administrador</h2>
                         <form onSubmit={handleSubmit}>
-                        <label style={{ color: '#252525' }}>Nombre:</label>
+                            <label style={{ color: '#252525' }}>Nombre:</label>
                             <br />
                             <input
-                                className={styles.input}
+                                className={styles.inputS1}
                                 name="name"
                                 type="text"
                                 placeholder="Nombre"
@@ -348,7 +348,7 @@ function TableAdministradores() {
                             <label style={{ color: '#252525' }}>Apellido:</label>
                             <br />
                             <input
-                                className={styles.input}
+                                className={styles.inputS1}
                                 name="lastname"
                                 type="text"
                                 placeholder="Apellido"
@@ -360,7 +360,7 @@ function TableAdministradores() {
                             <label style={{ color: '#252525' }}>Correo:</label>
                             <br />
                             <input
-                                className={styles.input}
+                                className={styles.inputS1}
                                 name="email"
                                 type="email"
                                 placeholder="Correo"
@@ -372,7 +372,7 @@ function TableAdministradores() {
                             <label style={{ color: '#252525' }}>Teléfono:</label>
                             <br />
                             <input
-                                className={styles.input}
+                                className={styles.inputS1}
                                 name="cellphoneNumber"
                                 type="text"
                                 placeholder="Teléfono"
@@ -380,14 +380,14 @@ function TableAdministradores() {
                                 onChange={handleInputChange}
                                 required
                             />
-                            <button type="submit" className={styles.btn}>Guardar cambios</button>
+                            <button type="submit" className={styles.add}>Guardar cambios</button>
                         </form>
                     </div>
                 </div>
             )}
 
-                        {/* Modal de Confirmación */}
-                        {openConfirmModal && (
+            {/* Modal de Confirmación */}
+            {openConfirmModal && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContentStatus}>
                         <h2 className={styles.formT}>Confirmar Acción</h2>
@@ -395,13 +395,13 @@ function TableAdministradores() {
                             ¿Seguro que quieres {confirmAction} a {selectedAdmin.name} {selectedAdmin.lastname}?
                         </p>
                         <div className={styles.buttonContainer}>
-                            <button 
+                            <button
                                 className={styles.btnCancel}
                                 onClick={() => setOpenConfirmModal(false)}
                             >
                                 Cancelar
                             </button>
-                            <button 
+                            <button
                                 className={styles.btnConfirm}
                                 onClick={() => handleStatusChange(selectedAdmin)}
                             >

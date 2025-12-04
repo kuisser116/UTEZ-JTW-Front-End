@@ -3,8 +3,8 @@ import axios from 'axios';
 import styles from '../../assets/styles/stylesAdmin/Home.module.css';
 import tableStyles from '../../assets/styles/Components/TablaChecadores.module.css';
 import { useNavigate } from 'react-router-dom';
-import Header from '../Components/HeaderAdminHC';
-import NavBar from '../Components/NavBar'; 
+import Header from '../Components/Header';
+import NavBar from '../Components/NavBar';
 import TableCheck from '../Components/TableChecadores';
 import plus from '../../assets/img/Assets_admin/plus-regular-240.png';
 import arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png';
@@ -31,6 +31,7 @@ function Events() {
     });
     const [selectedEventWorkshops, setSelectedEventWorkshops] = useState([]);
     const [filteredChecadores, setFilteredChecadores] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
     console.log(token)
@@ -51,23 +52,29 @@ function Events() {
 
     useEffect(() => {
         filterAvailableChecadores();
-    }, [checadores, adminEvents]);
+    }, [checadores, adminEvents, searchTerm]);
 
     const filterAvailableChecadores = () => {
         const filtered = checadores.filter(checador => {
             // If the checker has no events, they are available
             if (!checador.events || checador.events.length === 0) return true;
-            
+
             // Check if any of the checker's events belong to the current admin
-            const hasAdminEvent = checador.events.some(checadorEvent => 
+            const hasAdminEvent = checador.events.some(checadorEvent =>
                 adminEvents.some(adminEvent => adminEvent._id === checadorEvent)
             );
-            
+
             // Return true if the checker has no events from this admin
             return !hasAdminEvent;
         });
-        
-        setFilteredChecadores(filtered);
+
+        // Apply search filter
+        const searchFiltered = filtered.filter(checador => {
+            const fullName = `${checador.name} ${checador.lastname}`.toLowerCase();
+            return fullName.includes(searchTerm.toLowerCase());
+        });
+
+        setFilteredChecadores(searchFiltered);
     };
 
     const fetchAdminEvents = async () => {
@@ -108,7 +115,7 @@ function Events() {
             const response = await axios.get(`${url}/supervisor/${sId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            
+
             const existingEvents = response.data.events || [];
             console.log(existingEvents)
             const updatedEvents = [...new Set([...existingEvents, selectedEvent])];
@@ -134,9 +141,9 @@ function Events() {
             events: [selectedEventId],
             workshops: [] // Reset workshops when event changes
         }));
-        
+
         // Filter workshops for the selected event
-        const filteredWorkshops = workshops.filter(workshop => 
+        const filteredWorkshops = workshops.filter(workshop =>
             workshop.event === selectedEventId
         );
         setSelectedEventWorkshops(filteredWorkshops);
@@ -188,14 +195,15 @@ function Events() {
 
     return (
         <div>
-            <Header />
-            <NavBar /> 
-            <h2 className={styles.tittle}>Checadores</h2>
-          
-            
-            <button onClick={() => setOpenModalRegister(true)} className={styles.addEvent}>
-                Agregar checador 
-            </button>
+            <Header showBackButton={false} />
+            <NavBar />
+            <div className={styles.headerContainer}>
+                <h2 className={styles.tittle}>Checadores</h2>
+
+                <button onClick={() => setOpenModalRegister(true)} className={styles.addEvent}>
+                    Agregar checador
+                </button>
+            </div>
 
             {openModal && (
                 <div className={styles.modalOverlay}>
@@ -223,7 +231,7 @@ function Events() {
                                                 <td>{checador.cellphoneNumber}</td>
                                                 <td>{checador.status ? 'Activo' : 'Inactivo'}</td>
                                                 <td>
-                                                    <button 
+                                                    <button
                                                         className={styles.add}
                                                         onClick={() => {
                                                             setSelectedSupervisor(checador);
@@ -252,7 +260,7 @@ function Events() {
             {openAssignModal && (
                 <div className={styles.modalOverlay}>
                     <div className={styles.modalContent2}>
-                        <select 
+                        <select
                             value={selectedEvent}
                             onChange={(e) => setSelectedEvent(e.target.value)}
                             className={styles.options}
@@ -265,14 +273,14 @@ function Events() {
                             ))}
                         </select>
                         <div className={styles.siC}>
-                            <button 
+                            <button
                                 onClick={handleAssignEvent}
                                 className={styles.add}
                                 disabled={!selectedEvent}
                             >
                                 Confirmar
                             </button>
-                            <button 
+                            <button
                                 onClick={() => setOpenAssignModal(false)}
                                 className={styles.cancel}
                             >
@@ -282,65 +290,82 @@ function Events() {
                     </div>
                 </div>
             )}
-            
+
             <div className={styles.eventsGrid}>
-               <TableCheck/>
+                <TableCheck />
             </div>
 
             {openModalRegister && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent3}>
-                        <img onClick={() => setOpenModalRegister(false)} className={styles.arrowMR} src={arrow} alt="" />
-                        <h2 className={styles.formT}>Registrar checador</h2>
-                        <form onSubmit={handleSubmit} className={styles.form}>
-                            <label htmlFor="" style={{color: "#252525"}}>Nombre</label> <br />
-                            <input
-                                type="text"
-                                name="name"
-                                placeholder="Nombre"
-                                value={formData.name}
-                                onChange={handleInputChange}
-                                required
-                                className={styles.input}
-                            /> <br />
-                            <label htmlFor="" style={{color: "#252525"}}>Apellido</label> <br />
-                            <input
-                                type="text"
-                                name="lastname"
-                                placeholder="Apellido"
-                                value={formData.lastname}
-                                onChange={handleInputChange}
-                                required
-                                className={styles.input}
-                            />
-                            <br />
-                            <label htmlFor="" style={{color: "#252525"}}>Correo electrónico</label> <br />
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Correo electrónico"
-                                value={formData.email}
-                                onChange={handleInputChange}
-                                required
-                                className={styles.input}
-                            />
-                            <br />
-                            <label htmlFor="" style={{color: "#252525"}}>Número de teléfono</label> <br />
-                            <input
-                                type="tel"
-                                name="cellphoneNumber"
-                                placeholder="Número de teléfono"
-                                value={formData.cellphoneNumber}
-                                onChange={handleInputChange}
-                                required
-                                className={styles.input}
-                            />
+                <div className={styles.modalOverlay} onClick={() => setOpenModalRegister(false)}>
+                    <div className={styles.modalContent3} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles.modalHeader}>
+                            <h2 className={styles.modalTitle}>Registrar Checador</h2>
+                            <button onClick={() => setOpenModalRegister(false)} className={styles.closeBtn}>×</button>
+                        </div>
 
-                            <div className={styles.buttonContainer}>
-                                <button type="submit" className={styles.add}>
+                        <form onSubmit={handleSubmit} className={styles.modalForm}>
+                            <div className={styles.formField}>
+                                <label>Nombre <span className={styles.required}>*</span></label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    placeholder="Nombre del checador"
+                                    value={formData.name}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className={styles.formField}>
+                                <label>Apellido <span className={styles.required}>*</span></label>
+                                <input
+                                    type="text"
+                                    name="lastname"
+                                    placeholder="Apellido del checador"
+                                    value={formData.lastname}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className={styles.formField}>
+                                <label>Correo Electrónico <span className={styles.required}>*</span></label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="correo@ejemplo.com"
+                                    value={formData.email}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className={styles.formField}>
+                                <label>Número de Teléfono <span className={styles.required}>*</span></label>
+                                <input
+                                    type="tel"
+                                    name="cellphoneNumber"
+                                    placeholder="777 123 4567"
+                                    value={formData.cellphoneNumber}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className={styles.modalFooter}>
+                                <button
+                                    type="button"
+                                    onClick={() => setOpenModalRegister(false)}
+                                    className={styles.btnCancel}
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="submit"
+                                    className={styles.btnSubmit}
+                                >
                                     Registrar Checador
                                 </button>
-                        
                             </div>
                         </form>
                     </div>

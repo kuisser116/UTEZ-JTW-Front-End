@@ -32,6 +32,14 @@ function EventWorkshop() {
     const editMainImgRef = useRef(null);
     const editBannerImgsRef = useRef(null);
 
+    const [openEditWorkshopModal, setOpenEditWorkshopModal] = useState(false);
+    const [selectedWorkshop, setSelectedWorkshop] = useState(null);
+    const [previewEditWorkshopImage, setPreviewEditWorkshopImage] = useState(null);
+    const editWorkshopImgRef = useRef(null);
+
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [workshopToDelete, setWorkshopToDelete] = useState(null);
+
     const verCalendario = (e) => {
         e.target.showPicker();
     };
@@ -139,20 +147,26 @@ function EventWorkshop() {
         fetchWorkshopStats();
     }, [eventId]);
 
-    const deleteWorkshop = async (workshopId) => {
-        if (window.confirm('¿Estás seguro de que deseas eliminar este taller?')) {
-            try {
-                await axios.delete(`${url}/workshop/delete/${workshopId}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                toast.success('Taller eliminado correctamente');
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-            } catch (error) {
-                console.error('Error al eliminar el taller:', error);
-                toast.error('Error al eliminar el taller');
-            }
+    const deleteWorkshop = (workshopId) => {
+        setWorkshopToDelete(workshopId);
+        setOpenDeleteModal(true);
+    };
+
+    const confirmDeleteWorkshop = async () => {
+        if (!workshopToDelete) return;
+
+        try {
+            await axios.delete(`${url}/workshop/delete/${workshopToDelete}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            setOpenDeleteModal(false);
+            toast.success('Taller eliminado correctamente');
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } catch (error) {
+            console.error('Error al eliminar el taller:', error);
+            toast.error('Error al eliminar el taller');
         }
     };
 
@@ -171,6 +185,14 @@ function EventWorkshop() {
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setPreviewEditImage(imageUrl);
+        }
+    };
+
+    const handleEditWorkshopFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setPreviewEditWorkshopImage(imageUrl);
         }
     };
 
@@ -253,6 +275,52 @@ function EventWorkshop() {
             }
         } else {
             toast.error('El taller está fuera del rango del evento');
+        }
+    };
+
+    const actualizarTaller = async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+
+        if (e.target.name.value) formData.append('name', e.target.name.value);
+        if (e.target.description.value) formData.append('description', e.target.description.value);
+        if (e.target.instructor.value) formData.append('instructor', e.target.instructor.value);
+        if (e.target.limitQuota.value) formData.append('limitQuota', e.target.limitQuota.value);
+
+        if (e.target.startDate.value) {
+            const startDate = formatDate(e.target.startDate.value);
+            formData.append('startDate', startDate);
+        }
+
+        if (e.target.endDate.value) {
+            const endDate = formatDate(e.target.endDate.value);
+            formData.append('endDate', endDate);
+        }
+
+        const imgFile = editWorkshopImgRef.current.files[0];
+        if (imgFile) {
+            formData.append('img', imgFile);
+        }
+
+        try {
+            await axios.put(
+                `${url}/workshop/update/${selectedWorkshop._id}`,
+                formData,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            );
+            setOpenEditWorkshopModal(false);
+            toast.success('Taller actualizado correctamente');
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } catch (error) {
+            console.error('Error al actualizar el taller:', error);
+            toast.error('Error al actualizar el taller');
         }
     };
 
@@ -464,26 +532,7 @@ function EventWorkshop() {
                         <span className={styles.sectionLabel}>Sobre el Evento</span>
                         <h2>{event.name}</h2>
                         <p>{event.description}</p>
-                        <div className={styles.featureList}>
-                            <div className={styles.featureItem}>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Certificado de participación</span>
-                            </div>
-                            <div className={styles.featureItem}>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Networking con profesionales</span>
-                            </div>
-                            <div className={styles.featureItem}>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Material didáctico incluido</span>
-                            </div>
-                        </div>
+
                     </div>
 
                     <div className={styles.aboutImage}>
@@ -564,7 +613,10 @@ function EventWorkshop() {
                                     <div className={styles.workshopActions}>
                                         <button
                                             className={styles.workshopBtn}
-                                            onClick={() => toast.info('Función de editar taller pendiente')}
+                                            onClick={() => {
+                                                setSelectedWorkshop(workshop);
+                                                setOpenEditWorkshopModal(true);
+                                            }}
                                         >
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -638,90 +690,77 @@ function EventWorkshop() {
 
             {/* CREATE WORKSHOP MODAL */}
             {openModal && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent}>
-                        <img
-                            onClick={() => setOpenModal(false)}
-                            className={styles.arrowM}
-                            src={arrow}
-                            alt="Cerrar"
-                        />
-                        <h2 className={styles.formT}>Agregar Taller</h2>
-                        <form className={styles.formTalleres} onSubmit={crearTaller}>
-                            <div
-                                className={styles.fileImg}
-                                onClick={() => imgRef.current.click()}
-                                style={{
-                                    backgroundImage: previewImage ? `url(${previewImage})` : 'none',
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center'
-                                }}
-                            >
-                                <p style={{ color: previewImage ? 'transparent' : '#6b7280' }}>
-                                    {previewImage ? '' : 'Click para subir imagen'}
-                                </p>
+                <div className={styles.modalOverlay} onClick={() => setOpenModal(false)}>
+                    <div className={styles.modalContent4} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles.modalHeader}>
+                            <h2 className={styles.modalTitle}>Agregar Nuevo Taller</h2>
+                            <button onClick={() => setOpenModal(false)} className={styles.closeBtn}>×</button>
+                        </div>
+
+                        <form onSubmit={crearTaller} className={styles.modalForm}>
+                            <div className={styles.formField}>
+                                <label>Nombre del Taller <span className={styles.required}>*</span></label>
+                                <input type="text" name='name' placeholder='Ej: Taller de Programación' required />
                             </div>
 
-                            <input
-                                type="file"
-                                name="img"
-                                ref={imgRef}
-                                onChange={handleFileChange}
-                                style={{ display: 'none' }}
-                            />
+                            <div className={styles.formField}>
+                                <label>Descripción <span className={styles.required}>*</span></label>
+                                <textarea name='description' placeholder='Describe el taller...' rows="3" required></textarea>
+                            </div>
 
-                            <div className={styles.formDataMain}>
-                                <label htmlFor="startDate">Fecha de inicio</label>
-                                <input
-                                    type="datetime-local"
-                                    name="startDate"
-                                    required
-                                    onFocus={verCalendario}
-                                />
+                            <div className={styles.formRow}>
+                                <div className={styles.formField}>
+                                    <label>Fecha Inicio <span className={styles.required}>*</span></label>
+                                    <input type="datetime-local" name="startDate" required onFocus={verCalendario} />
+                                </div>
+                                <div className={styles.formField}>
+                                    <label>Fecha Fin <span className={styles.required}>*</span></label>
+                                    <input type="datetime-local" name="endDate" required onFocus={verCalendario} />
+                                </div>
+                            </div>
 
-                                <label htmlFor="endDate">Fecha de fin</label>
-                                <input
-                                    type="datetime-local"
-                                    name="endDate"
-                                    required
-                                    onFocus={verCalendario}
-                                />
+                            <div className={styles.formRow}>
+                                <div className={styles.formField}>
+                                    <label>Instructor <span className={styles.required}>*</span></label>
+                                    <input type="text" name='instructor' placeholder='Nombre del instructor' required />
+                                </div>
+                                <div className={styles.formField}>
+                                    <label>Cupo Límite <span className={styles.required}>*</span></label>
+                                    <input type="number" name='limitQuota' placeholder='Ej: 30' required />
+                                </div>
+                            </div>
 
-                                <label htmlFor="name">Nombre</label>
+                            <div className={styles.formField}>
+                                <label>Imagen del Taller</label>
+                                <div
+                                    className={styles.imagePreview}
+                                    onClick={() => imgRef.current.click()}
+                                    style={{
+                                        backgroundImage: previewImage ? `url(${previewImage})` : 'none',
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center'
+                                    }}
+                                >
+                                    {!previewImage && (
+                                        <div className={styles.imagePlaceholder}>
+                                            <span>📷</span>
+                                            <p>Click para seleccionar imagen</p>
+                                        </div>
+                                    )}
+                                </div>
                                 <input
-                                    type="text"
-                                    name='name'
-                                    placeholder='Nombre del taller'
-                                    required
-                                />
-
-                                <label htmlFor="description">Descripción</label>
-                                <input
-                                    type="text"
-                                    name='description'
-                                    placeholder='Descripción del taller'
-                                    required
-                                />
-
-                                <label htmlFor="limitQuota">Cupo límite</label>
-                                <input
-                                    type="number"
-                                    name='limitQuota'
-                                    placeholder='Cupo límite'
-                                    required
-                                />
-
-                                <label htmlFor="instructor">Nombre del instructor</label>
-                                <input
-                                    type="text"
-                                    name='instructor'
-                                    placeholder='Nombre del instructor'
-                                    required
+                                    type="file"
+                                    name="img"
+                                    ref={imgRef}
+                                    onChange={handleFileChange}
+                                    style={{ display: 'none' }}
+                                    accept="image/*"
                                 />
                             </div>
 
-                            <div className={styles.btns}>
-                                <button type="submit" className={styles.Mbtn}>Confirmar</button>
+                            <div className={styles.modalFooter}>
+                                <button type="button" onClick={() => setOpenModal(false)} className={styles.btnCancel}>Cancelar</button>
+                                <button type="submit" className={styles.btnSubmit}>Crear Taller</button>
                             </div>
                         </form>
                     </div>
@@ -730,90 +769,212 @@ function EventWorkshop() {
 
             {/* EDIT EVENT MODAL */}
             {openEditModal && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent}>
-                        <img
-                            onClick={() => setOpenEditModal(false)}
-                            className={styles.arrowM}
-                            src={arrow}
-                            alt="Cerrar"
-                        />
-                        <h2 className={styles.formT}>Editar evento</h2>
-                        <form onSubmit={actualizarEvento} className={styles.formTalleres}>
-                            <div
-                                className={styles.fileImg}
-                                onClick={() => editMainImgRef.current.click()}
-                                style={{
-                                    backgroundImage: previewEditImage ?
-                                        `url(${previewEditImage})` :
-                                        `url(${url}/event/image?filename=${event.mainImg})`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center'
-                                }}
-                            >
-                                <p style={{ color: 'transparent' }}>Imagen principal</p>
+                <div className={styles.modalOverlay} onClick={() => setOpenEditModal(false)}>
+                    <div className={styles.modalContent4} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles.modalHeader}>
+                            <h2 className={styles.modalTitle}>Editar Evento</h2>
+                            <button onClick={() => setOpenEditModal(false)} className={styles.closeBtn}>×</button>
+                        </div>
+
+                        <form onSubmit={actualizarEvento} className={styles.modalForm}>
+                            <div className={styles.formField}>
+                                <label>Nombre del Evento</label>
+                                <input type="text" name='name' placeholder='Nombre del evento' defaultValue={event.name} />
                             </div>
 
-                            <input
-                                type="file"
-                                name="mainImg"
-                                ref={editMainImgRef}
-                                onChange={handleEditFileChange}
-                                style={{ display: 'none' }}
-                            />
+                            <div className={styles.formField}>
+                                <label>Descripción</label>
+                                <textarea name='description' placeholder='Descripción del evento' rows="3" defaultValue={event.description}></textarea>
+                            </div>
 
-                            <div className={styles.formDataMain}>
-                                <label htmlFor="startDate">Fecha de inicio</label>
+                            <div className={styles.formRow}>
+                                <div className={styles.formField}>
+                                    <label>Fecha Inicio</label>
+                                    <input type="datetime-local" name="startDate" onFocus={verCalendario} />
+                                </div>
+                                <div className={styles.formField}>
+                                    <label>Fecha Fin</label>
+                                    <input type="datetime-local" name="endDate" onFocus={verCalendario} />
+                                </div>
+                            </div>
+
+                            <div className={styles.formField}>
+                                <label>Ubicación</label>
+                                <input type="text" name='location' placeholder='Ubicación del evento' defaultValue={event.location || "UTEZ Campus"} />
+                            </div>
+
+                            <div className={styles.formField}>
+                                <label>Imagen Principal</label>
+                                <div
+                                    className={styles.imagePreview}
+                                    onClick={() => editMainImgRef.current.click()}
+                                    style={{
+                                        backgroundImage: previewEditImage ?
+                                            `url(${previewEditImage})` :
+                                            `url(${url}/event/image?filename=${event.mainImg})`,
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center'
+                                    }}
+                                >
+                                    {!previewEditImage && !event.mainImg && (
+                                        <div className={styles.imagePlaceholder}>
+                                            <span>📷</span>
+                                            <p>Click para seleccionar imagen</p>
+                                        </div>
+                                    )}
+                                </div>
                                 <input
-                                    type="datetime-local"
-                                    name="startDate"
-                                    onFocus={verCalendario}
+                                    type="file"
+                                    name="mainImg"
+                                    ref={editMainImgRef}
+                                    onChange={handleEditFileChange}
+                                    style={{ display: 'none' }}
+                                    accept="image/*"
                                 />
+                            </div>
 
-                                <label htmlFor="endDate">Fecha de fin</label>
-                                <input
-                                    type="datetime-local"
-                                    name="endDate"
-                                    onFocus={verCalendario}
-                                />
-
-                                <label htmlFor="name">Nombre del evento</label>
-                                <input
-                                    type="text"
-                                    name='name'
-                                    placeholder='Nombre del evento'
-                                    defaultValue={event.name}
-                                />
-
-                                <label htmlFor="description">Descripción del evento</label>
-                                <input
-                                    type="text"
-                                    name='description'
-                                    placeholder='Descripción del evento'
-                                    defaultValue={event.description}
-                                />
-
-                                <label htmlFor="location">Ubicación</label>
-                                <input
-                                    type="text"
-                                    name='location'
-                                    placeholder='Ubicación del evento'
-                                    defaultValue={event.location || "UTEZ Campus"}
-                                />
-
-                                <label htmlFor="bannerImgs">Imágenes para el banner</label>
+                            <div className={styles.formField}>
+                                <label>Imágenes del Banner</label>
+                                <small className={styles.fieldHint}>Selecciona mínimo 3 imágenes</small>
                                 <input
                                     type="file"
                                     name="bannerImgs"
                                     multiple
                                     ref={editBannerImgsRef}
-                                    style={{ padding: '10px' }}
+                                    className={styles.fileInputStyled}
+                                    accept="image/*"
                                 />
-                                <small style={{ color: '#6b7280' }}>Agrega al menos 3 imágenes</small>
                             </div>
 
-                            <div className={styles.btns}>
-                                <button type="submit" className={styles.Mbtn}>Actualizar</button>
+                            <div className={styles.modalFooter}>
+                                <button type="button" onClick={() => setOpenEditModal(false)} className={styles.btnCancel}>Cancelar</button>
+                                <button type="submit" className={styles.btnSubmit}>Actualizar Evento</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* DELETE CONFIRMATION MODAL */}
+            {openDeleteModal && (
+                <div className={styles.modalOverlay} onClick={() => setOpenDeleteModal(false)}>
+                    <div className={styles.modalContent4} onClick={(e) => e.stopPropagation()} style={{ maxWidth: '450px' }}>
+                        <div className={styles.modalHeader}>
+                            <h2 className={styles.modalTitle}>Confirmar Eliminación</h2>
+                            <button onClick={() => setOpenDeleteModal(false)} className={styles.closeBtn}>×</button>
+                        </div>
+
+                        <div className={styles.modalForm}>
+                            <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+                                <div style={{
+                                    width: '64px',
+                                    height: '64px',
+                                    margin: '0 auto 16px',
+                                    borderRadius: '50%',
+                                    background: 'rgba(239, 68, 68, 0.1)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}>
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                    </svg>
+                                </div>
+                                <p style={{ fontSize: '15px', color: '#666', margin: 0 }}>
+                                    ¿Estás seguro de que deseas eliminar este taller? Esta acción no se puede deshacer.
+                                </p>
+                            </div>
+
+                            <div className={styles.modalFooter}>
+                                <button type="button" onClick={() => setOpenDeleteModal(false)} className={styles.btnCancel}>
+                                    Cancelar
+                                </button>
+                                <button type="button" onClick={confirmDeleteWorkshop} className={styles.btnSubmit} style={{ background: '#ef4444' }}>
+                                    Eliminar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* EDIT WORKSHOP MODAL */}
+            {openEditWorkshopModal && selectedWorkshop && (
+                <div className={styles.modalOverlay} onClick={() => setOpenEditWorkshopModal(false)}>
+                    <div className={styles.modalContent4} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles.modalHeader}>
+                            <h2 className={styles.modalTitle}>Editar Taller</h2>
+                            <button onClick={() => setOpenEditWorkshopModal(false)} className={styles.closeBtn}>×</button>
+                        </div>
+
+                        <form onSubmit={actualizarTaller} className={styles.modalForm}>
+                            <div className={styles.formField}>
+                                <label>Nombre del Taller</label>
+                                <input type="text" name='name' placeholder='Ej: Taller de Programación' defaultValue={selectedWorkshop.name} />
+                            </div>
+
+                            <div className={styles.formField}>
+                                <label>Descripción</label>
+                                <textarea name='description' placeholder='Describe el taller...' rows="3" defaultValue={selectedWorkshop.description}></textarea>
+                            </div>
+
+                            <div className={styles.formRow}>
+                                <div className={styles.formField}>
+                                    <label>Fecha Inicio</label>
+                                    <input type="datetime-local" name="startDate" onFocus={verCalendario} />
+                                </div>
+                                <div className={styles.formField}>
+                                    <label>Fecha Fin</label>
+                                    <input type="datetime-local" name="endDate" onFocus={verCalendario} />
+                                </div>
+                            </div>
+
+                            <div className={styles.formRow}>
+                                <div className={styles.formField}>
+                                    <label>Instructor</label>
+                                    <input type="text" name='instructor' placeholder='Nombre del instructor' defaultValue={selectedWorkshop.instructor} />
+                                </div>
+                                <div className={styles.formField}>
+                                    <label>Cupo Límite</label>
+                                    <input type="number" name='limitQuota' placeholder='Ej: 30' defaultValue={selectedWorkshop.limitQuota} />
+                                </div>
+                            </div>
+
+                            <div className={styles.formField}>
+                                <label>Imagen del Taller</label>
+                                <div
+                                    className={styles.imagePreview}
+                                    onClick={() => editWorkshopImgRef.current.click()}
+                                    style={{
+                                        backgroundImage: previewEditWorkshopImage ?
+                                            `url(${previewEditWorkshopImage})` :
+                                            selectedWorkshop.img ? `url(${url}/workshop/image?filename=${selectedWorkshop.img})` : 'none',
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center'
+                                    }}
+                                >
+                                    {!previewEditWorkshopImage && !selectedWorkshop.img && (
+                                        <div className={styles.imagePlaceholder}>
+                                            <span>📷</span>
+                                            <p>Click para seleccionar imagen</p>
+                                        </div>
+                                    )}
+                                </div>
+                                <input
+                                    type="file"
+                                    name="img"
+                                    ref={editWorkshopImgRef}
+                                    onChange={handleEditWorkshopFileChange}
+                                    style={{ display: 'none' }}
+                                    accept="image/*"
+                                />
+                            </div>
+
+                            <div className={styles.modalFooter}>
+                                <button type="button" onClick={() => setOpenEditWorkshopModal(false)} className={styles.btnCancel}>Cancelar</button>
+                                <button type="submit" className={styles.btnSubmit}>Actualizar Taller</button>
                             </div>
                         </form>
                     </div>

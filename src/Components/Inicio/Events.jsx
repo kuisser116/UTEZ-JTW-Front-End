@@ -31,35 +31,37 @@ function Events() {
 
     return (
         <div>
-            <Header/>
-            <h2 className={styles.tittle}>Eventos</h2>
-            <div className={styles.search}>
-                <input className={styles.searchInput} type="text" placeholder="Buscar eventos" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
+            <Header showBackButton={false} />
+            <div className={styles.headerContainer}>
+                <h2 className={styles.tittle}>Eventos</h2>
+                <div className={styles.search}>
+                    <input className={styles.searchInput} type="text" placeholder="Buscar eventos" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                </div>
             </div>
-            
+
             <div className={styles.eventsGrid}>
                 {filteredEvents.length > 0 ? (
-                filteredEvents.map(event => (
-                    <Link 
-                        className={styles.eventCard} 
-                        style={{ 
-                            backgroundImage: `url(${url}/event/image?filename=${event.mainImg})`,
-                        }}
-                        key={event._id} 
-                        to={`/Event`} 
-                        state={'/Events'}
-                        onClick={() => localStorage.setItem('idEvent', event._id)}
-                    >
-                        <div className={styles.eventInfo}>
-                            <div className={styles.info}>
-                                <p className={styles.p}>{event.name}</p>
+                    filteredEvents.map(event => (
+                        <Link
+                            className={styles.eventCard}
+                            style={{
+                                backgroundImage: `url(${url}/event/image?filename=${event.mainImg})`,
+                            }}
+                            key={event._id}
+                            to={`/Event`}
+                            state={'/Events'}
+                            onClick={() => localStorage.setItem('idEvent', event._id)}
+                        >
+                            <div className={styles.eventInfo}>
+                                <div className={styles.info}>
+                                    <p className={styles.p}>{event.name}</p>
+                                </div>
                             </div>
-                        </div>
-                    </Link>
-                ))
-            ) : (
-                <p className={styles.noEvents}>No hay eventos disponibles</p>
-            )}
+                        </Link>
+                    ))
+                ) : (
+                    <p className={styles.noEvents}>No hay eventos disponibles</p>
+                )}
             </div>
         </div>
     );

@@ -246,26 +246,7 @@ function Eventpage() {
                             Sumérgete en un evento diseñado para impulsar tu crecimiento profesional y personal.
                             Conecta con expertos de la industria, participa en talleres prácticos y amplía tu red de contactos.
                         </p>
-                        <div className={styles.featureList}>
-                            <div className={styles.featureItem}>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Certificado de participación</span>
-                            </div>
-                            <div className={styles.featureItem}>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Networking con profesionales</span>
-                            </div>
-                            <div className={styles.featureItem}>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Material didáctico incluido</span>
-                            </div>
-                        </div>
+
                     </div>
 
                     <div className={styles.aboutImage}>

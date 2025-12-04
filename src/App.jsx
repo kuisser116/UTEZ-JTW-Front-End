@@ -27,6 +27,7 @@ import ChecadoresAdmin from './Components/admis/Checadores';
 import HomeSA from './Components/S_admins/Home';
 import Admins from './Components/S_admins/Checadores';
 import EventSA from './Components/S_admins/Events';
+import EventSA2 from './Components/S_admins/ListEvent';
 
 function App() {
   return (
@@ -46,102 +47,111 @@ function App() {
               2. RUTAS DE PARTICIPANTE
               (Permitimos también a Admins para que puedan ver los eventos)
              ======================================================= */}
-          <Route 
-            path="/Events" 
+          <Route
+            path="/Events"
             element={
               <ProtectedRoute allowedRoles={['Participant', 'EventAdmin', 'SuperAdmin']}>
                 <Events />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/Event" 
+          <Route
+            path="/Event"
             element={
               <ProtectedRoute allowedRoles={['Participant', 'EventAdmin', 'SuperAdmin']}>
                 <Event />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/ListEvent" 
+          <Route
+            path="/ListEvent"
             element={
               <ProtectedRoute allowedRoles={['Participant', 'EventAdmin', 'SuperAdmin']}>
                 <ListEvent />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/List" 
+          <Route
+            path="/List"
             element={
               <ProtectedRoute allowedRoles={['Participant', 'EventAdmin', 'SuperAdmin']}>
                 <List />
               </ProtectedRoute>
-            } 
+            }
+          />
+          <Route
+            path="/EventSA2"
+            element={
+              <ProtectedRoute allowedRoles={['Participant', 'EventAdmin', 'SuperAdmin']}>
+                <EventSA2 />
+              </ProtectedRoute>
+            }
           />
 
           {/* =======================================================
               3. RUTAS DE ADMINISTRADOR DE EVENTOS (EventAdmin)
              ======================================================= */}
-          <Route 
-            path="/HomeAdmin" 
+          <Route
+            path="/HomeAdmin"
             element={
               <ProtectedRoute allowedRoles={['EventAdmin']}>
                 <HomeAdmin />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/Dashboard" 
+          <Route
+            path="/Dashboard"
             element={
               <ProtectedRoute allowedRoles={['EventAdmin']}>
                 <Dashboard />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/EventWorkshop" 
+          <Route
+            path="/EventWorkshop"
             element={
               <ProtectedRoute allowedRoles={['EventAdmin']}>
                 <EventWorkshop />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/Checadores" 
+          <Route
+            path="/Checadores"
             element={
               <ProtectedRoute allowedRoles={['EventAdmin']}>
                 <ChecadoresAdmin />
               </ProtectedRoute>
-            } 
+            }
           />
 
           {/* =======================================================
               4. RUTAS DE SUPER ADMINISTRADOR (SuperAdmin)
              ======================================================= */}
-          <Route 
-            path="/HomeSA" 
+          <Route
+            path="/HomeSA"
             element={
               <ProtectedRoute allowedRoles={['SuperAdmin']}>
                 <HomeSA />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/Admins" 
+          <Route
+            path="/Admins"
             element={
               <ProtectedRoute allowedRoles={['SuperAdmin']}>
                 <Admins />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/EventSA" 
+          <Route
+            path="/EventSA"
             element={
               <ProtectedRoute allowedRoles={['SuperAdmin']}>
                 <EventSA />
               </ProtectedRoute>
-            } 
+            }
           />
+
 
           {/* =======================================================
               5. RUTA POR DEFECTO (404)

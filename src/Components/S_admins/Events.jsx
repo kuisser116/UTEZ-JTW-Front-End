@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from '../../assets/styles/stylesSA/eventos.module.css';
+import styles from '../../assets/styles/stylesAdmin/Home.module.css';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import Header from '../Components/HeaderAdminHC';
+import Header from '../Components/Header';
 import NavBar from '../Components/SNavBar';
 import { url } from '../../utils/base.url';
 
@@ -14,7 +14,7 @@ function Events() {
 
     const navigate = useNavigate();
 
-    
+
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (!token) {
@@ -43,36 +43,38 @@ function Events() {
 
     return (
         <div>
-            <Header/>
-            <NavBar/>
-            <h2 className={styles.tittle}>Eventos</h2>
-            <div className={styles.search}>
-                <input className={styles.searchInput} type="text" placeholder="Buscar eventos" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}/>
+            <Header showBackButton={false} />
+            <NavBar />
+            <div className={styles.headerContainer}>
+                <h2 className={styles.tittle}>Eventos</h2>
+                <div className={styles.search}>
+                    <input className={styles.searchInput} type="text" placeholder="Buscar eventos" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                </div>
             </div>
-            
+
             <div className={styles.eventsGrid}>
                 {filteredEvents.length > 0 ? (
-                filteredEvents.map(event => (
-                    <Link 
-                        className={styles.eventCard} 
-                        style={{ 
-                            backgroundImage: `url(${url}/event/image?filename=${event.mainImg})`,
-                        }}
-                        key={event._id} 
-                        to={`/List`} 
-                        state={'/EventSA'}
-                        onClick={() => localStorage.setItem('idEvent', event._id)}
-                    >
-                        <div className={styles.eventInfo}>
-                            <div className={styles.info}>
-                                <p className={styles.p}>{event.name}</p>
+                    filteredEvents.map(event => (
+                        <Link
+                            className={styles.eventCard}
+                            style={{
+                                backgroundImage: `url(${url}/event/image?filename=${event.mainImg})`,
+                            }}
+                            key={event._id}
+                            to={`/EventSA2`}
+                            state={'/EventSA'}
+                            onClick={() => localStorage.setItem('idEvent', event._id)}
+                        >
+                            <div className={styles.eventInfo}>
+                                <div className={styles.info}>
+                                    <p className={styles.p}>{event.name}</p>
+                                </div>
                             </div>
-                        </div>
-                    </Link>
-                ))
-            ) : (
-                <p className={styles.noEvents}>No hay eventos disponibles</p>
-            )}
+                        </Link>
+                    ))
+                ) : (
+                    <p className={styles.noEvents}>No hay eventos disponibles</p>
+                )}
             </div>
         </div>
     );

@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from '../../assets/styles/stylesSA/Home.module.css';
 import { Link, useNavigate } from 'react-router-dom';
-import Header from '../Components/HeaderAdminHC';
-import NavBar from '../Components/SNavBar'; 
+import Header from '../Components/Header';
+import NavBar from '../Components/SNavBar';
 import TableAdmin from '../Components/TableAdmin';
 import plus from '../../assets/img/Assets_admin/plus-regular-240.png';
 import arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png';
@@ -27,13 +27,13 @@ function Events() {
     const token = localStorage.getItem("token");
 
 
-    
+
     useEffect(() => {
         if (!token) {
             console.log('No puedes entrar')
             navigate("/login"); // Redirige al login si no hay token
         }
-    }, []); 
+    }, []);
 
     // Este useEffect actualizará la contraseña con el correo cuando el email cambie
     useEffect(() => {
@@ -59,7 +59,7 @@ function Events() {
             });
 
             console.log(responseUser.data);
-            console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa',responseUser.data);
+            console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa', responseUser.data);
             setOpenModal(false);
             window.location.reload();
         } catch (error) {
@@ -71,37 +71,49 @@ function Events() {
     return (
         <div>
             <Toaster position="top-center" />
-            <Header />
-            <NavBar /> 
-            <h2 className={styles.tittle}>Administradores</h2>
-           
-            
-            <button onClick={() => setOpenModal(true)} className={styles.addEvent}>
-                Agregar usuario <img className={styles.plusadd} src={plus} alt="" />
-            </button>
-            
+            <Header showBackButton={false} />
+            <NavBar />
+            <div className={styles.headerContainer}>
+                <h2 className={styles.tittle}>Administradores</h2>
+                <button onClick={() => setOpenModal(true)} className={styles.addEvent}>
+                    Agregar usuario
+                </button>
+            </div>
+
             {openModal && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent}>
-                        <img onClick={() => setOpenModal(false)} className={styles.arrowM} src={arrow} alt="" />
-                        <h2 className={styles.formT}>Agregar usuario</h2>
-                        <form onSubmit={enviarUsuario}>
-                        <label htmlFor="" style={{color:'#252525'}}>Nombre</label><br />
-                            <input className={styles.input} name="name" type="text" placeholder="Nombre" value={formData.name} onChange={handleChange} required />
-                            <br /><label htmlFor="" style={{color:'#252525'}}>Apellido</label> <br />
-                            <input className={styles.input} name="lastname" type="text" placeholder="Apellido" value={formData.lastname} onChange={handleChange} required />
-                            <br /><label htmlFor="" style={{color:'#252525'}}>Correo</label> <br />
-                            <input className={styles.input} name="email" type="email" placeholder="Correo" value={formData.email} onChange={handleChange} required />
-                            <br /><label htmlFor="" style={{color: '#252525'}}>Numero de telefono</label><br />
-                            <input className={styles.input} name="cellphoneNumber" type="tel" placeholder="Número de celular" value={formData.cellphoneNumber} onChange={handleChange} required />
-                            <br /> <label htmlFor="" style={{color: '#252525'}}>Compañia</label><br />
-                            <input className={styles.input} name="company" type="text" placeholder="Compañía" value={formData.company} onChange={handleChange} required />
+                <div className={styles.modalOverlay} onClick={() => setOpenModal(false)}>
+                    <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles.modalHeader}>
+                            <h2 className={styles.modalTitle}>Agregar Usuario</h2>
+                            <button onClick={() => setOpenModal(false)} className={styles.closeBtn}>×</button>
+                        </div>
+                        <form onSubmit={enviarUsuario} className={styles.modalForm}>
+                            <div className={styles.formField}>
+                                <label>Nombre <span className={styles.required}>*</span></label>
+                                <input className={styles.input} name="name" type="text" placeholder="Nombre" value={formData.name} onChange={handleChange} required />
+                            </div>
+                            <div className={styles.formField}>
+                                <label>Apellido <span className={styles.required}>*</span></label>
+                                <input className={styles.input} name="lastname" type="text" placeholder="Apellido" value={formData.lastname} onChange={handleChange} required />
+                            </div>
+                            <div className={styles.formField}>
+                                <label>Correo <span className={styles.required}>*</span></label>
+                                <input className={styles.input} name="email" type="email" placeholder="Correo" value={formData.email} onChange={handleChange} required />
+                            </div>
+                            <div className={styles.formField}>
+                                <label>Número de teléfono <span className={styles.required}>*</span></label>
+                                <input className={styles.input} name="cellphoneNumber" type="tel" placeholder="Número de celular" value={formData.cellphoneNumber} onChange={handleChange} required />
+                            </div>
+                            <div className={styles.formField}>
+                                <label>Compañía <span className={styles.required}>*</span></label>
+                                <input className={styles.input} name="company" type="text" placeholder="Compañía" value={formData.company} onChange={handleChange} required />
+                            </div>
                             <button type="submit" className={styles.btn}>Guardar</button>
                         </form>
                     </div>
                 </div>
             )}
-            
+
             <div className={styles.eventsGrid}>
                 <TableAdmin />
             </div>

@@ -18,10 +18,10 @@ function TableChecadores() {
     const [workshops, setWorkshops] = useState([]);
     const [selectedEventWorkshops, setSelectedEventWorkshops] = useState([]);
     const [paginaActual, setPaginaActual] = useState(1);
-    const [itemsPorPagina] = useState(10);
+    const [itemsPorPagina] = useState(5);
     const [openConfirmModal, setOpenConfirmModal] = useState(false);
     const [confirmAction, setConfirmAction] = useState(null);
-    
+
     const token = localStorage.getItem("token");
     const adminId = localStorage.getItem("adminId");
     console.log(token)
@@ -38,7 +38,7 @@ function TableChecadores() {
                 const supervisoresFiltrados = responseSupervisores.data.data.filter(
                     supervisor => supervisor.administrator === adminId
                 );
-                
+
                 setSupervisores(supervisoresFiltrados);
 
                 // Obtener eventos de la base de datos
@@ -73,7 +73,7 @@ function TableChecadores() {
     const handleEditClick = (supervisor) => {
         setSelectedSupervisor(supervisor);
         setOpenEditModal(true);
-    
+
         // Cargar talleres del evento actual
         if (supervisor.events && supervisor.events[0]) {
             const currentEventId = supervisor.events[0];
@@ -83,7 +83,7 @@ function TableChecadores() {
             setSelectedEventWorkshops([]);
         }
     };
-    
+
     const handleEventChange = (e) => {
         const selectedEventId = e.target.value;
         setSelectedSupervisor(prev => ({
@@ -91,9 +91,9 @@ function TableChecadores() {
             events: [selectedEventId],
             workshops: []
         }));
-        
+
         // Filter workshops for the selected event
-        const filteredWorkshops = workshops.filter(workshop => 
+        const filteredWorkshops = workshops.filter(workshop =>
             workshop.event === selectedEventId
         );
         setSelectedEventWorkshops(filteredWorkshops);
@@ -160,7 +160,7 @@ function TableChecadores() {
     const handleStatusChange = async (supervisor) => {
         try {
             const newStatus = !supervisor.status;
-            await axios.put(`${url}/supervisor/${supervisor._id}`, 
+            await axios.put(`${url}/supervisor/${supervisor._id}`,
                 { status: newStatus },
                 {
                     headers: {
@@ -168,14 +168,14 @@ function TableChecadores() {
                     }
                 }
             );
-            
+
             // Actualizar el estado local
             setSupervisores((prevState) =>
                 prevState.map((s) =>
                     s._id === supervisor._id ? { ...s, status: newStatus } : s
                 )
             );
-            
+
             setOpenConfirmModal(false);
             location.reload();
         } catch (error) {
@@ -207,7 +207,7 @@ function TableChecadores() {
     const generarBotonesPaginacion = () => {
         const botones = [];
         const totalPaginas = Math.ceil(supervisores.length / itemsPorPagina);
-        
+
         if (totalPaginas <= 5) {
             // Si hay 5 páginas o menos, mostrar todos los botones
             for (let i = 1; i <= totalPaginas; i++) {
@@ -235,7 +235,7 @@ function TableChecadores() {
 
             // Lógica para determinar qué botones mostrar con elipsis
             let startPage, endPage;
-            
+
             if (paginaActual <= 3) {
                 startPage = 2;
                 endPage = 4;
@@ -310,7 +310,7 @@ function TableChecadores() {
                 </button>
             );
         }
-        
+
         return botones;
     };
 
@@ -339,7 +339,7 @@ function TableChecadores() {
                             className={styles.searchInput}
                         />
                     </div>
-                    
+
                     <table className={styles.tablaTalleres}>
                         <thead>
                             <tr className={styles.encabezado}>
@@ -370,12 +370,12 @@ function TableChecadores() {
                                         <td className={styles.edit}>{supervisor.status ? 'Activo' : 'Inactivo'}</td>
                                         <td className={styles.edit}>
                                             <img className={styles.img} src={pen} alt="Editar" onClick={() => handleEditClick(supervisor)} />
-                                          
+
                                         </td>
                                         <td className={styles.edit}>
-                                        <img 
-                                                className={styles.img} 
-                                                src={supervisor.status ? disable : check} 
+                                            <img
+                                                className={styles.img}
+                                                src={supervisor.status ? disable : check}
                                                 onClick={() => {
                                                     setSelectedSupervisor(supervisor);
                                                     setConfirmAction(supervisor.status ? 'desactivar' : 'activar');
@@ -394,25 +394,25 @@ function TableChecadores() {
                     </table>
 
                     <div className={styles.paginationContainer}>
-                        <button 
-                            onClick={irPaginaAnterior} 
+                        <button
+                            onClick={irPaginaAnterior}
                             disabled={paginaActual === 1}
                             className={`${styles.paginationArrow} ${paginaActual === 1 ? styles.disabled : ''}`}
                         >
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </button>
-                        
+
                         {generarBotonesPaginacion()}
-                        
-                        <button 
-                            onClick={irPaginaSiguiente} 
+
+                        <button
+                            onClick={irPaginaSiguiente}
                             disabled={paginaActual === Math.ceil(supervisores.length / itemsPorPagina)}
                             className={`${styles.paginationArrow} ${paginaActual === Math.ceil(supervisores.length / itemsPorPagina) ? styles.disabled : ''}`}
                         >
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </button>
                     </div>
@@ -420,15 +420,15 @@ function TableChecadores() {
             </div>
 
             {openEditModal && selectedSupervisor && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent}>
-                        <img onClick={() => setOpenEditModal(false)} className={styles.arrowM} src={arrow} alt="" />
+                <div className={styles.modalOverlay} onClick={() => setOpenEditModal(false)}>
+                    <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                        <button onClick={() => setOpenEditModal(false)} className={styles.closeBtn}>×</button>
                         <h2 className={styles.formT}>Editar Checador</h2>
                         <form onSubmit={handleEditSubmit}>
-                            <label htmlFor="" style={{color: '#252525'}}>Selecciona el evento</label>
-                            <select 
-                                className={styles.inputS1} 
-                                value={selectedSupervisor.events[0] || ''} 
+                            <label htmlFor="" style={{ color: '#252525' }}>Selecciona el evento</label>
+                            <select
+                                className={styles.inputS1}
+                                value={selectedSupervisor.events[0] || ''}
                                 onChange={handleEventChange}
                             >
                                 <option value="">Seleccionar evento</option>
@@ -437,8 +437,8 @@ function TableChecadores() {
                                 ))}
                             </select>
 
-                            <label htmlFor="" style={{color: '#252525'}}>Selecciona los talleres del evento</label>
-                            <select 
+                            <label htmlFor="" style={{ color: '#252525' }}>Selecciona los talleres del evento</label>
+                            <select
                                 className={styles.inputS}
                                 multiple
                                 value={selectedSupervisor.workshops || []}
@@ -471,13 +471,13 @@ function TableChecadores() {
                             ¿Seguro que quieres {confirmAction} a {selectedSupervisor.name}?
                         </p>
                         <div className={styles.buttonContainer}>
-                            <button 
+                            <button
                                 className={styles.btnCancel}
                                 onClick={() => setOpenConfirmModal(false)}
                             >
                                 Cancelar
                             </button>
-                            <button 
+                            <button
                                 className={styles.btnConfirm}
                                 onClick={() => handleStatusChange(selectedSupervisor)}
                             >

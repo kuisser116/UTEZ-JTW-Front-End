@@ -1,403 +1,343 @@
-body {
-    background-color: #ffffff;
-    margin: 0;
-    font-family: 'Geomanist', sans-serif;
-}
-
-
-.table{
-  background-color: #ffffff;
+/* ===== TABLE CONTAINER ===== */
+.tableContent {
   position: absolute;
   width: 100%;
   height: 100%;
-  top: 100%;
-  z-index: 1;
+  display: flex;
+  flex-direction: column;
 }
-
-.tableContent{
-  position: absolute;
-  color: #252525;
-  width: 100%;
-}
-
-.tableTittle{
-  position: absolute;
-  margin-top: 10vh;
-  left: 5%;
-}
-
-
-/*Tabla*/
 
 .tablaContainer {
-  position: absolute;
-  left: 0%;
-  right: 0%;
-
-
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
+/* ===== SEARCH BAR ===== */
+.searchContainer {
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.searchInput {
+  width: 100%;
+  padding: 12px 18px;
+  font-size: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+  color: #1a1a1a;
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: #667eea;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.searchInput::placeholder {
+  color: #999;
+}
+
+/* ===== TABLE STYLES ===== */
 .tablaTalleres {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.tablaTalleres thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .encabezado {
-  background-color: #f2f2f2;
-  height: 50px;
-
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-.tabla-talleres th {
-  text-align: center;
-  padding: 12px 16px;
+.tablaTalleres th {
+  text-align: left;
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+}
+
+.tablaTalleres tbody tr {
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.tablaTalleres tbody tr:hover {
+  background: rgba(102, 126, 234, 0.08);
+}
+
+.tablaTalleres td {
+  padding: 16px 20px;
+  color: #333;
+  font-size: 14px;
+}
+
+.edit {
+  vertical-align: middle;
+}
+
+.img {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+}
+
+.img:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* ===== PAGINATION ===== */
+.paginationContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.paginationButton {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: 500;
   color: #333;
-  vertical-align: middle;
-}
-
-.tabla-talleres tbody tr {
-  border-bottom: 1px solid #e0e0e0;
-  height: 54px;
-  text-align: center;
-}
-
-.tabla-talleres td {
-  padding: 8px 16px;
-  color: #333;
-  text-align: center;
-  vertical-align: middle;
-}
-
-.tabla-talleres .acciones {
-  width: 40px;
-  text-align: center;
-}
-
-.menu-puntos {
   cursor: pointer;
-  background: none;
-  border: none;
-  font-size: 20px;
-  color: #666;
-  padding: 5px;
+  transition: all 0.2s ease;
 }
 
-.fecha-hora {
-  display: block;
+.paginationButton:hover {
+  background: rgba(102, 126, 234, 0.1);
+  border-color: #667eea;
+  color: #667eea;
 }
 
-.hora {
-  color: #666;
-  font-size: 0.9em;
+.paginationActive {
+  background: #667eea !important;
+  color: white !important;
+  border-color: #667eea !important;
 }
 
-.img{
-  width: 40px;
+.paginationArrow {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #333;
 }
 
-.edit{
-  text-align: center;
+.paginationArrow:hover:not(.disabled) {
+  background: rgba(102, 126, 234, 0.1);
+  border-color: #667eea;
+  color: #667eea;
 }
 
+.paginationArrow.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
 
+.paginationEllipsis {
+  padding: 0 8px;
+  color: #999;
+  font-size: 14px;
+}
 
-
-
-
-/* 🎨 Estilos del modal */
+/* ===== MODALS ===== */
 .modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  z-index: 2000;
 }
 
 .modalContent {
-  background: white;
-  padding: 20px;
-  border-radius: 20px;
-  width: 30%;
-  text-align: center;
-  box-shadow: 0px 4px 10px rgba(164, 26, 26, 0.3);
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-.modalContent h2 {
-  margin-bottom: 10px;
-  color: #252525;
-  margin-top: 0;
-}
-
-.modalContent input, .modalContent select {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 32px;
+  border-radius: 16px;
   width: 90%;
-  padding: 8px;
-  margin: 5px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  max-width: 500px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
 }
 
-.modalContent button {
-  width: 20%;
-  margin: 5px;
-  cursor: pointer;
-  font-size: 20px;
-  border-radius: 10px;
-  border-color: #252525;
-  border-width: 3px;
-}
-
-.modalContent button:first-of-type {
-  background: #004bad00;
-  color: #252525;
-
-}
-
-.modalContent button:last-of-type {
-  background: #d9544f00;
-  color: #252525;
-}
-
-.inputS1{
+.modalContentStatus {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 32px;
+  border-radius: 16px;
   width: 90%;
-  height: 6vh;
-  background-color: #25252500;
-  border-color: #252525;
-  border-width: 3px;
-  border-radius: 10px;
-  margin-bottom: 21px;
-  color: #252525;
-}
-
-.inputS{
-  width: 90%;
-  height: 15vh;
-  background-color: #25252500;
-  border-color: #252525;
-  border-width: 3px;
-  border-radius: 10px;
-  margin-bottom: 21px;
-  color: #252525;
-}
-.formT{
-  color: #252525;
-  font-size: 4vh;
-  margin: auto;
-  padding-bottom: 20px;
-  text-align: center;
-}
-
-.arrowM{
-  position: absolute;
-  width: 4vh;
-  left: 36%;
-  top: 30%;
-  cursor: pointer;
-}
-
-.add{
-  width: 10%;
-  height: 30%;
-  color: #252525;
-  background-color: #25252500;
-  border-radius: 10px;
-  border-width: 2px;
-  border-color: #252525;
-  margin-right: 10px;
-}
-/* En tu archivo TablaChecadores.module.css */
-
-
-
-
-
-/* Contenedor de la paginación */
-.paginationContainer {
-  display: flex;
-  justify-content: flex-start;  /* Cambiado de center a flex-start para alinear a la izquierda */
-  align-items: center;
-  position: fixed;  /* Añadido para mantener fijo en la parte inferior */
-  bottom: 20px;    /* Añadido para posicionar desde abajo */
-  left: 4%;      /* Añadido para dar margen desde la izquierda */
-  padding: 10px 0;
-  gap: 6px;        /* Reducido de 8px a 6px para hacer los botones más compactos */
-  font-family: inherit;
-  z-index: 0; 
-  top: 90%;  /* Asegura que esté por encima de otros elementos */
-}
-
-.paginationButton {
-  min-width: 30px;  /* Reducido de 36px a 30px */
-  height: 30px;     /* Reducido de 36px a 30px */
-  border-radius: 4px;
-  border: 1px solid #e0e0e0;
-  background-color: white;
-  color: #252525;
-  font-size: 12px;  /* Reducido de 14px a 12px */
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.paginationButton:hover {
-  background-color: #f5f5f5;
-  border-color: #d0d0d0;
-}
-
-/* Botón activo */
-.paginationActive {
-  background-color: #252525;
-  color: white;
-  border-color: #252525;
-}
-
-.paginationActive:hover {
-  background-color: #333333;
-  border-color: #333333;
-}
-
-/* Botones de flechas */
-.paginationArrow {
-  min-width: 36px;
-  height: 36px;
-  border-radius: 4px;
-  border: 1px solid #e0e0e0;
-  background-color: white;
-  color: #252525;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.paginationArrow:hover:not(.disabled) {
-  background-color: #f5f5f5;
-  border-color: #d0d0d0;
-}
-
-/* Estilo para botones deshabilitados */
-.paginationArrow.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  color: #aaaaaa;
-}
-
-/* Estilo para los puntos suspensivos */
-.paginationEllipsis {
-  min-width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #252525;
-  font-weight: bold;
-}
-
-/* Adaptación para móviles */
-@media (max-width: 600px) {
-  .paginationContainer {
-    gap: 4px;
-  }
-  
-  .paginationButton, .paginationArrow {
-    min-width: 32px;
-    height: 32px;
-    font-size: 12px;
-  }
-}
-
-
-
-.searchContainer {
-  margin-bottom: 10px;
-  width: 100%;
-}
-
-.searchInput {
-  width: 100%;
   max-width: 400px;
-  padding: 10px 15px;
-  border: 1px solid #252525;
-  border-radius: 15px;
-  font-size: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.formT {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 24px 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.formT2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 16px 0;
+}
+
+.pStatus {
+  color: #666;
+  font-size: 15px;
+  margin-bottom: 24px;
+}
+
+.modalContent label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+  margin-top: 16px;
+}
+
+.inputS,
+.inputS1 {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.2s ease;
+  color: #1a1a1a;
+  margin-bottom: 16px;
+}
+
+.inputS {
+  min-height: 120px;
+}
+
+.inputS:focus,
+.inputS1:focus {
   outline: none;
-  transition: border-color 0.3s ease;
+  border-color: #667eea;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
-
-.searchInput:focus {
-  border-color: #74a9e2;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
-}
-
 
 .buttonContainer {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
-  gap: 10px;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.add,
+.btnConfirm {
+  background: #667eea;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.add:hover,
+.btnConfirm:hover {
+  background: #5568d3;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  transform: translateY(-1px);
 }
 
 .btnCancel {
-  padding: 8px 16px;
-  background-color: #6c757d00;
-  color: #252525;
-  border: 3px solid #252525;
-  border-radius: 10px;
+  background: transparent;
+  color: #666;
+  padding: 12px 24px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  width: 20px;
-  font-size: 20px;
-  
-
+  transition: all 0.2s ease;
 }
 
-.btnConfirm {
-  padding: 8px 16px;
-  background-color: #dc354600;
-  color: #252525;
-  border: 3px solid #252525;
-  border-radius: 10px;
+.btnCancel:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1a1a1a;
+}
+
+.arrowM {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
-  width: 20px;
-  font-size: 20px;
-
+  opacity: 0.7;
+  transition: all 0.2s ease;
 }
 
-.img {
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  margin: 0 5px;
+.arrowM:hover {
+  opacity: 1;
+  transform: translateX(-4px);
 }
-
-.modalContentStatus{
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 25px;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-}
-
-.pStatus{
-  font-size: 20px;
-  color: #252525;
-}
-
-.formT2{
-  color: #252525;
-  font-size: 3vh;
-  margin: auto;
-  padding-bottom: 20px;
-  text-align: center;
-}
-
-
-

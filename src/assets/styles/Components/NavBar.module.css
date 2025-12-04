@@ -4,14 +4,21 @@
     top: 20%;
     left: 5%;
     width: 90%;
-    background-color: #f4f2ee;
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    padding: 10px 20px;
 }
 
 .navList {
     list-style-type: none;
     display: flex;
     justify-content: left;
+    margin: 0;
+    padding: 0;
 }
 
 .navItem {
@@ -24,14 +31,17 @@
     text-decoration: none;
     font-size: 25px;
     font-weight: bold;
+    transition: all 0.3s ease;
 }
 
 .navLink:hover {
-    text-decoration: underline;
+    color: #000;
+    transform: scale(1.05);
 }
 
 .active {
     font-weight: bold;
-    color: #252525; /* O el color que prefieras */
-    border-bottom: 2px solid #252525;
+    color: #252525;
+    border-bottom: 3px solid #252525;
+    padding-bottom: 5px;
 }

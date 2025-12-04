@@ -6,7 +6,7 @@ import { GoogleLogin } from '@react-oauth/google';
 // Estilos e imágenes (Reutilizamos los del login)
 import styles from '../../assets/styles/stylesLogin/login.module.css';
 import conferenceImage from '../../assets/img/conference-3-100.svg';
-import Header from '../Components/Header'; 
+import Header from '../Components/Header';
 
 // Contexto
 import { useAuth } from '../../context/AuthContext';
@@ -19,7 +19,7 @@ function RegisterComponent() {
         password: '',
         confirmPassword: ''
     });
-    
+
     const navigate = useNavigate();
     const { registerManual, loginWithGoogle } = useAuth();
 
@@ -77,7 +77,7 @@ function RegisterComponent() {
 
             <div className={styles.contentWrapper}>
                 <div className={styles.loginCard} style={{ height: 'auto', minHeight: '650px' }}>
-                    
+
                     {/* Left Side - Form */}
                     <div className={styles.formSection}>
                         <div className={styles.headerWrapper} style={{ marginBottom: '1.5rem' }}>
@@ -148,8 +148,8 @@ function RegisterComponent() {
                             Registrarse
                         </button>
 
-                        <div style={{ marginTop: '15px', textAlign: 'center', fontSize: '0.9rem' }}>
-                            <p style={{ color: '#666' }}>
+                        <div style={{ marginTop: '15px', textAlign: 'center' }}>
+                            <p style={{ color: '#666', fontSize: '16px' }}>
                                 ¿Ya tienes cuenta?{' '}
                                 <Link to="/login" style={{ color: '#a18cd1', fontWeight: 'bold' }}>
                                     Inicia sesión aquí

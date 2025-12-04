@@ -6,14 +6,14 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { toast, Toaster } from 'sonner';
 
-function Header() {
+function Header({ showBackButton = true }) {
     const today = new Date().toLocaleDateString('es-ES', {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
         day: 'numeric'
     });
-    
+
     const location = useLocation();
     const navigate = useNavigate();
     const { user, isAuthenticated, logout } = useAuth();
@@ -36,7 +36,12 @@ function Header() {
             <nav className={styles.topNav}>
                 <div className={styles.navContainer}>
                     {/* Back Button */}
-                    <Link to={backLink} state={'/Events'} className={styles.backButton}>
+                    <Link
+                        to={backLink}
+                        state={'/Events'}
+                        className={styles.backButton}
+                        style={{ visibility: showBackButton ? 'visible' : 'hidden' }}
+                    >
                         <img className={styles.arrow} src={Arrow} alt="Back" />
                     </Link>
 
@@ -57,25 +62,25 @@ function Header() {
                     {/* User Profile / Logout */}
                     {isAuthenticated && user && (
                         <div className={styles.userSection}>
-                            <button 
-                                className={styles.userButton} 
+                            <button
+                                className={styles.userButton}
                                 onClick={() => setShowUserMenu(!showUserMenu)}
                             >
                                 {user.picture ? (
-                                    <img 
-                                        src={user.picture} 
-                                        alt={user.name} 
-                                        className={styles.userAvatar} 
+                                    <img
+                                        src={user.picture}
+                                        alt={user.name}
+                                        className={styles.userAvatar}
                                     />
                                 ) : (
                                     <div className={styles.userAvatarPlaceholder}>
                                         {user.name.charAt(0).toUpperCase()}
                                     </div>
                                 )}
-                                
+
                                 <span className={styles.userName}>{user.name.split(' ')[0]}</span>
-                                
-                                <svg 
+
+                                <svg
                                     width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                                     className={showUserMenu ? styles.chevronUp : styles.chevronDown}
                                 >
@@ -88,15 +93,15 @@ function Header() {
                                 <>
                                     {/* Overlay invisible para cerrar el menú al hacer clic fuera */}
                                     <div className={styles.menuOverlay} onClick={() => setShowUserMenu(false)} />
-                                    
+
                                     <div className={styles.userMenu}>
                                         <div className={styles.userInfo}>
                                             <p className={styles.userEmailName}>{user.name}</p>
                                             <p className={styles.userEmail}>{user.email}</p>
                                         </div>
                                         <div className={styles.menuDivider}></div>
-                                        <button 
-                                            className={styles.logoutButton} 
+                                        <button
+                                            className={styles.logoutButton}
                                             onClick={handleLogout}
                                         >
                                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import styles from '../../assets/styles/stylesAdmin/Home.module.css';
 import { Link, useNavigate } from 'react-router-dom';
-import Header from '../Components/HeaderAdminHC';
-import NavBar from '../Components/NavBar'; 
+import Header from '../Components/Header';
+import NavBar from '../Components/NavBar';
 import plus from '../../assets/img/Assets_admin/plus-regular-240.png';
 import fondoImg from '../../assets/img/Assets_admin/fondoa.png';
 import arrow from '../../assets/img/assets_participante/left-arrow-solid-240.png';
@@ -37,7 +37,7 @@ function Events() {
             console.log('No puedes entrar')
             navigate("/login"); // Redirige al login si no hay token
         }
-    }, []); 
+    }, []);
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -82,16 +82,16 @@ function Events() {
 
     const enviarEvento = async (event) => {
         event.preventDefault();
-    
+
         const startDate = formatDate(event.target.startDate.value);
         const endDate = formatDate(event.target.endDate.value);
-    
+
         const formData = new FormData();
         formData.append('name', event.target.name.value);
         formData.append('description', event.target.description.value);
         formData.append('startDate', startDate);
         formData.append('endDate', endDate);
-    
+
         const mainImgFile = mainImgRef.current.files[0];
         if (mainImgFile) {
             const renamedFile = new File(
@@ -101,7 +101,7 @@ function Events() {
             );
             formData.append('mainImg', renamedFile);
         }
-    
+
         const bannerImgsFiles = bannerImgsRef.current.files;
         if (bannerImgsFiles.length < 3) {
             toast.error('Debes agregar al menos 3 imágenes para el banner');
@@ -110,13 +110,13 @@ function Events() {
         for (let i = 0; i < bannerImgsFiles.length; i++) {
             formData.append('bannerImgs', bannerImgsFiles[i]);
         }
-    
+
         try {
             if (!event.target.name.value || !event.target.description.value) {
                 toast.error('El nombre y la descripción son campos obligatorios');
                 return;
             }
-    
+
             const response = await axios.post(`${url}/event/create`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -135,7 +135,7 @@ function Events() {
             }
         }
     };
-    
+
 
     //Terminar descripcion con mas de 50 palabras
     const truncateText = (text, maxLength) => {
@@ -147,122 +147,161 @@ function Events() {
         e.target.showPicker();
     };
 
-        const filteredEvents = events.filter(event =>
+    const filteredEvents = events.filter(event =>
         event.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
     return (
         <div>
             <Toaster position="top-center" />
-            <Header />
+            <Header showBackButton={false} />
             <NavBar />
-            <h2 className={styles.tittle}>Eventos</h2>
-            <div className={styles.search}>
-            <input 
-                className={styles.searchInput} 
-                type="text" 
-                placeholder="Buscar evento" 
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)} 
-            />
-            </div>            
-            <button onClick={() => setOpenModal(true)} className={styles.addEvent}>
-                Agregar evento
-            </button>
+            <div className={styles.headerContainer}>
+                <h2 className={styles.tittle}>Eventos</h2>
+                <div className={styles.search}>
+                    <input
+                        className={styles.searchInput}
+                        type="text"
+                        placeholder="Buscar evento"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+                <button onClick={() => setOpenModal(true)} className={styles.addEvent}>
+                    Agregar evento
+                </button>
+            </div>
             <div className={styles.eventsGrid}>
                 {filteredEvents.length > 0 ? (
-                filteredEvents.map(event => (
-                    <Link 
-                        className={styles.eventCard} 
-                        style={{ 
-                            backgroundImage: `url(${url}/event/image?filename=${event.mainImg})`,
-                        }}
-                        key={event._id} 
-                        to={`/EventWorkshop`} 
-                        state={'/HomeAdmin'}
-                        onClick={() => localStorage.setItem('idEvent', event._id)}
-                    >
-                        <div className={styles.eventInfo}>
-                            <div className={styles.info}>
-                                <p className={styles.p}>{event.name}</p>
+                    filteredEvents.map(event => (
+                        <Link
+                            className={styles.eventCard}
+                            style={{
+                                backgroundImage: `url(${url}/event/image?filename=${event.mainImg})`,
+                            }}
+                            key={event._id}
+                            to={`/EventWorkshop`}
+                            state={'/HomeAdmin'}
+                            onClick={() => localStorage.setItem('idEvent', event._id)}
+                        >
+                            <div className={styles.eventInfo}>
+                                <div className={styles.info}>
+                                    <p className={styles.p}>{event.name}</p>
+                                </div>
                             </div>
-                        </div>
-                    </Link>
-                ))
-            ) : (
-                <p className={styles.noEvents}>No hay eventos disponibles</p>
-            )}
+                        </Link>
+                    ))
+                ) : (
+                    <p className={styles.noEvents}>No hay eventos disponibles</p>
+                )}
             </div>
 
             {openModal && (
-                <div className={styles.modalOverlay}>
-                    <div className={styles.modalContent4}>
-                        <img onClick={() => setOpenModal(false)} className={styles.arrowMC} src={arrow} alt="" />
-                        <h2 className={styles.formT}>Agregar evento</h2>
-                        <form onSubmit={enviarEvento}>
-                            {/* Div que actúa como input file con fondo de imagen */}
-                            <div 
-                                className={styles.fileImg} 
-                                onClick={() => mainImgRef.current.click()} // Se abre el input de la imagen principal
-                                style={{
-                                    backgroundImage: `url(${previewImage})`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    color: 'white',
-                                    fontWeight: 'bold',
-                                    textAlign: 'center'
-                                }}
-                            >
-                                <p style={{color: 'white'}}>Imagen principal <br /> del evento</p>
-                            </div>
+                <div className={styles.modalOverlay} onClick={() => setOpenModal(false)}>
+                    <div className={styles.modalContent4} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles.modalHeader}>
+                            <h2 className={styles.modalTitle}>Agregar Nuevo Evento</h2>
+                            <button onClick={() => setOpenModal(false)} className={styles.closeBtn}>×</button>
+                        </div>
 
-
-                            {/* Input file oculto para la imagen principal */}
-                            <input 
-                                type="file" 
-                                name="mainImg" 
-                                multiple 
-                                ref={mainImgRef} // Referencia a este input
-                                onChange={handleFileChange} 
-                                style={{ display: 'none' }} 
-                            />
-                            
-                            <div className={styles.formDataMain}>
-                                <label htmlFor="" style={{color: '#252525'}}>Inicio del evento</label>
-                                <input type="datetime-local" name="startDate" placeholder='Fecha de inicio' onFocus={verCalendario}/> <br />
-                                
-                                <label htmlFor="" style={{color: '#252525'}}>Fin del evento</label>
-                                <input type="datetime-local" name="endDate" onFocus={verCalendario}/> <br />
-                                
-                                <label htmlFor="" style={{color: '#252525'}}>Nombre del evento</label>
-                                <input type="text" name='name' placeholder='Nombre del evento' /> <br />
-                                
-                                <label htmlFor="" style={{color: '#252525'}}>Descripción del evento</label>
-                                <input type="text" name='description' placeholder='Descripción del evento' /> <br />
-                                
-                                
-                                {/* Input para las imágenes del banner */}
-                                <small className={styles.small} style={{color: '#252525'}}>Agrega al menos 3 imágenes</small>
-
-                                <input 
-                                    type="file" 
-                                    name="bannerImgs" 
-                                    multiple 
-                                    ref={bannerImgsRef} 
+                        <form onSubmit={enviarEvento} className={styles.modalForm}>
+                            <div className={styles.formField}>
+                                <label>Nombre del Evento <span className={styles.required}>*</span></label>
+                                <input
+                                    type="text"
+                                    name='name'
+                                    placeholder='Ej: Conferencia Anual 2024'
+                                    required
                                 />
-                                <br />
                             </div>
 
-                            <div className={styles.btns}>
-                                <button  type="submit" className={styles.Mbtn}>Confirmar</button>
+                            <div className={styles.formField}>
+                                <label>Descripción <span className={styles.required}>*</span></label>
+                                <textarea
+                                    name='description'
+                                    placeholder='Describe el evento...'
+                                    rows="3"
+                                    required
+                                ></textarea>
                             </div>
-                                    
-                            
 
+                            <div className={styles.formRow}>
+                                <div className={styles.formField}>
+                                    <label>Fecha Inicio <span className={styles.required}>*</span></label>
+                                    <input
+                                        type="datetime-local"
+                                        name="startDate"
+                                        onFocus={verCalendario}
+                                        required
+                                    />
+                                </div>
+                                <div className={styles.formField}>
+                                    <label>Fecha Fin <span className={styles.required}>*</span></label>
+                                    <input
+                                        type="datetime-local"
+                                        name="endDate"
+                                        onFocus={verCalendario}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className={styles.formField}>
+                                <label>Imagen Principal</label>
+                                <div
+                                    className={styles.imagePreview}
+                                    onClick={() => mainImgRef.current.click()}
+                                    style={{
+                                        backgroundImage: previewImage !== fondoImg ? `url(${previewImage})` : 'none',
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center'
+                                    }}
+                                >
+                                    {previewImage === fondoImg && (
+                                        <div className={styles.imagePlaceholder}>
+                                            <span>📷</span>
+                                            <p>Click para seleccionar imagen</p>
+                                        </div>
+                                    )}
+                                </div>
+                                <input
+                                    type="file"
+                                    name="mainImg"
+                                    ref={mainImgRef}
+                                    onChange={handleFileChange}
+                                    style={{ display: 'none' }}
+                                    accept="image/*"
+                                />
+                            </div>
+
+                            <div className={styles.formField}>
+                                <label>Imágenes del Banner</label>
+                                <small className={styles.fieldHint}>Selecciona mínimo 3 imágenes</small>
+                                <input
+                                    type="file"
+                                    name="bannerImgs"
+                                    multiple
+                                    ref={bannerImgsRef}
+                                    className={styles.fileInputStyled}
+                                    accept="image/*"
+                                />
+                            </div>
+
+                            <div className={styles.modalFooter}>
+                                <button
+                                    type="button"
+                                    onClick={() => setOpenModal(false)}
+                                    className={styles.btnCancel}
+                                >
+                                    Cancelar
+                                </button>
+                                <button
+                                    type="submit"
+                                    className={styles.btnSubmit}
+                                >
+                                    Guardar Evento
+                                </button>
+                            </div>
                         </form>
                     </div>
                 </div>

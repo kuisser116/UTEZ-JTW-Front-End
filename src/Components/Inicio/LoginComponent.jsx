@@ -54,7 +54,7 @@ function LoginComponent() {
             localStorage.setItem('user', JSON.stringify(user));
 
             toast.success(`Bienvenido ${user.name || ''}`);
-            
+
             // Redireccionar según el rol
             Redireccionar(role);
 
@@ -83,9 +83,9 @@ function LoginComponent() {
             else if (role === 'EventAdmin') navigate('/HomeAdmin');
             else if (role === 'Participant') navigate('/Events'); // Redirección para participantes
             else navigate('/'); // Default
-            
+
             // Truco para recargar el contexto si no se actualizó automáticamente
-            window.location.reload(); 
+            window.location.reload();
         }, 1500);
     };
 
@@ -141,8 +141,8 @@ function LoginComponent() {
                         </button>
 
                         {/* Enlace para Registrarse */}
-                        <div style={{ marginTop: '15px', textAlign: 'center', fontSize: '0.9rem' }}>
-                            <p style={{ color: '#666' }}>
+                        <div style={{ marginTop: '15px', textAlign: 'center' }}>
+                            <p style={{ color: '#666', fontSize: '16px' }}>
                                 ¿No tienes cuenta?{' '}
                                 <Link to="/register" style={{ color: '#4F46E5', fontWeight: 'bold' }}>
                                     Regístrate aquí

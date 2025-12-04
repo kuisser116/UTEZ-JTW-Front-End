@@ -5,77 +5,32 @@ body {
 }
 
 .topNav {
-    position: absolute;
-    top: 2%;
-    left: 0;
+    position: fixed;
+    top: 0;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    display: flex;
     width: 100%;
-    display: flex;
     justify-content: center;
-    align-items: center;
     z-index: 3;
-}
 
-.navLinks {
-    display: flex;
-    list-style: none;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.navLinks li {
-    margin: 0 50px;
-}
-
-.navLinks a {
-    text-decoration: none;
-    color: #333;
-    font-size: 2vh;
-}
-
-.aEventos {
-    transition: all 0.3s ease;
-}
-
-.aEventos:hover {
-    transform: scale(1.02);
 }
 
 
 .logoututton {
-    background-color: #252525;
-    color: white;
+    background-color: #25252500;
+    color: rgb(0, 0, 0);
     border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
-    height: 44px;
     outline: none;
     margin: 0;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 2%;
-    width: 15%;
-    transition: all 0.3s ease;
-}
-.logoututtonRe {
-    background-color: #252525;
-    color: white;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    height: 44px;
-    outline: none;
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 17%;
-    width: 15%;
     transition: all 0.3s ease;
 }
 
+
 .logoututton:hover {
-    transform: translateY(-50%) scale(1.02);
+    transform: scale(1.02);
 }
 
 .logoututton:focus {

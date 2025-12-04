@@ -19,7 +19,7 @@ const ParticleBackground = () => {
         let isMounted = true; // 🚩 Flag para controlar si el componente está montado
 
         // Configuración
-        const particleCount = 1000;
+        const particleCount = 2000;
         const particleSize = 3;
         const mouseRadius = 150;
         const disperseForce = 20;
